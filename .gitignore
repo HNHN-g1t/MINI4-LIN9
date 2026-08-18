@@ -1,0 +1,9 @@
+# APIキーを含む実設定（config.json.example をコピーして各自で作る）
+config.json
+
+# Python
+__pycache__/
+*.pyc
+
+# 取得時の一時ダンプ
+_tamiya_*.html

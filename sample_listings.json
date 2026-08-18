@@ -1,0 +1,82 @@
+{
+  "query": "15435",
+  "product": {
+    "item_code": "ITEM 15435",
+    "gp_code": "GP.435",
+    "name": "スーパーハード大径ローハイトタイヤ＆カーボン強化ホイール",
+    "category": "タイヤ＆ホイール",
+    "tags": ["対応：MS / MA / AR / VZ ほか", "大径", "ローハイト", "スーパーハード"]
+  },
+  "price_history": [
+    { "label": "3月", "value": 980 },
+    { "label": "4月", "value": 940 },
+    { "label": "5月", "value": 1010 },
+    { "label": "6月", "value": 1060 },
+    { "label": "7月", "value": 1180 },
+    { "label": "8月", "value": 1120 }
+  ],
+  "listings": [
+    {
+      "mall": "mercari",
+      "title": "タミヤ 15435 スーパーハード大径ローハイトタイヤ 新品未開封",
+      "price": 980, "shipping": 0, "url": "#",
+      "seller": "個人", "seller_rating": "★4.9（412）", "condition": "新品"
+    },
+    {
+      "mall": "shop",
+      "title": "【模型店ホシノ】15435 大径ローハイトタイヤ 店頭在庫あり・当日発送",
+      "price": 1050, "shipping": 0, "url": "#",
+      "seller": "個人ショップ ・ 静岡県", "seller_rating": null, "condition": "新品",
+      "is_ad": true
+    },
+    {
+      "mall": "yahoo",
+      "title": "ミニ四駆 大径ローハイト タイヤ＆ホイールセット バラし品",
+      "price": 780, "shipping": 0, "url": "#",
+      "seller": "個人", "seller_rating": "98.7%（1,204）", "condition": "中古"
+    },
+    {
+      "mall": "mercari",
+      "title": "15435 スーパーハード大径ローハイト 新品 4セットまとめ",
+      "price": 1200, "shipping": 0, "url": "#",
+      "seller": "個人", "seller_rating": null, "condition": "新品"
+    },
+    {
+      "mall": "yahoo",
+      "title": "タミヤ純正 GP.435 大径ローハイトタイヤ 未開封 送料無料",
+      "price": 1180, "shipping": 0, "url": "#",
+      "seller": "個人", "seller_rating": "99.2%（860）", "condition": "新品"
+    },
+    {
+      "mall": "mercari",
+      "title": "【ストア出品】15435 ほか大径ローハイトタイヤ各種 在庫多数",
+      "price": 1100, "shipping": 0, "url": "#",
+      "seller": "メルカリShops", "seller_rating": "★4.8", "condition": "新品",
+      "is_ad": true
+    },
+    {
+      "mall": "shop",
+      "title": "中古良品 15435 カーボン強化ホイールのみ（タイヤ欠品）",
+      "price": 450, "shipping": 185, "url": "#",
+      "seller": "個人ショップ ・ 東京都", "seller_rating": null, "condition": "中古"
+    },
+    {
+      "mall": "mercari",
+      "title": "大径ローハイトタイヤ 15435 開封済み未使用",
+      "price": 890, "shipping": 0, "url": "#",
+      "seller": "個人", "seller_rating": "★5.0（88）", "condition": "中古"
+    },
+    {
+      "mall": "yahoo",
+      "title": "15435 大径ローハイト 新品 10セット 即決",
+      "price": 400, "shipping": 0, "url": "#",
+      "seller": "個人", "seller_rating": null, "condition": "新品"
+    },
+    {
+      "mall": "shop",
+      "title": "15435 スーパーハード大径ローハイトタイヤ＆カーボン強化ホイール",
+      "price": 1210, "shipping": 0, "url": "#",
+      "seller": "個人ショップ ・ 大阪府", "seller_rating": null, "condition": "新品"
+    }
+  ]
+}

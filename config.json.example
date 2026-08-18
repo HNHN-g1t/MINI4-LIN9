@@ -1,0 +1,8 @@
+{
+  "yahoo_appid": "Yahoo!デベロッパーネットワークで発行したClient ID",
+  "vc_affiliate_id": "ValueCommerceのアフィリエイトID（任意・Yahoo!ショッピングの収益化用）",
+  "vc_token": "ValueCommerce管理画面 > 広告 > 対応機能別 > Webサービス のトークン",
+  "vc_yahoo_auction_ec_code": "ヤフオク!提携承認後にVC管理画面で確認するecCode（任意）",
+  "mercari_ambassador_suffix": "メルカリアンバサダーの計測パラメータ（任意）",
+  "shop_csv_dir": "shops"
+}
