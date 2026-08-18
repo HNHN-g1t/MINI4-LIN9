@@ -13,6 +13,7 @@
 import html
 import json
 import os
+import shutil
 import sys
 import urllib.parse
 from datetime import datetime, timedelta, timezone
@@ -238,6 +239,16 @@ apply();
 """
 
 
+def copy_assets(outdir: str) -> None:
+    """ファビコン等の固定ファイルを site/assets/ に配置する。"""
+    src, dst = "assets", os.path.join(outdir, "assets")
+    if not os.path.isdir(src):
+        return
+    os.makedirs(dst, exist_ok=True)
+    for name in os.listdir(src):
+        shutil.copy2(os.path.join(src, name), os.path.join(dst, name))
+
+
 def build(items: list[dict], outdir: str) -> str:
     # 各商品に細分類を割り当てる
     for it in items:
@@ -302,6 +313,10 @@ def build(items: list[dict], outdir: str) -> str:
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="assets/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="theme-color" content="#d81f2a">
 <title>ミニ四リン駆｜タミヤ ミニ四駆・クラフトツール カタログ（公式品番マスタ）</title>
 <style>{CSS}</style>
 </head>
@@ -333,6 +348,7 @@ def build(items: list[dict], outdir: str) -> str:
 </html>
 """
     os.makedirs(outdir, exist_ok=True)
+    copy_assets(outdir)
     path = os.path.join(outdir, "index.html")
     with open(path, "w", encoding="utf-8") as f:
         f.write(doc)
