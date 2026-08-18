@@ -51,18 +51,20 @@ def categorize(name: str) -> str:
     return FALLBACK_CATEGORY
 
 
-def ec_links(item: dict) -> dict:
-    """ECサイトの検索URL。ミニ四駆系は品番、工具は商品名で引くのが当たりやすい。"""
+def ec_links(item: dict) -> list[tuple[str, str]]:
+    """ECサイトの検索URL。ミニ四駆系は品番、工具は商品名で引くのが当たりやすい。
+    並び順は amazon → メルカリ → Yahoo! → ヤフオク。"""
     if item.get("genre_key") == "tool":
         term = f"タミヤ {item['name']}"
     else:
         term = f"ミニ四駆 {item['item_code']}"
     q = urllib.parse.quote(term)
-    return {
-        "yahoo": f"https://shopping.yahoo.co.jp/search?p={q}",
-        "mercari": f"https://jp.mercari.com/search?keyword={q}",
-        "auction": f"https://auctions.yahoo.co.jp/search/search?p={q}",
-    }
+    return [
+        ("amazon", f"https://www.amazon.co.jp/s?k={q}"),
+        ("メルカリ", f"https://jp.mercari.com/search?keyword={q}"),
+        ("Yahoo!", f"https://shopping.yahoo.co.jp/search?p={q}"),
+        ("ヤフオク", f"https://auctions.yahoo.co.jp/search/search?p={q}"),
+    ]
 
 
 CSS = """
@@ -101,11 +103,19 @@ display:flex;flex-direction:column;transition:box-shadow .15s,transform .15s}
 .ph{aspect-ratio:4/3;background:#fff;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--line)}
 .ph img{max-width:100%;max-height:100%;object-fit:contain}
 .bd{padding:10px 12px 12px;display:flex;flex-direction:column;gap:4px;flex:1}
+.row1{display:flex;align-items:center;gap:8px}
+.nm{font-size:12.5px;line-height:1.45;flex:1;overflow:hidden;white-space:nowrap}
+.btn-detail{font-size:10.5px;font-weight:700;border:1px solid var(--line);background:var(--surface);
+color:var(--ink2);border-radius:6px;padding:3px 10px;cursor:pointer;white-space:nowrap;
+font-family:inherit;line-height:1.5}
+.btn-detail:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-soft)}
+.detail{display:none;margin-top:6px;padding-top:6px;border-top:1px dashed var(--line)}
+.it.open .detail{display:block}
+.nmfull{font-size:12.5px;line-height:1.45;margin:2px 0 4px}
 .code{font-size:10.5px;font-weight:800;color:var(--ink3);letter-spacing:.03em}
-.nm{font-size:12.5px;line-height:1.45;min-height:36px}
-.pr{font-size:15px;font-weight:800;margin-top:auto}
+.pr{font-size:15px;font-weight:800}
 .pr small{font-size:10px;font-weight:600;color:var(--ink3)}
-.ecrow{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.ecrow{display:flex;gap:6px;margin-top:auto;padding-top:8px;flex-wrap:wrap}
 .ec{font-size:10.5px;font-weight:700;border-radius:6px;padding:3px 8px;border:1px solid var(--line);color:var(--ink2)}
 .ec:hover{background:var(--brand-soft);border-color:var(--brand);color:var(--brand)}
 .ec.souba{background:var(--brand);border-color:var(--brand);color:#fff}
@@ -171,6 +181,13 @@ chips.forEach(ch => ch.addEventListener('click', () => {
   apply();
 }));
 
+// 「詳細」で品番・正式名称・価格を開閉する
+document.querySelectorAll('.btn-detail').forEach(b => b.addEventListener('click', () => {
+  const card = b.closest('.it');
+  const open = card.classList.toggle('open');
+  b.textContent = open ? '閉じる' : '詳細';
+}));
+
 syncChips();
 apply();
 """
@@ -211,24 +228,29 @@ def build(items: list[dict], outdir: str) -> str:
     cards = []
     for it in items:
         code, name, cat = it["item_code"], it["name"], it["_cat"]
-        ec = ec_links(it)
         hay = html.escape(f"{code} {it.get('gp_no','')} {name} {cat} {it['genre']}".lower())
         souba = f'<a class="ec souba" href="items/{code}.html">相場ページ</a>' if code in have_page else ""
         gp = f"　／ {html.escape(it['gp_no'])}" if it.get("gp_no") else ""
+        short = name[:13] + ("…" if len(name) > 13 else "")
+        ecrow = "".join(
+            f'<a class="ec" href="{u}" target="_blank" rel="noopener">{html.escape(lb)}</a>'
+            for lb, u in ec_links(it)
+        )
         cards.append(f'''      <div class="it" data-genre="{it["genre_key"]}" data-cat="{html.escape(cat)}" data-hay="{hay}">
         <a class="ph" href="{html.escape(it["url"])}" target="_blank" rel="noopener">
           <img src="{html.escape(it["image"])}" alt="{html.escape(name)}" loading="lazy"></a>
         <div class="bd">
-          <div class="code">ITEM {code}{gp}</div>
-          <div class="cat-tag">{html.escape(cat)}</div>
-          <div class="nm">{html.escape(name)}</div>
-          <div class="pr">¥{it["price"]:,} <small>メーカー希望（税込）</small></div>
-          <div class="ecrow">
-            {souba}
-            <a class="ec" href="{ec["yahoo"]}" target="_blank" rel="noopener">Yahoo!</a>
-            <a class="ec" href="{ec["mercari"]}" target="_blank" rel="noopener">メルカリ</a>
-            <a class="ec" href="{ec["auction"]}" target="_blank" rel="noopener">ヤフオク</a>
+          <div class="row1">
+            <div class="nm">{html.escape(short)}</div>
+            <button class="btn-detail" type="button">詳細</button>
           </div>
+          <div class="detail">
+            <div class="code">ITEM {code}{gp}</div>
+            <div class="cat-tag">{html.escape(cat)}</div>
+            <div class="nmfull">{html.escape(name)}</div>
+            <div class="pr">¥{it["price"]:,} <small>メーカー希望（税込）</small></div>
+          </div>
+          <div class="ecrow">{souba}{ecrow}</div>
         </div>
       </div>''')
 
