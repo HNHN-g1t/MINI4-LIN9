@@ -30,17 +30,6 @@ jobs:
       - name: タミヤ公式のパーツ一覧を取得
         run: python fetch_tamiya_catalog.py
 
-      - name: 相場ページを再生成（YAHOO_APPID を登録済みのときだけ）
-        env:
-          YAHOO_APPID: ${{ secrets.YAHOO_APPID }}
-        run: |
-          if [ -n "$YAHOO_APPID" ]; then
-            python build_catalog.py
-          else
-            echo "YAHOO_APPID が未登録のため、相場ページの再生成はスキップします。"
-            echo "リポジトリに含まれている site/items/ をそのまま使います。"
-          fi
-
       - name: カタログインデックスを生成
         run: python build_official_index.py
 

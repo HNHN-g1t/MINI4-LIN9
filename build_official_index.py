@@ -103,7 +103,13 @@ display:flex;flex-direction:column;transition:box-shadow .15s,transform .15s}
 .ph{aspect-ratio:4/3;background:#fff;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--line)}
 .ph img{max-width:100%;max-height:100%;object-fit:contain}
 .bd{padding:10px 12px 12px;display:flex;flex-direction:column;gap:4px;flex:1}
-.row1{display:flex;align-items:center;gap:8px}
+.row1{display:flex;align-items:center;gap:6px}
+.btn-fav{font-size:15px;line-height:1;border:none;background:none;cursor:pointer;padding:2px 1px;
+color:var(--ink3);font-family:inherit}
+.btn-fav:hover{color:#e8a400}
+.btn-fav.on{color:#f0a500}
+.tab.fav.on{background:#f0a500}
+.tab.fav.on:hover{background:#f0a500}
 .nm{font-size:12.5px;line-height:1.45;flex:1;overflow:hidden;white-space:nowrap}
 .btn-detail{font-size:10.5px;font-weight:700;border:1px solid var(--line);background:var(--surface);
 color:var(--ink2);border-radius:6px;padding:3px 10px;cursor:pointer;white-space:nowrap;
@@ -133,35 +139,63 @@ const chipRow = document.querySelector('.chips');
 const cards = [...document.querySelectorAll('.it')];
 const countLine = document.getElementById('countLine');
 const empty = document.getElementById('empty');
+const favN = document.getElementById('favN');
 let genre = '';   // '' = すべて
 let cat = '';     // '' = 全カテゴリ
 
+// ---- お気に入り（ブラウザのlocalStorageにのみ保存。ログイン不要） ----
+const FAV_KEY = 'mini4rinku:favs';
+let favs = new Set();
+try{ favs = new Set(JSON.parse(localStorage.getItem(FAV_KEY) || '[]')); }catch(e){}
+
+function saveFavs(){
+  try{ localStorage.setItem(FAV_KEY, JSON.stringify([...favs])); }catch(e){}
+}
+function paintFavs(){
+  for(const c of cards){
+    const on = favs.has(c.dataset.code);
+    const b = c.querySelector('.btn-fav');
+    b.textContent = on ? '★' : '☆';
+    b.classList.toggle('on', on);
+    b.title = on ? 'お気に入りから外す' : 'お気に入りに追加';
+  }
+  favN.textContent = favs.size;
+}
+
 function syncChips(){
-  // ジャンル未選択（すべて）のときは細分類を出さない。
+  // ジャンル未選択（すべて）・お気に入りのときは細分類を出さない。
   // ジャンル選択時は、そのジャンルに存在する細分類だけ出す。
+  const real = genre && genre !== 'fav';
   for(const ch of chips){
     const gs = ch.dataset.genres;
-    const show = !!genre && (!gs || gs.split(' ').includes(genre));
-    ch.classList.toggle('hide', !show);
+    ch.classList.toggle('hide', !(real && (!gs || gs.split(' ').includes(genre))));
   }
   // 隠れたチップが選択中なら解除する
   const active = chips.find(c => cat && c.dataset.cat === cat);
   if(active && active.classList.contains('hide')) cat = '';
   chips.forEach(c => c.classList.toggle('on', c.dataset.cat === cat));
-  chipRow.style.display = genre ? '' : 'none';
+  chipRow.style.display = real ? '' : 'none';
 }
 
 function apply(){
   const terms = q.value.trim().toLowerCase().split(/\\s+/).filter(Boolean);
   let shown = 0;
   for(const c of cards){
-    const on = (!genre || c.dataset.genre === genre)
-            && (!cat   || c.dataset.cat   === cat)
+    const okGenre = !genre ? true
+                  : genre === 'fav' ? favs.has(c.dataset.code)
+                  : c.dataset.genre === genre;
+    const on = okGenre
+            && (!cat || c.dataset.cat === cat)
             && terms.every(t => c.dataset.hay.includes(t));
     c.style.display = on ? '' : 'none';
     if(on) shown++;
   }
-  countLine.textContent = `${shown}件 / 全${cards.length}件を表示`;
+  countLine.textContent = genre === 'fav'
+    ? `お気に入り ${shown}件`
+    : `${shown}件 / 全${cards.length}件を表示`;
+  empty.textContent = genre === 'fav' && !favs.size
+    ? 'お気に入りはまだありません。各カードの☆を押すと登録できます。'
+    : '該当する商品が見つかりません';
   empty.style.display = shown ? 'none' : 'block';
 }
 
@@ -188,17 +222,22 @@ document.querySelectorAll('.btn-detail').forEach(b => b.addEventListener('click'
   b.textContent = open ? '閉じる' : '詳細';
 }));
 
+// ☆でお気に入りを登録・解除する
+document.querySelectorAll('.btn-fav').forEach(b => b.addEventListener('click', () => {
+  const code = b.closest('.it').dataset.code;
+  if(favs.has(code)) favs.delete(code); else favs.add(code);
+  saveFavs();
+  paintFavs();
+  if(genre === 'fav') apply();   // お気に入り表示中は即座に反映する
+}));
+
+paintFavs();
 syncChips();
 apply();
 """
 
 
 def build(items: list[dict], outdir: str) -> str:
-    have_page = set()
-    items_dir = os.path.join(outdir, "items")
-    if os.path.isdir(items_dir):
-        have_page = {f[:-5] for f in os.listdir(items_dir) if f.endswith(".html")}
-
     # 各商品に細分類を割り当てる
     for it in items:
         it["_cat"] = it.get("official_category") or categorize(it["name"])
@@ -208,11 +247,14 @@ def build(items: list[dict], outdir: str) -> str:
     genres = [(k, lb) for k, lb in GENRE_ORDER if any(i["genre_key"] == k for i in items)]
     genre_counts = {k: sum(1 for i in items if i["genre_key"] == k) for k, _ in genres}
 
-    # 上段タブ（ジャンルを先に並べ、「すべて」は最後）
+    # 上段タブ（ジャンル → すべて → お気に入り）
     tab_html = "".join(
         f'<div class="tab" data-genre="{k}">{html.escape(lb)}<span class="n">{genre_counts[k]}</span></div>'
         for k, lb in genres
-    ) + f'<div class="tab on" data-genre="">すべて<span class="n">{len(items)}</span></div>'
+    ) + (
+        f'<div class="tab on" data-genre="">すべて<span class="n">{len(items)}</span></div>'
+        '<div class="tab fav" data-genre="fav">★ お気に入り<span class="n" id="favN">0</span></div>'
+    )
 
     # 下段チップ（細分類）。同じ分類名が複数ジャンルに出るので1つにまとめ、
     # どのジャンルに属するかを data-genres に持たせる。ジャンル選択時だけ表示する。
@@ -229,18 +271,18 @@ def build(items: list[dict], outdir: str) -> str:
     for it in items:
         code, name, cat = it["item_code"], it["name"], it["_cat"]
         hay = html.escape(f"{code} {it.get('gp_no','')} {name} {cat} {it['genre']}".lower())
-        souba = f'<a class="ec souba" href="items/{code}.html">相場ページ</a>' if code in have_page else ""
         gp = f"　／ {html.escape(it['gp_no'])}" if it.get("gp_no") else ""
         short = name[:13] + ("…" if len(name) > 13 else "")
         ecrow = "".join(
             f'<a class="ec" href="{u}" target="_blank" rel="noopener">{html.escape(lb)}</a>'
             for lb, u in ec_links(it)
         )
-        cards.append(f'''      <div class="it" data-genre="{it["genre_key"]}" data-cat="{html.escape(cat)}" data-hay="{hay}">
+        cards.append(f'''      <div class="it" data-code="{code}" data-genre="{it["genre_key"]}" data-cat="{html.escape(cat)}" data-hay="{hay}">
         <a class="ph" href="{html.escape(it["url"])}" target="_blank" rel="noopener">
           <img src="{html.escape(it["image"])}" alt="{html.escape(name)}" loading="lazy"></a>
         <div class="bd">
           <div class="row1">
+            <button class="btn-fav" type="button" title="お気に入りに追加">☆</button>
             <div class="nm">{html.escape(short)}</div>
             <button class="btn-detail" type="button">詳細</button>
           </div>
@@ -250,7 +292,7 @@ def build(items: list[dict], outdir: str) -> str:
             <div class="nmfull">{html.escape(name)}</div>
             <div class="pr">¥{it["price"]:,} <small>メーカー希望（税込）</small></div>
           </div>
-          <div class="ecrow">{souba}{ecrow}</div>
+          <div class="ecrow">{ecrow}</div>
         </div>
       </div>''')
 
@@ -259,13 +301,13 @@ def build(items: list[dict], outdir: str) -> str:
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>パーツポスト｜タミヤ ミニ四駆・クラフトツール カタログ（公式品番マスタ）</title>
+<title>ミニ四リン駆｜タミヤ ミニ四駆・クラフトツール カタログ（公式品番マスタ）</title>
 <style>{CSS}</style>
 </head>
 <body>
 <header>
   <div class="hwrap">
-    <a class="logo" href="index.html">パーツ<span>ポスト</span></a>
+    <a class="logo" href="index.html">ミニ四<span>リン駆</span></a>
     <div class="searchbox"><input id="q" type="search"
       placeholder="品番・商品名で検索（例：15435 / ローラー / ニッパー / エンペラー）"></div>
   </div>
@@ -280,9 +322,10 @@ def build(items: list[dict], outdir: str) -> str:
   <div class="empty" id="empty">該当する商品が見つかりません</div>
 </main>
 <footer>
-  パーツポスト（プロトタイプ） ・ 品番・名称・価格・写真はタミヤ公式サイトの情報（出典: tamiya.com） ・
+  ミニ四リン駆（プロトタイプ） ・ 品番・名称・価格・写真はタミヤ公式サイトの情報（出典: tamiya.com） ・
   最終更新 {datetime.now(JST).strftime("%Y-%m-%d %H:%M JST")}<br>
   商品写真は公式サイトから直接参照しています。ECリンクは各モールの検索結果を開きます。
+  お気に入りはご利用中のブラウザ内にのみ保存され、サーバーには送信されません。
 </footer>
 <script>{JS}</script>
 </body>
