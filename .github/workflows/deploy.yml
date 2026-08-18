@@ -1,0 +1,59 @@
+name: カタログを生成して GitHub Pages に公開
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    # 毎週月曜 6:00 JST（UTC 日曜 21:00）にタミヤ公式カタログを取り直す
+    - cron: "0 21 * * 0"
+  workflow_dispatch: # 手動実行ボタン
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: タミヤ公式のパーツ一覧を取得
+        run: python fetch_tamiya_catalog.py
+
+      - name: 相場ページを再生成（YAHOO_APPID を登録済みのときだけ）
+        env:
+          YAHOO_APPID: ${{ secrets.YAHOO_APPID }}
+        run: |
+          if [ -n "$YAHOO_APPID" ]; then
+            python build_catalog.py
+          else
+            echo "YAHOO_APPID が未登録のため、相場ページの再生成はスキップします。"
+            echo "リポジトリに含まれている site/items/ をそのまま使います。"
+          fi
+
+      - name: カタログインデックスを生成
+        run: python build_official_index.py
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
