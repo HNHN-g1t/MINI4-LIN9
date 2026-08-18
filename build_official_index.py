@@ -19,11 +19,11 @@ from datetime import datetime, timedelta, timezone
 
 JST = timezone(timedelta(hours=9))
 
-# 上段タブの並び（tamiya_catalog.json の genre_key に対応）
+# 上段タブの並び（tamiya_catalog.json の genre_key に対応）。「すべて」は末尾に付く。
 GENRE_ORDER = [
     ("parts", "グレードアップパーツ"),
-    ("kit", "キット"),
     ("ao", "AOパーツ"),
+    ("kit", "キット"),
     ("tool", "クラフトツール"),
 ]
 
@@ -67,33 +67,28 @@ def ec_links(item: dict) -> dict:
 
 CSS = """
 :root{--bg:#f5f6f8;--surface:#fff;--ink:#1a2233;--ink2:#5a6478;--ink3:#8b93a5;
---brand:#1256c4;--brand-soft:#e8f0fd;--line:#e3e6ec;--good:#0e7a4b;
+--brand:#1256c4;--brand-soft:#e8f0fd;--line:#e3e6ec;--good:#0e7a4b;--accent:#d81f2a;
 font-family:"Hiragino Sans","Noto Sans JP",Meiryo,sans-serif}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--ink);font-size:14px;line-height:1.6}
 a{color:inherit;text-decoration:none}
 header{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}
 .hwrap{max-width:1120px;margin:0 auto;display:flex;align-items:center;gap:16px;padding:12px 16px;flex-wrap:wrap}
-.logo{font-weight:800;font-size:20px;color:var(--brand);white-space:nowrap}
-.logo span{color:var(--ink)}
+.logo{font-weight:800;font-size:20px;color:var(--accent);white-space:nowrap}
+.logo span{color:var(--brand)}
 .searchbox{flex:1;min-width:240px;display:flex;gap:8px}
 .searchbox input{flex:1;border:1.5px solid var(--line);border-radius:8px;padding:8px 12px;font-size:13px;outline:none}
 .searchbox input:focus{border-color:var(--brand)}
-.tabs{max-width:1120px;margin:0 auto;display:flex;gap:2px;padding:0 16px;flex-wrap:wrap}
-.tab{padding:9px 18px;font-size:13.5px;font-weight:700;color:var(--ink2);cursor:pointer;
-border-bottom:3px solid transparent;user-select:none;white-space:nowrap}
-.tab:hover{color:var(--brand)}
-.tab.on{color:var(--brand);border-bottom-color:var(--brand)}
-.tab .n{font-size:11px;font-weight:600;color:var(--ink3);margin-left:5px}
-.tab.on .n{color:var(--brand)}
-main{max-width:1120px;margin:0 auto;padding:18px 16px 40px}
-.hero{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 22px;margin-bottom:14px}
-.hero h1{font-size:18px;margin-bottom:4px}
-.hero p{font-size:12.5px;color:var(--ink2)}
-.kpis{display:flex;gap:26px;margin-top:10px;flex-wrap:wrap}
-.kpi .v{font-size:20px;font-weight:800}
-.kpi .l{font-size:11px;color:var(--ink3)}
-.chips{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.tabs{max-width:1120px;margin:0 auto;display:flex;gap:4px;padding:0 16px;flex-wrap:wrap}
+.tab{padding:9px 20px;font-size:13.5px;font-weight:700;color:var(--ink2);cursor:pointer;
+background:var(--surface);border-radius:4px 4px 0 0;user-select:none;white-space:nowrap}
+.tab:hover{color:var(--brand);background:var(--brand-soft)}
+.tab.on{background:var(--brand);color:#fff}
+.tab.on:hover{background:var(--brand);color:#fff}
+.tab .n{font-size:11px;font-weight:600;color:var(--ink3);margin-left:6px}
+.tab.on .n{color:#cfe0fa}
+main{max-width:1120px;margin:0 auto;padding:12px 16px 40px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px}
 .chip{background:var(--surface);border:1.5px solid var(--line);border-radius:999px;
 padding:5px 14px;font-size:12px;font-weight:600;cursor:pointer;user-select:none}
 .chip.on{background:var(--brand);border-color:var(--brand);color:#fff}
@@ -124,6 +119,7 @@ JS = """
 const q = document.getElementById('q');
 const tabs = [...document.querySelectorAll('.tab')];
 const chips = [...document.querySelectorAll('.chip')];
+const chipRow = document.querySelector('.chips');
 const cards = [...document.querySelectorAll('.it')];
 const countLine = document.getElementById('countLine');
 const empty = document.getElementById('empty');
@@ -131,15 +127,18 @@ let genre = '';   // '' = すべて
 let cat = '';     // '' = 全カテゴリ
 
 function syncChips(){
-  // 選択中ジャンルに存在する細分類だけ出す
+  // ジャンル未選択（すべて）のときは細分類を出さない。
+  // ジャンル選択時は、そのジャンルに存在する細分類だけ出す。
   for(const ch of chips){
-    const g = ch.dataset.genre;
-    ch.classList.toggle('hide', !!(genre && g && g !== genre));
+    const gs = ch.dataset.genres;
+    const show = !!genre && (!gs || gs.split(' ').includes(genre));
+    ch.classList.toggle('hide', !show);
   }
   // 隠れたチップが選択中なら解除する
-  const active = chips.find(c => c.dataset.cat === cat && cat);
+  const active = chips.find(c => cat && c.dataset.cat === cat);
   if(active && active.classList.contains('hide')) cat = '';
   chips.forEach(c => c.classList.toggle('on', c.dataset.cat === cat));
+  chipRow.style.display = genre ? '' : 'none';
 }
 
 function apply(){
@@ -192,21 +191,21 @@ def build(items: list[dict], outdir: str) -> str:
     genres = [(k, lb) for k, lb in GENRE_ORDER if any(i["genre_key"] == k for i in items)]
     genre_counts = {k: sum(1 for i in items if i["genre_key"] == k) for k, _ in genres}
 
-    # 上段タブ
-    tab_html = f'<div class="tab on" data-genre="">すべて<span class="n">{len(items)}</span></div>' + "".join(
+    # 上段タブ（ジャンルを先に並べ、「すべて」は最後）
+    tab_html = "".join(
         f'<div class="tab" data-genre="{k}">{html.escape(lb)}<span class="n">{genre_counts[k]}</span></div>'
         for k, lb in genres
-    )
+    ) + f'<div class="tab on" data-genre="">すべて<span class="n">{len(items)}</span></div>'
 
-    # 下段チップ（ジャンルごとの細分類。ジャンル選択時に該当分だけ表示）
-    seen_cat: list[tuple[str, str]] = []
+    # 下段チップ（細分類）。同じ分類名が複数ジャンルに出るので1つにまとめ、
+    # どのジャンルに属するかを data-genres に持たせる。ジャンル選択時だけ表示する。
+    cat_genres: dict[str, list[str]] = {}
     for k, _ in genres:
         for c in dict.fromkeys(i["_cat"] for i in items if i["genre_key"] == k):
-            if (k, c) not in seen_cat:
-                seen_cat.append((k, c))
-    chip_html = '<span class="chip on" data-cat="" data-genre="">すべて</span>' + "".join(
-        f'<span class="chip" data-cat="{html.escape(c)}" data-genre="{k}">{html.escape(c)}</span>'
-        for k, c in seen_cat
+            cat_genres.setdefault(c, []).append(k)
+    chip_html = '<span class="chip on" data-cat="" data-genres="">すべて</span>' + "".join(
+        f'<span class="chip" data-cat="{html.escape(c)}" data-genres="{" ".join(gs)}">{html.escape(c)}</span>'
+        for c, gs in cat_genres.items()
     )
 
     cards = []
@@ -251,15 +250,6 @@ def build(items: list[dict], outdir: str) -> str:
   <div class="tabs">{tab_html}</div>
 </header>
 <main>
-  <div class="hero">
-    <h1>タミヤ公式 品番カタログ</h1>
-    <p>タミヤ公式の品番・正式名称・商品写真をもとにした一覧です。上のタブでジャンルを、下のチップで細分類を絞り込めます。各商品からECサイトの検索へ直接ジャンプできます。</p>
-    <div class="kpis">
-      <div class="kpi"><div class="v">{len(items):,}</div><div class="l">掲載品番（公式）</div></div>
-      {"".join(f'<div class="kpi"><div class="v">{genre_counts[k]:,}</div><div class="l">{html.escape(lb)}</div></div>' for k, lb in genres)}
-      <div class="kpi"><div class="v">{len(have_page)}</div><div class="l">相場ページ生成済み</div></div>
-    </div>
-  </div>
   <div class="chips">{chip_html}</div>
   <div class="count-line" id="countLine"></div>
   <div class="grid">
