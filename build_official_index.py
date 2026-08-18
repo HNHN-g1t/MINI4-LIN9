@@ -20,6 +20,9 @@ from datetime import datetime, timedelta, timezone
 
 JST = timezone(timedelta(hours=9))
 
+# メルカリアンバサダー（計測用ID）
+MERCARI_AFID = "1714548549"
+
 # 上段タブの並び（tamiya_catalog.json の genre_key に対応）。「すべて」は末尾に付く。
 GENRE_ORDER = [
     ("parts", "GUパーツ"),
@@ -53,19 +56,25 @@ def categorize(name: str) -> str:
     return FALLBACK_CATEGORY
 
 
-def ec_links(item: dict) -> list[tuple[str, str]]:
-    """ECサイトの検索URL。ミニ四駆系は品番、工具は商品名で引くのが当たりやすい。
-    並び順は amazon → メルカリ → Yahoo! → ヤフオク。"""
+def ec_links(item: dict) -> list[tuple[str, str, str]]:
+    """ECサイトの検索URLを (ラベル, URL, rel属性) で返す。
+    ミニ四駆系は品番、工具は商品名で引くのが当たりやすい。
+    並び順は amazon → メルカリ → Yahoo! → ヤフオク。
+    メルカリはアンバサダーの計測ID(afid)を付ける。"""
+    code = item["item_code"]
     if item.get("genre_key") == "tool":
-        term = f"タミヤ {item['name']}"
+        term = mercari_term = f"タミヤ {item['name']}"
     else:
-        term = f"ミニ四駆 {item['item_code']}"
+        term = f"ミニ四駆 {code}"
+        mercari_term = f"{code} タミヤ"
     q = urllib.parse.quote(term)
+    mq = urllib.parse.quote(mercari_term)
     return [
-        ("amazon", f"https://www.amazon.co.jp/s?k={q}"),
-        ("メルカリ", f"https://jp.mercari.com/search?keyword={q}"),
-        ("Yahoo!", f"https://shopping.yahoo.co.jp/search?p={q}"),
-        ("ヤフオク", f"https://auctions.yahoo.co.jp/search/search?p={q}"),
+        ("amazon", f"https://www.amazon.co.jp/s?k={q}", "noopener"),
+        ("メルカリ", f"https://jp.mercari.com/search?keyword={mq}&afid={MERCARI_AFID}",
+         "sponsored noopener"),
+        ("Yahoo!", f"https://shopping.yahoo.co.jp/search?p={q}", "noopener"),
+        ("ヤフオク", f"https://auctions.yahoo.co.jp/search/search?p={q}", "noopener"),
     ]
 
 
@@ -286,8 +295,8 @@ def build(items: list[dict], outdir: str) -> str:
         gp = f"　／ {html.escape(it['gp_no'])}" if it.get("gp_no") else ""
         short = name[:13] + ("…" if len(name) > 13 else "")
         ecrow = "".join(
-            f'<a class="ec" href="{u}" target="_blank" rel="noopener">{html.escape(lb)}</a>'
-            for lb, u in ec_links(it)
+            f'<a class="ec" href="{u}" target="_blank" rel="{rel}">{html.escape(lb)}</a>'
+            for lb, u, rel in ec_links(it)
         )
         cards.append(f'''      <div class="it" data-code="{code}" data-genre="{it["genre_key"]}" data-cat="{html.escape(cat)}" data-hay="{hay}">
         <a class="ph" href="{html.escape(it["url"])}" target="_blank" rel="noopener">
@@ -341,7 +350,8 @@ def build(items: list[dict], outdir: str) -> str:
   ミニ四リン駆（プロトタイプ） ・ 品番・名称・価格・写真はタミヤ公式サイトの情報（出典: tamiya.com） ・
   最終更新 {datetime.now(JST).strftime("%Y-%m-%d %H:%M JST")}<br>
   商品写真は公式サイトから直接参照しています。ECリンクは各モールの検索結果を開きます。
-  お気に入りはご利用中のブラウザ内にのみ保存され、サーバーには送信されません。
+  お気に入りはご利用中のブラウザ内にのみ保存され、サーバーには送信されません。<br>
+  <b>【PR】</b>メルカリへのリンクはメルカリアンバサダープログラムを利用しており、報酬を受け取る場合があります。
 </footer>
 <script>{JS}</script>
 </body>
