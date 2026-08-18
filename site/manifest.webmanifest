@@ -1,0 +1,27 @@
+{
+ "name": "ミニ四リン駆",
+ "short_name": "ミニ四リン駆",
+ "description": "タミヤ ミニ四駆・クラフトツールの品番カタログ",
+ "start_url": "/",
+ "scope": "/",
+ "display": "standalone",
+ "background_color": "#f5f6f8",
+ "theme_color": "#d81f2a",
+ "icons": [
+  {
+   "src": "/assets/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "/assets/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "/assets/apple-touch-icon.png",
+   "sizes": "180x180",
+   "type": "image/png"
+  }
+ ]
+}

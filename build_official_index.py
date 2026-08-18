@@ -250,6 +250,58 @@ apply();
 """
 
 
+NOT_FOUND_HTML = """<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ミニ四リン駆</title>
+<link rel="icon" href="/assets/favicon.ico" sizes="any">
+<meta http-equiv="refresh" content="0; url=/">
+<script>location.replace('/' + location.hash);</script>
+<style>body{font-family:"Hiragino Sans","Noto Sans JP",Meiryo,sans-serif;
+background:#f5f6f8;color:#1a2233;display:flex;min-height:100vh;margin:0;
+align-items:center;justify-content:center;text-align:center;padding:24px}
+a{color:#1256c4;font-weight:700}</style>
+</head>
+<body>
+<div>
+  <p>ページを移動しています…</p>
+  <p><a href="/">開かない場合はこちら（ミニ四リン駆トップ）</a></p>
+</div>
+</body>
+</html>
+"""
+
+MANIFEST = {
+    "name": "ミニ四リン駆",
+    "short_name": "ミニ四リン駆",
+    "description": "タミヤ ミニ四駆・クラフトツールの品番カタログ",
+    "start_url": "/",
+    "scope": "/",
+    "display": "standalone",
+    "background_color": "#f5f6f8",
+    "theme_color": "#d81f2a",
+    "icons": [
+        {"src": "/assets/icon-192.png", "sizes": "192x192", "type": "image/png"},
+        {"src": "/assets/icon-512.png", "sizes": "512x512", "type": "image/png"},
+        {"src": "/assets/apple-touch-icon.png", "sizes": "180x180", "type": "image/png"},
+    ],
+}
+
+
+def write_extras(outdir: str) -> None:
+    """404ページとマニフェストを書き出す。
+
+    404ページは、古いURL（/partspost/ など）をホーム画面アイコンや
+    ブックマークが保持していてもトップへ着地させるための保険。
+    """
+    with open(os.path.join(outdir, "404.html"), "w", encoding="utf-8") as f:
+        f.write(NOT_FOUND_HTML)
+    with open(os.path.join(outdir, "manifest.webmanifest"), "w", encoding="utf-8") as f:
+        json.dump(MANIFEST, f, ensure_ascii=False, indent=1)
+
+
 def copy_assets(outdir: str) -> None:
     """ファビコン等の固定ファイルを site/assets/ に配置する。
     独自ドメイン用の CNAME も公開ルートに置く。"""
@@ -332,7 +384,10 @@ def build(items: list[dict], outdir: str) -> str:
 <link rel="icon" href="assets/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="canonical" href="https://mini4lin9.fun/">
 <meta name="theme-color" content="#d81f2a">
+<meta name="apple-mobile-web-app-title" content="ミニ四リン駆">
 <title>ミニ四リン駆｜タミヤ ミニ四駆・クラフトツール カタログ（公式品番マスタ）</title>
 <style>{CSS}</style>
 </head>
@@ -368,6 +423,7 @@ def build(items: list[dict], outdir: str) -> str:
 """
     os.makedirs(outdir, exist_ok=True)
     copy_assets(outdir)
+    write_extras(outdir)
     path = os.path.join(outdir, "index.html")
     with open(path, "w", encoding="utf-8") as f:
         f.write(doc)
