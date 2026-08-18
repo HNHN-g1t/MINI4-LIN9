@@ -21,7 +21,8 @@ JST = timezone(timedelta(hours=9))
 
 # 上段タブの並び（tamiya_catalog.json の genre_key に対応）。「すべて」は末尾に付く。
 GENRE_ORDER = [
-    ("parts", "グレードアップパーツ"),
+    ("parts", "GUパーツ"),
+    ("limited", "限定パーツ"),
     ("ao", "AOパーツ"),
     ("kit", "キット"),
     ("tool", "クラフトツール"),

@@ -3,6 +3,7 @@
 
 取得対象（公式のジャンル区分）:
     グレードアップパーツ … genre 303010
+    限定パーツ           … genre 303025
     キット             … genre 3010  （シリーズ別の子カテゴリあり）
     AOパーツ           … genre 303030
     クラフトツール       … genre 5020  （工具種別の子カテゴリあり）
@@ -33,13 +34,14 @@ SLEEP = 1.0  # 公式サイトへの負荷配慮
 # key, 表示ラベル, ジャンルコード
 GENRES = [
     ("parts", "グレードアップパーツ", "303010"),
+    ("limited", "限定パーツ", "303025"),
     ("kit", "キット", "3010"),
     ("ao", "AOパーツ", "303030"),
     ("tool", "クラフトツール", "5020"),
 ]
 
 CARD_RE = re.compile(
-    r'<a\s+href="(?P<url>https://www\.tamiya\.com/japan/products/\d+/index\.html)"'
+    r'<a\s+href="(?P<url>https://(?:www\.)?tamiya\.com/japan/products/\d+/index\.html)"'
     r'\s+data-article="(?P<code>\d+)">.*?'
     r'<img[^>]+src="(?P<img>[^"]+)".*?'
     r'<h3[^>]*><span>ITEM\s*(?P<item>\d+)\s*</span>(?P<name>.*?)</h3>.*?'
@@ -140,13 +142,13 @@ def collect_genre(key: str, label: str, code: str, max_pages: int) -> list[dict]
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--pages", type=int, default=0, help="各ジャンルの取得ページ上限（0=全件）")
-    ap.add_argument("--genre", default="", help="キー指定で1ジャンルだけ取得（parts/kit/ao/tool）")
+    ap.add_argument("--genre", default="", help="キー指定で1ジャンルだけ取得（parts/limited/kit/ao/tool）")
     ap.add_argument("--out", default="tamiya_catalog.json")
     args = ap.parse_args()
 
     targets = [g for g in GENRES if not args.genre or g[0] == args.genre]
     if not targets:
-        print(f"エラー: 不明なジャンル {args.genre}（parts/kit/ao/tool）", file=sys.stderr)
+        print(f"エラー: 不明なジャンル {args.genre}（parts/limited/kit/ao/tool）", file=sys.stderr)
         return 1
 
     all_items: list[dict] = []
