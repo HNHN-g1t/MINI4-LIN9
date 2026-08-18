@@ -20,8 +20,10 @@ from datetime import datetime, timedelta, timezone
 
 JST = timezone(timedelta(hours=9))
 
-# メルカリアンバサダー（計測用ID）
-MERCARI_AFID = "1714548549"
+# アフィリエイトの計測ID
+MERCARI_AFID = "1714548549"      # メルカリアンバサダー
+AMAZON_TAG = "hnhn03-22"         # Amazonアソシエイト
+VALUECOMMERCE_ID = ""            # ValueCommerce（申請中。IDが出たらここに入れる）
 
 # 上段タブの並び（tamiya_catalog.json の genre_key に対応）。「すべて」は末尾に付く。
 GENRE_ORDER = [
@@ -60,7 +62,7 @@ def ec_links(item: dict) -> list[tuple[str, str, str]]:
     """ECサイトの検索URLを (ラベル, URL, rel属性) で返す。
     ミニ四駆系は品番、工具は商品名で引くのが当たりやすい。
     並び順は amazon → メルカリ → Yahoo! → ヤフオク。
-    メルカリはアンバサダーの計測ID(afid)を付ける。"""
+    メルカリはアンバサダーのafid、AmazonはアソシエイトタグをURLに付ける。"""
     code = item["item_code"]
     if item.get("genre_key") == "tool":
         term = mercari_term = f"タミヤ {item['name']}"
@@ -70,7 +72,7 @@ def ec_links(item: dict) -> list[tuple[str, str, str]]:
     q = urllib.parse.quote(term)
     mq = urllib.parse.quote(mercari_term)
     return [
-        ("amazon", f"https://www.amazon.co.jp/s?k={q}", "noopener"),
+        ("amazon", f"https://www.amazon.co.jp/s?k={q}&tag={AMAZON_TAG}", "sponsored noopener"),
         ("メルカリ", f"https://jp.mercari.com/search?keyword={mq}&afid={MERCARI_AFID}",
          "sponsored noopener"),
         ("Yahoo!", f"https://shopping.yahoo.co.jp/search?p={q}", "noopener"),
@@ -351,7 +353,9 @@ def build(items: list[dict], outdir: str) -> str:
   最終更新 {datetime.now(JST).strftime("%Y-%m-%d %H:%M JST")}<br>
   商品写真は公式サイトから直接参照しています。ECリンクは各モールの検索結果を開きます。
   お気に入りはご利用中のブラウザ内にのみ保存され、サーバーには送信されません。<br>
-  <b>【PR】</b>メルカリへのリンクはメルカリアンバサダープログラムを利用しており、報酬を受け取る場合があります。
+  <b>【PR】</b>当サイトはアフィリエイトプログラム（メルカリアンバサダー、Amazonアソシエイト、
+  ValueCommerce ※申請中）を利用しており、商品リンク経由の購入により報酬を受け取る場合があります。<br>
+  Amazonのアソシエイトとして、ミニ四リン駆は適格販売により収入を得ています。
 </footer>
 <script>{JS}</script>
 </body>
