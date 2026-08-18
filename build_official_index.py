@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""公式マスタ（tamiya_catalog.json）からカタログインデックス site/index.html を生成する。
+"""公式マスタ（tamiya_catalog.json）からカタログインデックス docs/index.html を生成する。
 
 - タミヤ公式の品番・正式名称・定価・商品写真を掲載
 - 上段タブでジャンル（グレードアップパーツ／キット／AOパーツ／クラフトツール）を切り替え
@@ -303,7 +303,7 @@ def write_extras(outdir: str) -> None:
 
 
 def copy_assets(outdir: str) -> None:
-    """ファビコン等の固定ファイルを site/assets/ に配置する。
+    """ファビコン等の固定ファイルを docs/assets/ に配置する。
     独自ドメイン用の CNAME も公開ルートに置く。"""
     src, dst = "assets", os.path.join(outdir, "assets")
     if os.path.isdir(src):
@@ -438,7 +438,7 @@ def main() -> int:
         return 1
     with open("tamiya_catalog.json", encoding="utf-8") as f:
         items = json.load(f)
-    path = build(items, "site")
+    path = build(items, "docs")
     print(f"生成完了: {path} ／ {len(items)}品番")
     for k, lb in GENRE_ORDER:
         n = sum(1 for i in items if i.get("genre_key") == k)

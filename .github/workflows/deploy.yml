@@ -1,21 +1,24 @@
-name: カタログを生成して GitHub Pages に公開
+name: カタログを生成して docs/ を更新
+
+# GitHub Pages の公開元は「main ブランチの /docs フォルダ」。
+# このワークフローは docs/ を生成してコミットするだけで、公開自体は
+# GitHub 標準の pages-build-deployment が行う。
+# （以前は Actions から直接デプロイしていたが、公開元がブランチ方式に
+#   切り替わった際に二重デプロイとなり、後から走ったほうに上書きされて
+#   サイトが404になったため、この方式に一本化した）
 
 on:
-  push:
-    branches: [main]
   schedule:
-    # 毎週月曜 6:00 JST（UTC 日曜 21:00）にタミヤ公式カタログを取り直す
+    # 毎週月曜 6:00 JST（UTC 日曜 21:00）にタミヤ公式から取り直す
     - cron: "0 21 * * 0"
   workflow_dispatch: # 手動実行ボタン
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
-  group: pages
-  cancel-in-progress: true
+  group: build-catalog
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -30,19 +33,18 @@ jobs:
       - name: タミヤ公式のパーツ一覧を取得
         run: python fetch_tamiya_catalog.py
 
-      - name: カタログインデックスを生成
+      - name: カタログを生成
         run: python build_official_index.py
 
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: site
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      - name: 変更があれば docs/ をコミット
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs tamiya_catalog.json
+          if git diff --cached --quiet; then
+            echo "変更なし。コミットしません。"
+          else
+            git commit -m "カタログを自動更新（タミヤ公式より取得）"
+            git push
+            echo "docs/ を更新しました。GitHub Pages が自動で公開します。"
+          fi
