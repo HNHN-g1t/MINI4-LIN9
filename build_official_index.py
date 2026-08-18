@@ -251,13 +251,18 @@ apply();
 
 
 def copy_assets(outdir: str) -> None:
-    """ファビコン等の固定ファイルを site/assets/ に配置する。"""
+    """ファビコン等の固定ファイルを site/assets/ に配置する。
+    独自ドメイン用の CNAME も公開ルートに置く。"""
     src, dst = "assets", os.path.join(outdir, "assets")
-    if not os.path.isdir(src):
-        return
-    os.makedirs(dst, exist_ok=True)
-    for name in os.listdir(src):
-        shutil.copy2(os.path.join(src, name), os.path.join(dst, name))
+    if os.path.isdir(src):
+        os.makedirs(dst, exist_ok=True)
+        for name in os.listdir(src):
+            shutil.copy2(os.path.join(src, name), os.path.join(dst, name))
+    # 独自ドメイン（mini4lin9.fun）用の CNAME。
+    # DNSレコードの登録が済むまでは CNAME.pending のまま置いておく。
+    # 有効化するときは CNAME.pending を CNAME にリネームするだけでよい。
+    if os.path.exists("CNAME"):
+        shutil.copy2("CNAME", os.path.join(outdir, "CNAME"))
 
 
 def build(items: list[dict], outdir: str) -> str:

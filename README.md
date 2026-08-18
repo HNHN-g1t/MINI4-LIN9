@@ -1,8 +1,10 @@
-# パーツポスト
+# ミニ四リン駆
 
 ミニ四駆パーツの販売情報をモール横断でまとめています。
 
-**公開サイト: https://hnhn-g1t.github.io/partspost/**
+**公開サイト: https://mini4lin9.fun/**
+
+（独自ドメイン。GitHub Pages の従来URL https://hnhn-g1t.github.io/partspost/ からは自動転送されます）
 
 タミヤ公式の品番・正式名称・商品写真をもとにしたカタログに、Yahoo!ショッピング・
 ヤフオク・メルカリ・個人ショップの出品情報を組み合わせています。
