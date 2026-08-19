@@ -85,6 +85,8 @@ def ec_links(item: dict) -> list[tuple[str, str, str]]:
          "sponsored noopener"),
         ("Yahoo!", f"https://shopping.yahoo.co.jp/search?p={q}", "noopener"),
         ("ヤフオク", f"https://auctions.yahoo.co.jp/search/search?p={q}", "noopener"),
+        # 楽天は検索パスに語を埋める形式。計測IDは未取得のため素のリンク。
+        ("楽天", f"https://search.rakuten.co.jp/search/mall/{q}/", "noopener"),
     ]
 
 
@@ -292,8 +294,18 @@ function onPagerClick(e){
 pagerTop.addEventListener('click', onPagerClick);
 pagerBottom.addEventListener('click', onPagerClick);
 
-// 指定カードのページへ移動する（カラーマップのピンから使う）
-window.goToCard = function(card){
+// 指定カードを必ず表示できる状態にしてから、そのページへ移動する。
+// 検索語や絞り込みで一覧から外れていると今までジャンプできなかったため、
+// 邪魔になっている条件を解除してから探し直す。
+window.revealCard = function(card){
+  if(!matched.includes(card)){
+    if(q.value){ q.value = ''; }        // 検索語を外す
+    cat = '';                            // 中カテゴリの絞り込みを外す
+    genre = card.dataset.genre || '';    // カードのあるジャンルへ移動
+    tabs.forEach(t => t.classList.toggle('on', t.dataset.genre === genre));
+    syncChips();
+    apply();
+  }
   const p = pageOf(card);
   if(p && p !== page){ page = p; renderPage(); }
   return p > 0;

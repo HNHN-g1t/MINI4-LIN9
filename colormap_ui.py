@@ -17,9 +17,14 @@ EFFECTS = ["ALL", "STANDARD", "METALLIC", "PEARL", "FLUORESCENT", "CLEAR"]
 
 CSS = """
 /* ---- スプレーカラーMAP ---- */
-.cmap{background:var(--surface);border:1px solid var(--line);border-radius:10px;
-margin:0 0 12px;overflow:hidden;display:none}
-.cmap.avail{display:block}
+/* 常にフローティング（下からせり上がるシート）。ページ中段には置かない。 */
+.cmap{position:fixed;left:0;right:0;bottom:0;z-index:80;margin:0 auto;max-width:1120px;
+background:var(--surface);border:1px solid var(--line);border-top:none;
+border-radius:14px 14px 0 0;max-height:84vh;display:none;flex-direction:column;
+box-shadow:0 -10px 30px rgba(20,40,80,.3);transform:translateY(100%);
+transition:transform .24s ease-out}
+.cmap.mounted{display:flex}
+.cmap.shown{transform:translateY(0)}
 .cmap-head{width:100%;display:flex;align-items:center;gap:10px;padding:10px 14px;
 background:none;border:none;cursor:pointer;font:inherit;color:inherit;text-align:left}
 .cmap-head:hover{background:var(--brand-soft)}
@@ -37,8 +42,12 @@ box-shadow:0 2px 6px rgba(18,86,196,.35)}
 display:block;transition:background .2s}
 .cmap-title{font-weight:800;font-size:13px;letter-spacing:.06em}
 .cmap-sub{font-size:11px;color:var(--ink3);flex:1}
-.cmap-body{display:none;border-top:1px solid var(--line);padding:12px 14px 14px}
-.cmap.open .cmap-body{display:block}
+.cmap-head{position:sticky;top:0;background:var(--surface);z-index:1;
+border-bottom:1px solid var(--line)}
+.cmap-body{display:block;padding:12px 14px 18px;overflow-y:auto;
+-webkit-overflow-scrolling:touch;flex:1}
+.cmap-chev{transform:rotate(180deg)}          /* 閉じる向き（下向き）で固定 */
+.cmap-head[aria-expanded="true"] .cmap-chev{transform:rotate(180deg)}
 .frow{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
 .frow-label{font-size:10px;font-weight:800;color:var(--ink3);letter-spacing:.08em;width:52px;flex:none}
 .fbtn{border:1.5px solid var(--line);background:var(--surface);border-radius:999px;
@@ -107,20 +116,9 @@ box-shadow:0 4px 14px rgba(20,40,80,.32)}
 .cmap-fab:focus-visible{outline:3px solid var(--brand);outline-offset:3px}
 .cmap-fab .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
-/* シート化（スマホのみ）。中身は同じものを使い回す */
-@media(max-width:900px){
-  .cmap.sheet{position:fixed;left:0;right:0;bottom:0;top:auto;z-index:80;margin:0;
-    border-radius:14px 14px 0 0;max-height:82vh;display:flex;flex-direction:column;
-    box-shadow:0 -8px 28px rgba(20,40,80,.28);transform:translateY(100%);
-    transition:transform .24s ease-out}
-  .cmap.sheet.shown{transform:translateY(0)}
-  .cmap.sheet .cmap-head{border-bottom:1px solid var(--line)}
-  .cmap.sheet .cmap-body{display:block;overflow-y:auto;-webkit-overflow-scrolling:touch;flex:1}
-  .cmap.sheet .cmap-toggle{background:var(--ink3)}
-  .cmap-backdrop{position:fixed;inset:0;background:rgba(16,22,34,.42);z-index:79;
-    opacity:0;pointer-events:none;transition:opacity .2s}
-  .cmap-backdrop.shown{opacity:1;pointer-events:auto}
-}
+.cmap-backdrop{position:fixed;inset:0;background:rgba(16,22,34,.42);z-index:79;
+opacity:0;pointer-events:none;transition:opacity .2s}
+.cmap-backdrop.shown{opacity:1;pointer-events:auto}
 """
 
 # 既存の apply() / syncChips() と連動させる前提のスクリプト
@@ -136,14 +134,6 @@ if(cmap){
   const tip=document.getElementById('cmapTip');
   let effect='ALL', activePin=null;
 
-  function setCmapOpen(open){
-    cmap.classList.toggle('open', open);
-    cmapHead.setAttribute('aria-expanded', open ? 'true' : 'false');
-    try{ localStorage.setItem(CMAP_KEY, open ? '1' : '0'); }catch(e){}
-  }
-  cmapHead.addEventListener('click', () => setCmapOpen(!cmap.classList.contains('open')));
-  let cmapInit=false; try{ cmapInit=localStorage.getItem(CMAP_KEY)==='1'; }catch(e){}
-  setCmapOpen(cmapInit);
 
   // 中カテゴリ（チップ）と連動する。どちらを押しても状態は1つ。
   cmap.querySelectorAll('.fbtn.series').forEach(b => b.addEventListener('click', () => {
@@ -183,7 +173,6 @@ if(cmap){
     // 塗装タブのときだけ円グラフボタンを出す
     const fabEl=document.querySelector('.cmap-fab');
     if(fabEl) fabEl.classList.toggle('on', genre==='paint');
-    cmap.classList.toggle('avail', genre==='paint');
     // 塗装タブに切り替わった直後は幅が確定していないので、描画後に測り直す
     if(window.syncCmapBar) setTimeout(window.syncCmapBar, 0);
   };
@@ -194,7 +183,7 @@ if(cmap){
     if(activePin) activePin.classList.remove('on');
     p.classList.add('on'); activePin=p;
     // 対象が別ページにいることがあるので、まずそのページへ切り替える
-    if(window.goToCard) goToCard(card);
+    if(window.revealCard) revealCard(card);
     closeSheet();
     setTimeout(() => {
       card.scrollIntoView({behavior:'smooth', block:'center'});
@@ -224,15 +213,13 @@ if(cmap){
   // ---- スマホ：円グラフボタンとボトムシート ----
   const fab=document.querySelector('.cmap-fab');
   const backdrop=document.querySelector('.cmap-backdrop');
-  const isPhone=() => window.matchMedia('(max-width:900px)').matches;
 
   function openSheet(){
-    if(!isPhone()) return;
-    cmap.classList.add('sheet');
+    cmap.classList.add('mounted');
     backdrop.hidden=false;
     void cmap.offsetHeight;          // 位置を確定させてから出す
     setTimeout(() => {
-      cmap.classList.add('shown','open');
+      cmap.classList.add('shown');
       backdrop.classList.add('shown');
       cmapHead.setAttribute('aria-expanded','true');
       fab.setAttribute('aria-expanded','true');
@@ -240,12 +227,13 @@ if(cmap){
     }, 16);
   }
   function closeSheet(){
-    if(!cmap.classList.contains('sheet')) return;
+    if(!cmap.classList.contains('mounted')) return;
     cmap.classList.remove('shown');
     backdrop.classList.remove('shown');
+    cmapHead.setAttribute('aria-expanded','false');
     fab.setAttribute('aria-expanded','false');
     setTimeout(() => {
-      cmap.classList.remove('sheet');
+      cmap.classList.remove('mounted');
       backdrop.hidden=true;
     }, 240);
   }
@@ -254,8 +242,7 @@ if(cmap){
   fab.addEventListener('click', openSheet);
   backdrop.addEventListener('click', closeSheet);
   document.addEventListener('keydown', e => { if(e.key==='Escape') closeSheet(); });
-  // シート表示中に見出しを押したら閉じる
-  cmapHead.addEventListener('click', () => { if(cmap.classList.contains('sheet')) closeSheet(); });
+  cmapHead.addEventListener('click', closeSheet);   // 見出しは閉じるボタン
 
   // 円グラフを120度ずつ3色で描く。カテゴリ切替に追従する。
   window.paintFab = function(cols){
