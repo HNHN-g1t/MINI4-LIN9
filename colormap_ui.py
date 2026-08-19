@@ -20,14 +20,23 @@ CSS = """
 .cmap{background:var(--surface);border:1px solid var(--line);border-radius:10px;
 margin:0 0 12px;overflow:hidden;display:none}
 .cmap.avail{display:block}
-.cmap-head{width:100%;display:flex;align-items:center;gap:10px;padding:12px 14px;
+.cmap-head{width:100%;display:flex;align-items:center;gap:10px;padding:10px 14px;
 background:none;border:none;cursor:pointer;font:inherit;color:inherit;text-align:left}
 .cmap-head:hover{background:var(--brand-soft)}
 .cmap-head:focus-visible{outline:2px solid var(--brand);outline-offset:-2px}
+/* 開閉ボタンはテキストの前。押せることが分かるよう太く目立たせる */
+.cmap-toggle{width:34px;height:34px;flex:none;border-radius:8px;background:var(--brand);
+color:#fff;display:flex;align-items:center;justify-content:center;
+box-shadow:0 2px 6px rgba(18,86,196,.35)}
+.cmap-head:hover .cmap-toggle{background:#0e46a0}
+.cmap-chev{width:20px;height:20px;transition:transform .2s;stroke-width:3.4}
+.cmap-head[aria-expanded="true"] .cmap-chev{transform:rotate(180deg)}
+/* カテゴリ内の代表色を3つ見せて、中身があることを示す */
+.cmap-swatches{display:flex;gap:3px;flex:none}
+.cmap-swatches i{width:16px;height:16px;border-radius:3px;border:1px solid rgba(0,0,0,.22);
+display:block;transition:background .2s}
 .cmap-title{font-weight:800;font-size:13px;letter-spacing:.06em}
 .cmap-sub{font-size:11px;color:var(--ink3);flex:1}
-.cmap-chev{width:18px;height:18px;flex:none;transition:transform .18s;color:var(--ink2)}
-.cmap-head[aria-expanded="true"] .cmap-chev{transform:rotate(180deg)}
 .cmap-body{display:none;border-top:1px solid var(--line);padding:12px 14px 14px}
 .cmap.open .cmap-body{display:block}
 .frow{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
@@ -44,7 +53,7 @@ padding:5px 14px;font-size:11.5px;font-weight:700;cursor:pointer;font-family:inh
 scrollbar-width:none}
 .cmap-scroll::-webkit-scrollbar{display:none}
 .cmap-inner{min-width:660px}
-.cmap-bar{height:26px;background:#eceff3;border-radius:13px;margin:8px 0 2px;
+.cmap-bar{height:26px;background:#eceff3;border-radius:13px;margin:2px 0 8px;
 position:relative;touch-action:none;cursor:grab;display:none}
 .cmap-bar.on{display:block}
 .cmap-bar:active{cursor:grabbing}
@@ -55,15 +64,15 @@ background:#b6bcc6;border-radius:10px;transition:background .15s}
 transform:translate(-50%,-50%);background:rgba(255,255,255,.9);border-radius:2px;
 box-shadow:0 -5px 0 rgba(255,255,255,.9),0 5px 0 rgba(255,255,255,.9)}
 
-/* 2Dマップ（縦＝色相 / 横＝明るさ） */
-.grid2d{display:grid;grid-template-columns:62px repeat(4,1fr);gap:5px;align-items:stretch}
-.hhead{font-size:11px;font-weight:700;color:var(--ink2);text-align:center;padding:2px 0}
-.lhead{font-size:11px;font-weight:800;color:var(--ink2);display:flex;align-items:center;
-padding-right:6px;gap:6px}
-.lhead i{width:10px;height:10px;border-radius:3px;flex:none;display:block}
-.cell{background:#fafbfc;border:1px solid var(--line);border-radius:6px;min-height:54px;
-padding:5px;display:flex;flex-wrap:wrap;gap:5px;align-content:flex-start}
-.cell.empty{min-height:26px;padding:2px}
+/* 2Dマップ（縦＝色相 / 横＝明るさ）。色相は細い縦帯で示す */
+.grid2d{display:grid;grid-template-columns:14px repeat(4,max-content);gap:4px;align-items:stretch}
+.hhead{font-size:10.5px;font-weight:700;color:var(--ink2);text-align:center;padding:1px 0}
+.lhead{border-radius:4px;min-height:100%}
+/* ピンは縦2段まで。増えたぶんは横に伸ばす */
+.cell{background:#fafbfc;border:1px solid var(--line);border-radius:6px;min-height:52px;
+padding:5px;display:grid;grid-auto-flow:column;grid-template-rows:repeat(2,auto);
+gap:4px;justify-content:start;align-content:start}
+.cell.empty{min-height:22px;padding:2px;display:block}
 .band{background:#fafbfc;border:1px solid var(--line);border-radius:6px;padding:6px;
 display:flex;flex-wrap:wrap;gap:5px}
 .zone-label{font-size:10.5px;font-weight:800;color:var(--ink3);letter-spacing:.08em;margin:12px 0 5px}
@@ -136,6 +145,13 @@ if(cmap){
     cmap.querySelectorAll('.fbtn.series').forEach(x =>
       x.setAttribute('aria-pressed', x.dataset.series===cur ? 'true':'false'));
     note.classList.toggle('show', cur==='PS');
+    // ヘッダーの色見本を、いま見えているピンの代表色に合わせる
+    const shownPins=pins.filter(p => !p.classList.contains('hide'));
+    const sw=cmap.querySelectorAll('.cmap-swatches i');
+    for(let i=0;i<sw.length;i++){
+      const p=shownPins[Math.floor((i+0.5)*shownPins.length/sw.length)];
+      sw[i].style.background = p ? p.style.backgroundColor : '#e3e6ec';
+    }
     cmap.classList.toggle('avail', genre==='paint');
     // 塗装タブに切り替わった直後は幅が確定していないので、描画後に測り直す
     if(window.syncCmapBar) requestAnimationFrame(window.syncCmapBar);
@@ -232,8 +248,8 @@ def _map_grid(rows: list[dict]) -> str:
     out = ['<div class="grid2d">', '<div></div>']
     out += [f'<div class="hhead">{html.escape(l)}</div>' for l in lights]
     for hue in hues:
-        out.append(f'<div class="lhead"><i style="background:{HUE_SWATCH.get(hue, "#ccc")}"></i>'
-                   f'{html.escape(hue)}</div>')
+        out.append(f'<div class="lhead" style="background:{HUE_SWATCH.get(hue, "#ccc")}" '
+                   f'title="{html.escape(hue)}" aria-label="{html.escape(hue)}"></div>')
         for lb in lights:
             cell = [r for r in rows if r["zone"] == "MAP"
                     and r["hue_band"] == hue and r["light_band"] == lb]
@@ -260,22 +276,25 @@ def section(rows: list[dict]) -> str:
         for e in EFFECTS)
     return f"""  <section class="cmap">
     <button class="cmap-head" type="button" aria-expanded="false" aria-controls="cmapBody">
+      <span class="cmap-toggle" aria-hidden="true">
+        <svg class="cmap-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </span>
+      <span class="cmap-swatches" aria-hidden="true"><i></i><i></i><i></i></span>
       <span class="cmap-title">SPRAY COLOR MAP</span>
       <span class="cmap-sub">色から探す（{len(rows)}色）</span>
-      <svg class="cmap-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-           stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
     </button>
     <div class="cmap-body" id="cmapBody">
       <div class="frow"><span class="frow-label">シリーズ</span>{sbtn}</div>
       <div class="frow"><span class="frow-label">色特性</span>{ebtn}</div>
       <p class="cmap-note">PSはポリカボディ専用の塗装スプレーです。</p>
-      <div class="cmap-scroll"><div class="cmap-inner">
-{_map_grid(rows)}
-      </div></div>
       <div class="cmap-bar" role="scrollbar" aria-label="カラーマップを横に動かす"
            aria-controls="cmapBody" aria-orientation="horizontal" tabindex="0">
         <div class="cmap-bar-thumb"></div>
       </div>
+      <div class="cmap-scroll"><div class="cmap-inner">
+{_map_grid(rows)}
+      </div></div>
       <div class="cmap-legend">縦軸＝色相／横軸＝明るさ。ピンを押すと該当商品へ移動します。
       記号 M=メタリック P=パール F=蛍光 C=クリヤー</div>
     </div>

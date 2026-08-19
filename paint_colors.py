@@ -11,7 +11,17 @@
 色を持たないもの（クリヤー・ラメ等）は SPECIAL 帯に振り分ける。
 """
 import colorsys
+import io as _io
+import json as _json
+import os as _os
 import re
+
+# 公式画像から抽出した実際の色（fetch_paint_swatches.py が作る）
+_SWATCH_FILE = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "paint_swatches.json")
+try:
+    SWATCHES = _json.load(_io.open(_SWATCH_FILE, encoding="utf-8"))
+except Exception:
+    SWATCHES = {}
 
 # 効果（フィルタの分類にも使う）。上から順に判定する。
 EFFECTS = [
@@ -112,11 +122,25 @@ def classify(item: dict) -> dict:
             effect = key
             break
 
+    real = SWATCHES.get(item["item_code"])
+
     base_hex, matched = None, ""
     for kw in _BASE_ORDER:
         if kw in color_name:
             base_hex, matched = BASE_COLORS[kw], kw
             break
+
+    # 公式画像から抽出した実測色があれば、それを正とする
+    if real:
+        h, s_, l_ = _hex_to_hsl(real)
+        if s_ < 0.13 or l_ > 0.93 or l_ < 0.07:
+            return {**item, "swatch": real, "effect": effect, "zone": "NEUTRAL", "series": series,
+                    "color_name": color_name, "hue_band": "", "light_band": ""}
+        hb = next(b for b, lo, hi in HUE_BANDS
+                  if ((lo <= h < hi) if lo < hi else (h >= lo or h < hi)))
+        lb = next(b for b, lo, hi in LIGHT_BANDS if lo <= l_ < hi)
+        return {**item, "swatch": real, "effect": effect, "zone": "MAP", "series": series,
+                "color_name": color_name, "hue_band": hb, "light_band": lb}
 
     # 色名が拾えないもの（クリヤー単体・ラメ・プライマー等）は SPECIAL 帯へ
     if base_hex is None:
