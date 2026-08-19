@@ -12,7 +12,9 @@ MARKS = {"METALLIC": "M", "PEARL": "P", "FLUORESCENT": "F", "CLEAR": "C"}
 HUE_SWATCH = {"レッド": "#d0202a", "オレンジ": "#ef7a1a", "イエロー": "#f2c31d",
               "グリーン": "#1e9c50", "スカイ": "#3fb8e0", "ブルー": "#1a5fc8",
               "パープル": "#7b3fa0", "ピンク": "#e86a9a"}
-SERIES = [("ALL", "ALL"), ("PS", "PS"), ("TS", "TS"), ("AS", "AS")]
+# シリーズボタン（中カテゴリと1対1で対応させる）。key は data-series の値。
+SERIES = [("ALL", "ALL"), ("ポリカ", "ポリカ"), ("TS", "TS"), ("AS", "AS"),
+          ("ラッカー", "ラッカー"), ("アクリル", "アクリル"), ("エナメル", "エナメル")]
 EFFECTS = ["ALL", "STANDARD", "METALLIC", "PEARL", "FLUORESCENT", "CLEAR"]
 
 CSS = """
@@ -125,7 +127,7 @@ opacity:0;pointer-events:none;transition:opacity .2s}
 JS = """
 // ---- スプレーカラーMAP ----
 const CMAP_KEY='mini4rinku:cmapOpen';
-const SERIES_CAT={PS:'ポリカーボネートスプレー',TS:'タミヤスプレー',AS:'エアーモデルスプレー'};
+const SERIES_CAT={'ポリカ':'ポリカーボネートスプレー',TS:'タミヤスプレー',AS:'エアーモデルスプレー','ラッカー':'ラッカー塗料','アクリル':'アクリル塗料ミニ','エナメル':'エナメル塗料'};
 const cmap=document.querySelector('.cmap');
 if(cmap){
   const cmapHead=cmap.querySelector('.cmap-head');
@@ -157,7 +159,7 @@ if(cmap){
     const cur=Object.keys(SERIES_CAT).find(k => SERIES_CAT[k]===cat) || 'ALL';
     cmap.querySelectorAll('.fbtn.series').forEach(x =>
       x.setAttribute('aria-pressed', x.dataset.series===cur ? 'true':'false'));
-    note.classList.toggle('show', cur==='PS');
+    note.classList.toggle('show', cur==='ポリカ');
     // 代表色は「赤系・青緑系・黄橙系」から1つずつ拾う。カテゴリを変えると色も変わる。
     const shownPins=pins.filter(p => !p.classList.contains('hide'));
     const FAMILY=[['レッド','ピンク'],['ブルー','スカイ','グリーン'],['イエロー','オレンジ']];
@@ -298,7 +300,7 @@ if(cmap){
 
 
 def _pin(r: dict) -> str:
-    code = r["name"].split()[0] if r["name"].split() else r["item_code"]
+    code = PC.code_of(r["name"]) or r["item_code"]
     return (f'<button class="pin" style="background:{r["swatch"]}" '
             f'data-target="item-{r["item_code"]}" data-effect="{r["effect"]}" '
             f'data-series="{r["series"]}" data-cname="{html.escape(r["official_category"])}" '

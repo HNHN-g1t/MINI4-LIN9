@@ -97,16 +97,28 @@ def _hsl_to_hex(h: float, s: float, l: float) -> str:
     return "#%02x%02x%02x" % (round(r * 255), round(g * 255), round(b * 255))
 
 
+# 品番の表記ゆれ。スプレーは「PS-3 …」、ビン入りは「アクリルミニ XF-93 …」の形。
+CODE_RE = re.compile(r"\b(PS|TS|AS|LP|XF|X)-\s?(\d+)\b")
+PREFIX_RE = re.compile(r"^(アクリルミニ|エナメル|ラッカー)\s*")
+
+
+def code_of(name: str) -> str:
+    """商品名から色番号（PS-3 / XF-93 など）を取り出す。"""
+    m = CODE_RE.search(name)
+    return f"{m.group(1)}-{m.group(2)}" if m else ""
+
+
 def _clean(name: str) -> str:
     """品番と補足を落として色名だけにする。"""
-    s = re.sub(r"^(PS|TS|AS)[-\s]?\d*\s*", "", name)
+    s = PREFIX_RE.sub("", name)
+    s = CODE_RE.sub("", s, count=1)
     s = re.sub(r"[（(].*?[)）]", "", s)
     return s.strip()
 
 
 def series_of(name: str) -> str:
-    """品番の接頭辞（PS / TS / AS）を返す。"""
-    m = re.match(r"^(PS|TS|AS)", name)
+    """色番号の接頭辞（PS / TS / AS / LP / X / XF）を返す。"""
+    m = CODE_RE.search(name)
     return m.group(1) if m else ""
 
 
