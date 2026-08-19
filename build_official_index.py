@@ -26,6 +26,7 @@ JST = timezone(timedelta(hours=9))
 # アフィリエイトの計測ID
 MERCARI_AFID = "1714548549"      # メルカリアンバサダー
 AMAZON_TAG = "hnhn03-22"         # Amazonアソシエイト
+RAKUTEN_AFID = "56ae2925.07c6f012.56ae2926.4d88b0cd"   # 楽天アフィリエイト
 VALUECOMMERCE_ID = ""            # ValueCommerce（申請中。IDが出たらここに入れる）
 
 # 上段タブの並び（tamiya_catalog.json の genre_key に対応）。「すべて」は末尾に付く。
@@ -68,8 +69,8 @@ def categorize(name: str) -> str:
 def ec_links(item: dict) -> list[tuple[str, str, str]]:
     """ECサイトの検索URLを (ラベル, URL, rel属性) で返す。
     ミニ四駆系は品番、工具・塗料は商品名で引くのが当たりやすい。
-    並び順は amazon → メルカリ → Yahoo! → ヤフオク。
-    メルカリはアンバサダーのafid、AmazonはアソシエイトタグをURLに付ける。"""
+    並び順は amazon → メルカリ → Yahoo! → ヤフオク → 楽天。
+    メルカリ・Amazon・楽天はそれぞれの計測IDを付ける。"""
     code = item["item_code"]
     if item.get("genre_key") in ("tool", "paint"):
         # 工具と塗料は品番で検索してもモール側でほぼヒットしないため商品名で引く
@@ -79,14 +80,18 @@ def ec_links(item: dict) -> list[tuple[str, str, str]]:
         mercari_term = f"{code} タミヤ"
     q = urllib.parse.quote(term)
     mq = urllib.parse.quote(mercari_term)
+    # 楽天は検索語をパスに埋める。アフィリエイトは中継URLに遷移先を
+    # まるごとURLエンコードして渡す形式（pc=パソコン向け / m=スマホ向け）。
+    rakuten_target = urllib.parse.quote(f"https://search.rakuten.co.jp/search/mall/{q}/", safe="")
+    rakuten_url = (f"https://hb.afl.rakuten.co.jp/hgc/{RAKUTEN_AFID}/"
+                   f"?pc={rakuten_target}&m={rakuten_target}")
     return [
         ("amazon", f"https://www.amazon.co.jp/s?k={q}&tag={AMAZON_TAG}", "sponsored noopener"),
         ("メルカリ", f"https://jp.mercari.com/search?keyword={mq}&afid={MERCARI_AFID}",
          "sponsored noopener"),
         ("Yahoo!", f"https://shopping.yahoo.co.jp/search?p={q}", "noopener"),
         ("ヤフオク", f"https://auctions.yahoo.co.jp/search/search?p={q}", "noopener"),
-        # 楽天は検索パスに語を埋める形式。計測IDは未取得のため素のリンク。
-        ("楽天", f"https://search.rakuten.co.jp/search/mall/{q}/", "noopener"),
+        ("楽天", rakuten_url, "sponsored noopener"),
     ]
 
 
@@ -542,7 +547,8 @@ def build(items: list[dict], outdir: str) -> str:
   商品写真は公式サイトから直接参照しています。ECリンクは各モールの検索結果を開きます。
   お気に入りはご利用中のブラウザ内にのみ保存され、サーバーには送信されません。<br>
   <b>【PR】</b>当サイトはアフィリエイトプログラム（メルカリアンバサダー、Amazonアソシエイト、
-  ValueCommerce ※申請中）を利用しており、商品リンク経由の購入により報酬を受け取る場合があります。<br>
+  楽天アフィリエイト、ValueCommerce ※申請中）を利用しており、商品リンク経由の購入により
+  報酬を受け取る場合があります。<br>
   Amazonのアソシエイトとして、ミニ四リン駆は適格販売により収入を得ています。
 </footer>
 <script>{JS}</script>
