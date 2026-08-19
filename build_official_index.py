@@ -2,10 +2,10 @@
 """公式マスタ（tamiya_catalog.json）からカタログインデックス docs/index.html を生成する。
 
 - タミヤ公式の品番・正式名称・定価・商品写真を掲載
-- 上段タブでジャンル（グレードアップパーツ／キット／AOパーツ／クラフトツール）を切り替え
-- 下段チップでジャンル内の細分類（公式シリーズ名・工具種別・パーツ種別）を絞り込み
+- 上段タブでジャンル（GUパーツ／限定パーツ／AOパーツ／キット／ポリカスプレー／ツール）を切り替え
+- 下段チップでジャンル内の細分類を絞り込み（細分類が1種類のジャンルでは出さない）
 - ページ内テキスト検索と各ECサイトへの検索ジャンプが動く
-- 相場ページ（site/items/15xxx.html）が生成済みの品番は内部リンクも表示
+- お気に入りは閲覧者のブラウザ内（localStorage）に保存する
 
 使い方:
     py build_official_index.py
@@ -31,8 +31,12 @@ GENRE_ORDER = [
     ("limited", "限定パーツ"),
     ("ao", "AOパーツ"),
     ("kit", "キット"),
-    ("tool", "クラフトツール"),
+    ("spray", "ポリカスプレー"),
+    ("tool", "ツール"),
 ]
+
+# 品番順に並べ替えるジャンル（発売日順ではなく品番で追いたいもの）
+SORT_BY_CODE = {"spray"}
 
 # 公式の細分類が無いジャンル（グレードアップパーツ・AOパーツ）向けの名前キーワード分類
 CATEGORY_RULES = [
@@ -60,11 +64,12 @@ def categorize(name: str) -> str:
 
 def ec_links(item: dict) -> list[tuple[str, str, str]]:
     """ECサイトの検索URLを (ラベル, URL, rel属性) で返す。
-    ミニ四駆系は品番、工具は商品名で引くのが当たりやすい。
+    ミニ四駆系は品番、工具・塗料は商品名で引くのが当たりやすい。
     並び順は amazon → メルカリ → Yahoo! → ヤフオク。
     メルカリはアンバサダーのafid、AmazonはアソシエイトタグをURLに付ける。"""
     code = item["item_code"]
-    if item.get("genre_key") == "tool":
+    if item.get("genre_key") in ("tool", "spray"):
+        # 工具と塗料は品番で検索してもモール側でほぼヒットしないため商品名で引く
         term = mercari_term = f"タミヤ {item['name']}"
     else:
         term = f"ミニ四駆 {code}"
@@ -187,7 +192,9 @@ function syncChips(){
   const active = chips.find(c => cat && c.dataset.cat === cat);
   if(active && active.classList.contains('hide')) cat = '';
   chips.forEach(c => c.classList.toggle('on', c.dataset.cat === cat));
-  chipRow.style.display = real ? '' : 'none';
+  // 細分類が1種類しかないジャンルでは、絞り込みにならないのでチップ行ごと隠す
+  const usable = chips.filter(c => c.dataset.cat && !c.classList.contains('hide')).length;
+  chipRow.style.display = (real && usable > 1) ? '' : 'none';
 }
 
 function apply(){
@@ -323,6 +330,13 @@ def build(items: list[dict], outdir: str) -> str:
         it["_cat"] = it.get("official_category") or categorize(it["name"])
         it.setdefault("genre_key", "parts")
         it.setdefault("genre", "グレードアップパーツ")
+
+    # 指定ジャンルはジャンル内を品番の昇順に並べ替える（他は取得順のまま）
+    if any(i["genre_key"] in SORT_BY_CODE for i in items):
+        head = [i for i in items if i["genre_key"] not in SORT_BY_CODE]
+        tail = sorted((i for i in items if i["genre_key"] in SORT_BY_CODE),
+                      key=lambda i: (i["genre_key"], int(i["item_code"])))
+        items = head + tail
 
     genres = [(k, lb) for k, lb in GENRE_ORDER if any(i["genre_key"] == k for i in items)]
     genre_counts = {k: sum(1 for i in items if i["genre_key"] == k) for k, _ in genres}
