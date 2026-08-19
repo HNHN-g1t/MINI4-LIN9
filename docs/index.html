@@ -21606,7 +21606,7 @@ padding:4px 8px;border-radius:5px;pointer-events:none;opacity:0;transition:opaci
 </main>
 <footer>
   ミニ四リン駆（プロトタイプ） ・ 品番・名称・価格・写真はタミヤ公式サイトの情報（出典: tamiya.com） ・
-  最終更新 2026-08-19 12:36 JST<br>
+  最終更新 2026-08-19 12:40 JST<br>
   商品写真は公式サイトから直接参照しています。ECリンクは各モールの検索結果を開きます。
   お気に入りはご利用中のブラウザ内にのみ保存され、サーバーには送信されません。<br>
   <b>【PR】</b>当サイトはアフィリエイトプログラム（メルカリアンバサダー、Amazonアソシエイト、
@@ -21810,7 +21810,10 @@ if(cmap){
     bar.setAttribute('aria-valuenow', Math.round(sc.scrollLeft/max*100));
   }
   window.syncCmapBar = syncBar;
-  sc.addEventListener('scroll', syncBar);
+  sc.addEventListener('scroll', syncBar, {passive:true});
+  // 端末によっては scroll が間引かれるため、指・ホイール操作でも直接更新する
+  sc.addEventListener('touchmove', syncBar, {passive:true});
+  sc.addEventListener('wheel', syncBar, {passive:true});
   window.addEventListener('resize', syncBar);
 
   let dragging=false;

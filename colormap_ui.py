@@ -183,7 +183,10 @@ if(cmap){
     bar.setAttribute('aria-valuenow', Math.round(sc.scrollLeft/max*100));
   }
   window.syncCmapBar = syncBar;
-  sc.addEventListener('scroll', syncBar);
+  sc.addEventListener('scroll', syncBar, {passive:true});
+  // 端末によっては scroll が間引かれるため、指・ホイール操作でも直接更新する
+  sc.addEventListener('touchmove', syncBar, {passive:true});
+  sc.addEventListener('wheel', syncBar, {passive:true});
   window.addEventListener('resize', syncBar);
 
   let dragging=false;
