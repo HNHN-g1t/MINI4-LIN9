@@ -18,6 +18,9 @@ import sys
 import urllib.parse
 from datetime import datetime, timedelta, timezone
 
+import colormap_ui
+import paint_colors
+
 JST = timezone(timedelta(hours=9))
 
 # アフィリエイトの計測ID
@@ -147,7 +150,7 @@ font-family:inherit;line-height:1.5}
 .empty{padding:60px 0;text-align:center;color:var(--ink3);display:none}
 footer{max-width:1120px;margin:0 auto;padding:16px;font-size:11px;color:var(--ink3);border-top:1px solid var(--line)}
 @media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
-"""
+""" + colormap_ui.CSS
 
 JS = """
 const q = document.getElementById('q');
@@ -210,6 +213,7 @@ function apply(){
     c.style.display = on ? '' : 'none';
     if(on) shown++;
   }
+  if(window.paintPins) paintPins();
   countLine.textContent = genre === 'fav'
     ? `お気に入り ${shown}件`
     : `${shown}件 / 全${cards.length}件を表示`;
@@ -254,7 +258,7 @@ document.querySelectorAll('.btn-fav').forEach(b => b.addEventListener('click', (
 paintFavs();
 syncChips();
 apply();
-"""
+""" + colormap_ui.JS
 
 
 NOT_FOUND_HTML = """<!DOCTYPE html>
@@ -377,7 +381,7 @@ def build(items: list[dict], outdir: str) -> str:
             f'<a class="ec" href="{u}" target="_blank" rel="{rel}">{html.escape(lb)}</a>'
             for lb, u, rel in ec_links(it)
         )
-        cards.append(f'''      <div class="it" data-code="{code}" data-genre="{it["genre_key"]}" data-cat="{html.escape(cat)}" data-hay="{hay}">
+        cards.append(f'''      <div class="it" id="item-{code}" data-code="{code}" data-genre="{it["genre_key"]}" data-cat="{html.escape(cat)}" data-hay="{hay}">
         <a class="ph" href="{html.escape(it["url"])}" target="_blank" rel="noopener">
           <img src="{html.escape(it["image"])}" alt="{html.escape(name)}" loading="lazy"></a>
         <div class="bd">
@@ -395,6 +399,9 @@ def build(items: list[dict], outdir: str) -> str:
           <div class="ecrow">{ecrow}</div>
         </div>
       </div>''')
+
+    paint_rows = paint_colors.build([i for i in items if i.get("genre_key") == "paint"])
+    cmap_html = colormap_ui.section(paint_rows) if paint_rows else ""
 
     doc = f"""<!DOCTYPE html>
 <html lang="ja">
@@ -422,11 +429,13 @@ def build(items: list[dict], outdir: str) -> str:
 </header>
 <main>
   <div class="chips">{chip_html}</div>
+{cmap_html}
   <div class="count-line" id="countLine"></div>
   <div class="grid">
 {chr(10).join(cards)}
   </div>
   <div class="empty" id="empty">該当する商品が見つかりません</div>
+  <div class="cmap-tip" id="cmapTip" role="status"></div>
 </main>
 <footer>
   ミニ四リン駆（プロトタイプ） ・ 品番・名称・価格・写真はタミヤ公式サイトの情報（出典: tamiya.com） ・

@@ -7,3 +7,6 @@ __pycache__/
 
 # 取得時の一時ダンプ
 _tamiya_*.html
+
+# デザイン確認用の一時プレビュー
+_preview_colormap.html
