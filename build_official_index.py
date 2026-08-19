@@ -2,7 +2,7 @@
 """公式マスタ（tamiya_catalog.json）からカタログインデックス docs/index.html を生成する。
 
 - タミヤ公式の品番・正式名称・定価・商品写真を掲載
-- 上段タブでジャンル（GUパーツ／限定パーツ／AOパーツ／キット／ポリカスプレー／ツール）を切り替え
+- 上段タブでジャンル（GUパーツ／限定パーツ／AOパーツ／キット／塗装／ツール）を切り替え
 - 下段チップでジャンル内の細分類を絞り込み（細分類が1種類のジャンルでは出さない）
 - ページ内テキスト検索と各ECサイトへの検索ジャンプが動く
 - お気に入りは閲覧者のブラウザ内（localStorage）に保存する
@@ -31,12 +31,12 @@ GENRE_ORDER = [
     ("limited", "限定パーツ"),
     ("ao", "AOパーツ"),
     ("kit", "キット"),
-    ("spray", "ポリカスプレー"),
+    ("paint", "塗装"),
     ("tool", "ツール"),
 ]
 
-# 品番順に並べ替えるジャンル（発売日順ではなく品番で追いたいもの）
-SORT_BY_CODE = {"spray"}
+# 品番順に並べ替えるジャンル（中カテゴリごとに品番の昇順で並べる）
+SORT_BY_CODE = {"paint"}
 
 # 公式の細分類が無いジャンル（グレードアップパーツ・AOパーツ）向けの名前キーワード分類
 CATEGORY_RULES = [
@@ -68,7 +68,7 @@ def ec_links(item: dict) -> list[tuple[str, str, str]]:
     並び順は amazon → メルカリ → Yahoo! → ヤフオク。
     メルカリはアンバサダーのafid、AmazonはアソシエイトタグをURLに付ける。"""
     code = item["item_code"]
-    if item.get("genre_key") in ("tool", "spray"):
+    if item.get("genre_key") in ("tool", "paint"):
         # 工具と塗料は品番で検索してもモール側でほぼヒットしないため商品名で引く
         term = mercari_term = f"タミヤ {item['name']}"
     else:
@@ -334,8 +334,14 @@ def build(items: list[dict], outdir: str) -> str:
     # 指定ジャンルはジャンル内を品番の昇順に並べ替える（他は取得順のまま）
     if any(i["genre_key"] in SORT_BY_CODE for i in items):
         head = [i for i in items if i["genre_key"] not in SORT_BY_CODE]
+        # 中カテゴリの並びは取得順（=公式ジャンルの指定順）を維持し、
+        # その中を品番の昇順にする
+        rank = {}
+        for i in items:
+            rank.setdefault((i["genre_key"], i.get("official_category", "")), len(rank))
         tail = sorted((i for i in items if i["genre_key"] in SORT_BY_CODE),
-                      key=lambda i: (i["genre_key"], int(i["item_code"])))
+                      key=lambda i: (rank[(i["genre_key"], i.get("official_category", ""))],
+                                     int(i["item_code"])))
         items = head + tail
 
     genres = [(k, lb) for k, lb in GENRE_ORDER if any(i["genre_key"] == k for i in items)]
@@ -356,10 +362,10 @@ def build(items: list[dict], outdir: str) -> str:
     for k, _ in genres:
         for c in dict.fromkeys(i["_cat"] for i in items if i["genre_key"] == k):
             cat_genres.setdefault(c, []).append(k)
-    chip_html = '<span class="chip on" data-cat="" data-genres="">すべて</span>' + "".join(
+    chip_html = "".join(
         f'<span class="chip" data-cat="{html.escape(c)}" data-genres="{" ".join(gs)}">{html.escape(c)}</span>'
         for c, gs in cat_genres.items()
-    )
+    ) + '<span class="chip on" data-cat="" data-genres="">すべて</span>' 
 
     cards = []
     for it in items:

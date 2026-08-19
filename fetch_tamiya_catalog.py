@@ -5,7 +5,7 @@
     グレードアップパーツ … genre 303010
     限定パーツ           … genre 303025
     キット             … genre 3010  （シリーズ別の子カテゴリあり）
-    ポリカスプレー       … genre 504060
+    塗装               … genre 504060 / 504030 / 504050 を束ねる
     AOパーツ           … genre 303030
     クラフトツール       … genre 5020  （工具種別の子カテゴリあり）
 
@@ -37,7 +37,13 @@ GENRES = [
     ("parts", "グレードアップパーツ", "303010"),
     ("limited", "限定パーツ", "303025"),
     ("kit", "キット", "3010"),
-    ("spray", "ポリカスプレー", "504060"),
+    # 塗装は複数の公式ジャンルを束ね、それぞれを中カテゴリとして扱う。
+    # ここでの並び順が、そのまま中カテゴリのタブ順になる。
+    ("paint", "塗装", [
+        ("504060", "ポリカーボネートスプレー"),
+        ("504030", "タミヤスプレー"),
+        ("504050", "エアーモデルスプレー"),
+    ]),
     ("ao", "AOパーツ", "303030"),
     ("tool", "クラフトツール", "5020"),
 ]
@@ -107,7 +113,25 @@ def discover_children(parent: str, html: str) -> list[tuple[str, str]]:
     return sorted(found.items())
 
 
-def collect_genre(key: str, label: str, code: str, max_pages: int) -> list[dict]:
+def collect_bundle(key: str, label: str, subs: list, max_pages: int) -> list[dict]:
+    """複数の公式ジャンルを1つのジャンルに束ねる（各コードが中カテゴリになる）。"""
+    print(chr(10) + "■ " + label + "（" + str(len(subs)) + "カテゴリ）")
+    by_code: dict[str, dict] = {}
+    for code, sub_label in subs:
+        for it in crawl(code, max_pages, sub_label):
+            by_code.setdefault(it["item_code"], {**it, "genre": label, "genre_key": key,
+                                                "official_category": sub_label})
+        time.sleep(SLEEP)
+    out = list(by_code.values())
+    for it in out:
+        it["gp_no"] = ""
+    print(f"  → {label}: {len(out)}件")
+    return out
+
+
+def collect_genre(key: str, label: str, code, max_pages: int) -> list[dict]:
+    if isinstance(code, list):
+        return collect_bundle(key, label, code, max_pages)
     print(f"\n■ {label}（genre {code}）")
     first = fetch(LIST_URL.format(code=code, page=1))
     children = discover_children(code, first)
@@ -144,13 +168,13 @@ def collect_genre(key: str, label: str, code: str, max_pages: int) -> list[dict]
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--pages", type=int, default=0, help="各ジャンルの取得ページ上限（0=全件）")
-    ap.add_argument("--genre", default="", help="キー指定で1ジャンルだけ取得（parts/limited/kit/spray/ao/tool）")
+    ap.add_argument("--genre", default="", help="キー指定で1ジャンルだけ取得（parts/limited/kit/paint/ao/tool）")
     ap.add_argument("--out", default="tamiya_catalog.json")
     args = ap.parse_args()
 
     targets = [g for g in GENRES if not args.genre or g[0] == args.genre]
     if not targets:
-        print(f"エラー: 不明なジャンル {args.genre}（parts/limited/kit/spray/ao/tool）", file=sys.stderr)
+        print(f"エラー: 不明なジャンル {args.genre}（parts/limited/kit/paint/ao/tool）", file=sys.stderr)
         return 1
 
     all_items: list[dict] = []
