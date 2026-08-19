@@ -98,6 +98,29 @@ padding:4px 8px;border-radius:5px;pointer-events:none;opacity:0;transition:opaci
 @keyframes cmapflash{0%,55%{box-shadow:0 0 0 3px var(--accent);border-color:var(--accent)}
 100%{box-shadow:0 0 0 0 rgba(0,0,0,0);border-color:var(--line)}}
 @media(max-width:900px){.frow-label{width:100%}}
+
+/* ---- スマホ用：円グラフボタン＋ボトムシート ---- */
+.cmap-fab{position:fixed;right:14px;bottom:16px;z-index:70;width:58px;height:58px;border-radius:50%;
+border:3px solid #fff;padding:0;cursor:pointer;display:none;
+box-shadow:0 4px 14px rgba(20,40,80,.32)}
+.cmap-fab.on{display:block}
+.cmap-fab:focus-visible{outline:3px solid var(--brand);outline-offset:3px}
+.cmap-fab .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* シート化（スマホのみ）。中身は同じものを使い回す */
+@media(max-width:900px){
+  .cmap.sheet{position:fixed;left:0;right:0;bottom:0;top:auto;z-index:80;margin:0;
+    border-radius:14px 14px 0 0;max-height:82vh;display:flex;flex-direction:column;
+    box-shadow:0 -8px 28px rgba(20,40,80,.28);transform:translateY(100%);
+    transition:transform .24s ease-out}
+  .cmap.sheet.shown{transform:translateY(0)}
+  .cmap.sheet .cmap-head{border-bottom:1px solid var(--line)}
+  .cmap.sheet .cmap-body{display:block;overflow-y:auto;-webkit-overflow-scrolling:touch;flex:1}
+  .cmap.sheet .cmap-toggle{background:var(--ink3)}
+  .cmap-backdrop{position:fixed;inset:0;background:rgba(16,22,34,.42);z-index:79;
+    opacity:0;pointer-events:none;transition:opacity .2s}
+  .cmap-backdrop.shown{opacity:1;pointer-events:auto}
+}
 """
 
 # 既存の apply() / syncChips() と連動させる前提のスクリプト
@@ -145,16 +168,24 @@ if(cmap){
     cmap.querySelectorAll('.fbtn.series').forEach(x =>
       x.setAttribute('aria-pressed', x.dataset.series===cur ? 'true':'false'));
     note.classList.toggle('show', cur==='PS');
-    // ヘッダーの色見本を、いま見えているピンの代表色に合わせる
+    // 代表色は「赤系・青緑系・黄橙系」から1つずつ拾う。カテゴリを変えると色も変わる。
     const shownPins=pins.filter(p => !p.classList.contains('hide'));
+    const FAMILY=[['レッド','ピンク'],['ブルー','スカイ','グリーン'],['イエロー','オレンジ']];
+    const reps=FAMILY.map(fam => {
+      const cand=shownPins.filter(p => fam.includes(p.dataset.hue));
+      return cand.length ? cand[Math.floor(cand.length/2)].style.backgroundColor : null;
+    });
+    const fallback=shownPins.length ? shownPins[Math.floor(shownPins.length/2)].style.backgroundColor : '#e3e6ec';
+    const cols=reps.map(c => c || fallback);
     const sw=cmap.querySelectorAll('.cmap-swatches i');
-    for(let i=0;i<sw.length;i++){
-      const p=shownPins[Math.floor((i+0.5)*shownPins.length/sw.length)];
-      sw[i].style.background = p ? p.style.backgroundColor : '#e3e6ec';
-    }
+    for(let i=0;i<sw.length;i++) sw[i].style.background=cols[i];
+    if(window.paintFab) paintFab(cols);
+    // 塗装タブのときだけ円グラフボタンを出す
+    const fabEl=document.querySelector('.cmap-fab');
+    if(fabEl) fabEl.classList.toggle('on', genre==='paint');
     cmap.classList.toggle('avail', genre==='paint');
     // 塗装タブに切り替わった直後は幅が確定していないので、描画後に測り直す
-    if(window.syncCmapBar) requestAnimationFrame(window.syncCmapBar);
+    if(window.syncCmapBar) setTimeout(window.syncCmapBar, 0);
   };
 
   pins.forEach(p => p.addEventListener('click', () => {
@@ -162,10 +193,15 @@ if(cmap){
     if(!card) return;
     if(activePin) activePin.classList.remove('on');
     p.classList.add('on'); activePin=p;
-    card.scrollIntoView({behavior:'smooth', block:'center'});
-    card.classList.remove('flash');
-    void card.offsetWidth;
-    card.classList.add('flash');
+    // 対象が別ページにいることがあるので、まずそのページへ切り替える
+    if(window.goToCard) goToCard(card);
+    closeSheet();
+    setTimeout(() => {
+      card.scrollIntoView({behavior:'smooth', block:'center'});
+      card.classList.remove('flash');
+      void card.offsetWidth;
+      card.classList.add('flash');
+    }, 16);
   }));
 
   function showTip(e){
@@ -184,6 +220,49 @@ if(cmap){
       p.addEventListener('blur', () => tip.classList.remove('show'));
     });
   }
+
+  // ---- スマホ：円グラフボタンとボトムシート ----
+  const fab=document.querySelector('.cmap-fab');
+  const backdrop=document.querySelector('.cmap-backdrop');
+  const isPhone=() => window.matchMedia('(max-width:900px)').matches;
+
+  function openSheet(){
+    if(!isPhone()) return;
+    cmap.classList.add('sheet');
+    backdrop.hidden=false;
+    void cmap.offsetHeight;          // 位置を確定させてから出す
+    setTimeout(() => {
+      cmap.classList.add('shown','open');
+      backdrop.classList.add('shown');
+      cmapHead.setAttribute('aria-expanded','true');
+      fab.setAttribute('aria-expanded','true');
+      if(window.syncCmapBar) syncCmapBar();
+    }, 16);
+  }
+  function closeSheet(){
+    if(!cmap.classList.contains('sheet')) return;
+    cmap.classList.remove('shown');
+    backdrop.classList.remove('shown');
+    fab.setAttribute('aria-expanded','false');
+    setTimeout(() => {
+      cmap.classList.remove('sheet');
+      backdrop.hidden=true;
+    }, 240);
+  }
+  window.closeCmapSheet=closeSheet;
+
+  fab.addEventListener('click', openSheet);
+  backdrop.addEventListener('click', closeSheet);
+  document.addEventListener('keydown', e => { if(e.key==='Escape') closeSheet(); });
+  // シート表示中に見出しを押したら閉じる
+  cmapHead.addEventListener('click', () => { if(cmap.classList.contains('sheet')) closeSheet(); });
+
+  // 円グラフを120度ずつ3色で描く。カテゴリ切替に追従する。
+  window.paintFab = function(cols){
+    const [a,b,c]=cols;
+    fab.style.background='conic-gradient('+a+' 0deg 120deg,'+b+' 120deg 240deg,'+c+' 240deg 360deg)';
+  };
+
   // 自前の横スクロールバー（標準バーはスマホで出ないため）
   const sc=cmap.querySelector('.cmap-scroll');
   const bar=cmap.querySelector('.cmap-bar');
@@ -236,6 +315,7 @@ def _pin(r: dict) -> str:
     return (f'<button class="pin" style="background:{r["swatch"]}" '
             f'data-target="item-{r["item_code"]}" data-effect="{r["effect"]}" '
             f'data-series="{r["series"]}" data-cname="{html.escape(r["official_category"])}" '
+            f'data-hue="{html.escape(r["hue_band"])}" '
             f'data-code="{html.escape(code)}" data-color="{html.escape(r["color_name"])}" '
             f'data-mark="{MARKS.get(r["effect"], "")}" '
             f'aria-label="{html.escape(code)} {html.escape(r["color_name"])} へ移動">'
@@ -298,4 +378,8 @@ def section(rows: list[dict]) -> str:
       <div class="cmap-legend">縦軸＝色相／横軸＝明るさ。ピンを押すと該当商品へ移動します。
       記号 M=メタリック P=パール F=蛍光 C=クリヤー</div>
     </div>
-  </section>"""
+  </section>
+  <div class="cmap-backdrop" hidden></div>
+  <button class="cmap-fab" type="button" aria-expanded="false" aria-controls="cmapBody">
+    <span class="sr">スプレーカラーMAPを開く</span>
+  </button>"""

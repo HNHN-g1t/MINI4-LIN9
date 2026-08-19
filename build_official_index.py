@@ -148,6 +148,16 @@ font-family:inherit;line-height:1.5}
 .ec.souba{background:var(--brand);border-color:var(--brand);color:#fff}
 .cat-tag{font-size:10px;color:var(--brand);font-weight:700}
 .empty{padding:60px 0;text-align:center;color:var(--ink3);display:none}
+/* ページ送り（公式サイトと同じ、数字を四角で並べる形） */
+.pager{display:none;gap:5px;flex-wrap:wrap;align-items:center;justify-content:center;margin:12px 0}
+.pager.on{display:flex}
+.pager button{min-width:34px;height:34px;padding:0 8px;border:1.5px solid var(--line);
+background:var(--surface);color:var(--ink2);border-radius:5px;font:inherit;font-size:12.5px;
+font-weight:700;cursor:pointer}
+.pager button:hover:not(:disabled){border-color:var(--brand);color:var(--brand)}
+.pager button[aria-current="page"]{background:var(--brand);border-color:var(--brand);color:#fff}
+.pager button:disabled{opacity:.35;cursor:default}
+.pager .gap{color:var(--ink3);font-size:12px;padding:0 2px}
 footer{max-width:1120px;margin:0 auto;padding:16px;font-size:11px;color:var(--ink3);border-top:1px solid var(--line)}
 @media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
 """ + colormap_ui.CSS
@@ -163,6 +173,14 @@ const empty = document.getElementById('empty');
 const favN = document.getElementById('favN');
 let genre = '';   // '' = すべて
 let cat = '';     // '' = 全カテゴリ
+
+// ---- ページ送り ----
+const PER_PAGE = 24;          // 1ページの表示件数
+const PAGE_WINDOW = 7;        // 数字ボタンを並べる最大数
+let page = 1;
+let matched = [];             // 絞り込み後のカード（ページ分割前）
+const pagerTop = document.getElementById('pagerTop');
+const pagerBottom = document.getElementById('pagerBottom');
 
 // ---- お気に入り（ブラウザのlocalStorageにのみ保存。ログイン不要） ----
 const FAV_KEY = 'mini4rinku:favs';
@@ -200,28 +218,93 @@ function syncChips(){
   chipRow.style.display = (real && usable > 1) ? '' : 'none';
 }
 
-function apply(){
+function apply(resetPage){
   const terms = q.value.trim().toLowerCase().split(/\\s+/).filter(Boolean);
-  let shown = 0;
-  for(const c of cards){
+  matched = cards.filter(c => {
     const okGenre = !genre ? true
                   : genre === 'fav' ? favs.has(c.dataset.code)
                   : c.dataset.genre === genre;
-    const on = okGenre
-            && (!cat || c.dataset.cat === cat)
-            && terms.every(t => c.dataset.hay.includes(t));
-    c.style.display = on ? '' : 'none';
-    if(on) shown++;
-  }
+    return okGenre
+        && (!cat || c.dataset.cat === cat)
+        && terms.every(t => c.dataset.hay.includes(t));
+  });
+  if(resetPage !== false) page = 1;
+  renderPage();
   if(window.paintPins) paintPins();
-  countLine.textContent = genre === 'fav'
-    ? `お気に入り ${shown}件`
-    : `${shown}件 / 全${cards.length}件を表示`;
+}
+
+function pageCount(){ return Math.max(1, Math.ceil(matched.length / PER_PAGE)); }
+
+// 指定カードが何ページ目にいるか。絞り込みに含まれなければ 0。
+function pageOf(card){
+  const i = matched.indexOf(card);
+  return i < 0 ? 0 : Math.floor(i / PER_PAGE) + 1;
+}
+
+function renderPage(){
+  const total = pageCount();
+  page = Math.min(Math.max(1, page), total);
+  const from = (page - 1) * PER_PAGE, to = from + PER_PAGE;
+  const visible = new Set(matched.slice(from, to));
+  for(const c of cards) c.style.display = visible.has(c) ? '' : 'none';
+
+  const n = matched.length;
+  countLine.textContent = n === 0
+    ? (genre === 'fav' ? 'お気に入り 0件' : '0件')
+    : genre === 'fav'
+      ? `お気に入り ${n}件（${from + 1}〜${Math.min(to, n)}件を表示）`
+      : `${from + 1}〜${Math.min(to, n)}件 / 全${n}件`;
   empty.textContent = genre === 'fav' && !favs.size
     ? 'お気に入りはまだありません。各カードの☆を押すと登録できます。'
     : '該当する商品が見つかりません';
-  empty.style.display = shown ? 'none' : 'block';
+  empty.style.display = n ? 'none' : 'block';
+
+  buildPager(pagerTop, total);
+  buildPager(pagerBottom, total);
+  try{ history.replaceState(null, '', page > 1 ? '#p=' + page : location.pathname); }catch(e){}
 }
+
+// 数字は PAGE_WINDOW 個までにして、間は … で省略する
+function buildPager(el, total){
+  el.classList.toggle('on', total > 1);
+  if(total <= 1){ el.innerHTML = ''; return; }
+  const half = Math.floor(PAGE_WINDOW / 2);
+  const start = Math.max(1, Math.min(page - half, total - PAGE_WINDOW + 1));
+  const end = Math.min(total, start + PAGE_WINDOW - 1);
+  const btn = (label, p, opt) => `<button type="button" data-p="${p}"${opt || ''}>${label}</button>`;
+  const parts = [btn('‹', page - 1, page === 1 ? ' disabled aria-label="前のページ"' : ' aria-label="前のページ"')];
+  if(start > 1){ parts.push(btn('1', 1)); if(start > 2) parts.push('<span class="gap">…</span>'); }
+  for(let p = start; p <= end; p++) parts.push(btn(p, p, p === page ? ' aria-current="page"' : ''));
+  if(end < total){ if(end < total - 1) parts.push('<span class="gap">…</span>'); parts.push(btn(total, total)); }
+  parts.push(btn('›', page + 1, page === total ? ' disabled aria-label="次のページ"' : ' aria-label="次のページ"'));
+  el.innerHTML = parts.join('');
+}
+
+// ページ番号を押したら切り替え、一覧の先頭へ戻す
+function onPagerClick(e){
+  const b = e.target.closest('button[data-p]');
+  if(!b || b.disabled) return;
+  page = parseInt(b.dataset.p, 10);
+  renderPage();
+  const top = document.querySelector('.grid').getBoundingClientRect().top + window.scrollY;
+  window.scrollTo({top: top - 80, behavior: 'smooth'});
+}
+pagerTop.addEventListener('click', onPagerClick);
+pagerBottom.addEventListener('click', onPagerClick);
+
+// 指定カードのページへ移動する（カラーマップのピンから使う）
+window.goToCard = function(card){
+  const p = pageOf(card);
+  if(p && p !== page){ page = p; renderPage(); }
+  return p > 0;
+};
+
+// 戻る／進むでページを復元する
+window.addEventListener('popstate', () => {
+  const m = location.hash.match(/p=(\\d+)/);
+  page = m ? parseInt(m[1], 10) : 1;
+  renderPage();
+});
 
 q.addEventListener('input', apply);
 
@@ -258,6 +341,8 @@ document.querySelectorAll('.btn-fav').forEach(b => b.addEventListener('click', (
 paintFavs();
 syncChips();
 apply();
+const _hp = location.hash.match(/p=(\\d)+/);
+if(_hp){ page = parseInt(location.hash.replace(/[^0-9]/g, ''), 10) || 1; renderPage(); }
 """ + colormap_ui.JS
 
 
@@ -431,9 +516,11 @@ def build(items: list[dict], outdir: str) -> str:
   <div class="chips">{chip_html}</div>
 {cmap_html}
   <div class="count-line" id="countLine"></div>
+  <nav class="pager" id="pagerTop" aria-label="ページ送り（上）"></nav>
   <div class="grid">
 {chr(10).join(cards)}
   </div>
+  <nav class="pager" id="pagerBottom" aria-label="ページ送り（下）"></nav>
   <div class="empty" id="empty">該当する商品が見つかりません</div>
   <div class="cmap-tip" id="cmapTip" role="status"></div>
 </main>
