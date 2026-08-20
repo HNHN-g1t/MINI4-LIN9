@@ -202,17 +202,6 @@ background:var(--surface)}
 font-size:11px;color:var(--ink3)}
 #xFeatured.done{min-height:0;border:none;background:none}
 
-/* シャッフル。ラベルは置かず、アイコンだけを帯の上に出す */
-.xnav{display:flex;justify-content:flex-end;margin:0 0 4px}
-.xnav button{width:30px;height:30px;display:flex;align-items:center;justify-content:center;
-padding:0;border:1.5px solid var(--line);background:var(--surface);color:var(--ink2);
-border-radius:50%;cursor:pointer}
-.xnav button:hover:not(:disabled){border-color:var(--brand);color:var(--brand)}
-.xnav button:disabled{opacity:.35;cursor:default}
-.xnav button svg{display:block}
-.xnav button.spin svg{animation:xspin .5s ease}
-@keyframes xspin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-
 .xstage{position:relative;overflow:hidden}
 .xpair{display:flex;gap:var(--xgap);justify-content:center;align-items:flex-start;
 will-change:transform,opacity}
@@ -236,22 +225,24 @@ cursor:pointer;border-radius:8px;-webkit-tap-highlight-color:transparent}
 .xhit:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
 
 @media(max-width:900px){
-  /* 4件を画面内に収めたいので、この区画だけ左右の余白を8px詰める */
+  /* 3件を画面内に収めたいので、この区画だけ左右の余白を8px詰める */
   #xFeatured{max-width:none;margin-left:-8px;margin-right:-8px;--xh:140px}
   .xslot::after{height:20px}
 }
 @media(prefers-reduced-motion:reduce){
   .xpair.anim{transition:opacity .15s ease}
   .xpair.toLeft,.xpair.toRight{transform:none}
-  .xnav button.spin svg{animation:none}
 }
 
-/* ---- X Machines：全投稿を素の大きさで敷き詰める ---- */
-#xWall{display:none;margin:0 0 10px}
+/* ---- X Machines：全投稿を2列で敷き詰める ---- */
+/* --xww = Xに描画させる素の幅 / --xws = 列幅に合わせた縮小率 */
+#xWall{--xww:250px;--xws:1;--xwgap:12px;display:none;margin:0 0 10px}
 #xWall.on{display:block}
-.xwgrid{display:grid;gap:12px;justify-content:center;
-grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
-.xwcell{min-width:0}
+.xwgrid{display:grid;gap:var(--xwgap);align-items:start;
+grid-template-columns:repeat(2,minmax(0,1fr))}
+/* 押した1件を先頭に置くため order を使う。DOMは動かさない（iframeが再読込されるため） */
+.xwcell{min-width:0;overflow:hidden}
+.xwcell > .xwinner{width:var(--xww);transform:scale(var(--xws));transform-origin:top left}
 .xwcell .twitter-tweet{margin:0 !important}
 .xwnote{font-size:11px;color:var(--ink3);margin:0 0 10px}
 </style>
@@ -26806,7 +26797,7 @@ grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
   楽天アフィリエイト、ValueCommerce）を利用しており、商品リンク経由の購入により
   報酬を受け取る場合があります。
   Amazonアソシエイトとして適格販売により収入を得ています。<br>
-  最終更新 2026-08-21 00:30 JST
+  最終更新 2026-08-21 00:56 JST
 </footer>
 <script>
 const q = document.getElementById('q');
@@ -27191,15 +27182,16 @@ if(cmap){
   const WALL_GENRE = 'xm';
   const RECENT_KEY = 'm4rinku:x-recent-post-ids';
   const RENDER_TIMEOUT = 8000;
-  const ANIM_MS = 220;
   const NATURAL = 250;          // Xの埋め込みが受け付ける最小幅
-  const COUNT_MOBILE = 4;
-  const COUNT_DESKTOP = 6;
+  const COUNT = 3;              // TOPの帯に並べる件数（スマホ・PCとも）
+  const WALL_COLS = 2;          // X Machines の列数
+  const WALL_GAP = 12;
   const DEFAULTS = {random:true, avoidRecentCount:8,
                     autoRotate:false, hideThread:true, dnt:true, lang:'ja'};
 
-  let cfg = DEFAULTS, allPosts = [], scale = 1, count = COUNT_MOBILE;
-  let stage = null, nav = null, current = null, busy = false, wallDone = false;
+  let cfg = DEFAULTS, allPosts = [], scale = 1;
+  let stage = null, current = null, wallDone = false;
+  let wallCells = [], wallNatural = NATURAL, wallScale = 1, pendingLead = null;
 
   const isMobile = () => window.matchMedia('(max-width:900px)').matches;
   const actives = () => allPosts.filter(p => p && p.active === true && tweetIdOf(p.url));
@@ -27283,12 +27275,11 @@ if(cmap){
     };
   }
 
-  // 何件を横に並べ、どれだけ縮めるかを決める
+  // 3件を横に並べるのに、どれだけ縮めるかを決める
   function measure(){
-    count = isMobile() ? COUNT_MOBILE : COUNT_DESKTOP;
     const gap = isMobile() ? 6 : 8;
-    const avail = (stage ? stage.clientWidth : HOST.clientWidth) - gap * (count - 1);
-    scale = Math.min(1, Math.max(1, avail) / count / NATURAL);
+    const avail = (stage ? stage.clientWidth : HOST.clientWidth) - gap * (COUNT - 1);
+    scale = Math.min(1, Math.max(1, avail) / COUNT / NATURAL);
     HOST.style.setProperty('--xw', NATURAL + 'px');
     HOST.style.setProperty('--xs', scale.toFixed(4));
     HOST.style.setProperty('--xgap', gap + 'px');
@@ -27298,7 +27289,7 @@ if(cmap){
   function stagePair(list){
     const pair = document.createElement('div');
     pair.className = 'xpair staging';
-    const inners = list.map(() => {
+    const inners = list.map(p => {
       const slot = document.createElement('div');
       slot.className = 'xslot';
       const inner = document.createElement('div');
@@ -27306,6 +27297,7 @@ if(cmap){
       const hit = document.createElement('button');
       hit.type = 'button';
       hit.className = 'xhit';
+      hit.dataset.pid = (p && p.id) || '';     // X Machines で先頭に置く1件
       hit.setAttribute('aria-label', 'X Machines を開く');
       slot.append(inner, hit);
       pair.appendChild(slot);
@@ -27337,8 +27329,8 @@ if(cmap){
   }
 
   // 仕込み済みの組を表に出し、古いほうを捨てる
-  function reveal(pair, dir){
-    const enter = dir === 'prev' ? 'toLeft' : 'toRight';
+  function reveal(pair){
+    const enter = 'toRight';
     pair.classList.add(enter);
     pair.classList.remove('staging');
     void pair.offsetWidth;                 // 位置を確定させてから戻す
@@ -27348,81 +27340,70 @@ if(cmap){
     current = pair;
   }
 
-  // 新しい組をランダムで引き直す。dirは出ていく向きだけを決める。
-  async function shuffle(dir){
-    if(busy) return;
-    const list = pickMany(count);
-    if(!list.length) return;
-    busy = true;
-    setNav(false);
-    try{
-      measure();
-      const pair = await fillPair(list);
-      if(!pair) return;                    // 引けなければ今の組を残す
-      if(current){
-        current.classList.add('anim', dir === 'prev' ? 'toRight' : 'toLeft');
-        await new Promise(r => setTimeout(r, ANIM_MS));
-      }
-      reveal(pair, dir);
-    }catch(e){
-      console.warn('[x-featured]', e && e.message ? e.message : e);
-    }finally{
-      busy = false;
-      setNav(true);
-    }
-  }
-
-  function setNav(on){
-    if(nav) nav.querySelectorAll('button').forEach(b => { b.disabled = !on; });
-  }
-
   // X Machines タブへ送る。タブ側の処理はページ本体が持っている。
-  function openWall(){
+  // 押した1件は pendingLead に預け、開いた先で先頭に回す。
+  function openWall(pid){
+    pendingLead = pid || null;
     const tab = document.querySelector('.tab[data-genre="' + WALL_GENRE + '"]');
     if(tab) tab.click();
   }
 
   function buildShell(){
     HOST.innerHTML = '';
-    nav = document.createElement('div');
-    nav.className = 'xnav';
-    nav.innerHTML =
-      '<button type="button" aria-label="別の投稿に入れ替える">' +
-      '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" ' +
-      'stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
-      '<path d="M20.4 11.9a8.5 8.5 0 1 1-2.5-6"/><path d="M20.8 3.6v5.2h-5.2"/>' +
-      '</svg></button>';
     stage = document.createElement('div');
     stage.className = 'xstage';
-    HOST.append(nav, stage);          // アイコンは帯の上
+    HOST.appendChild(stage);
 
-    nav.addEventListener('click', e => {
-      const b = e.target.closest('button');
-      if(!b) return;
-      b.classList.remove('spin');
-      void b.offsetWidth;
-      b.classList.add('spin');
-      shuffle('next');
-    });
-
-    // サムネはどこを押しても X Machines へ
+    // サムネはどこを押しても X Machines へ。押した1件を先頭に回す。
     stage.addEventListener('click', e => {
-      if(e.target.closest('.xhit')) openWall();
+      const hit = e.target.closest('.xhit');
+      if(hit) openWall(hit.dataset.pid);
     });
 
     let rt = null;
     window.addEventListener('resize', () => {
-      const before = count;
       clearTimeout(rt);
-      rt = setTimeout(() => {
-        measure();
-        // 並べる数が変わったら組ごと引き直す（枠の数が合わなくなるため）
-        if(count !== before) shuffle('next');
-      }, 180);
+      rt = setTimeout(() => { measure(); measureWall(); fitWall(); }, 180);
     });
   }
 
-  // ---- X Machines（全件を素の大きさで） ----
+  // ---- X Machines（全件を2列で敷き詰める） ----
+  // 列幅に合わせて素の幅と縮小率を決める。素の幅は組んだ時点で固定する
+  // （変えると描き直しになり、iframeが全部読み込み直しになるため）。
+  function measureWall(){
+    if(!WALL || !WALL.classList.contains('on')) return;
+    const col = Math.max(1, (WALL.clientWidth - WALL_GAP * (WALL_COLS - 1)) / WALL_COLS);
+    if(!wallDone) wallNatural = Math.round(Math.min(550, Math.max(NATURAL, col)));
+    wallScale = Math.min(1, col / wallNatural);
+    WALL.style.setProperty('--xww', wallNatural + 'px');
+    WALL.style.setProperty('--xws', wallScale.toFixed(4));
+    WALL.style.setProperty('--xwgap', WALL_GAP + 'px');
+  }
+
+  // 縮小したぶんだけセルの高さも詰める（下に余白が残らないように）
+  const wro = ('ResizeObserver' in window)
+    ? new ResizeObserver(es => { for(const e of es) fitCell(e.target); }) : null;
+  function fitCell(inner){
+    const cell = inner.parentElement;
+    if(!cell) return;
+    const h = inner.offsetHeight;
+    cell.style.height = h ? Math.ceil(h * wallScale) + 'px' : '';
+  }
+  function fitWall(){ wallCells.forEach(c => fitCell(c.inner)); }
+
+  // 押した1件を先頭に、残りをシャッフルして並べる。
+  // DOMは動かさず order だけ振る（動かすとiframeが読み込み直しになる）。
+  function orderWall(leadId){
+    if(!wallCells.length) return;
+    const rest = wallCells.filter(c => c.id !== leadId);
+    for(let i = rest.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      const t = rest[i]; rest[i] = rest[j]; rest[j] = t;
+    }
+    const lead = wallCells.find(c => c.id === leadId);
+    (lead ? [lead].concat(rest) : rest).forEach((c, i) => { c.cell.style.order = i; });
+  }
+
   async function buildWall(){
     if(!WALL || wallDone) return;
     wallDone = true;
@@ -27440,27 +27421,45 @@ if(cmap){
     }
     const grid = document.createElement('div');
     grid.className = 'xwgrid';
-    const cells = list.map(() => {
-      const c = document.createElement('div');
-      c.className = 'xwcell';
-      grid.appendChild(c);
-      return c;
+    const built = list.map(p => {
+      const cell = document.createElement('div');
+      cell.className = 'xwcell';
+      const inner = document.createElement('div');
+      inner.className = 'xwinner';
+      cell.appendChild(inner);
+      grid.appendChild(cell);
+      return {id: (p && p.id) || '', cell, inner};
     });
     WALL.innerHTML = '';
     WALL.appendChild(grid);
 
-    const opts = tweetOpts();
+    const opts = Object.assign(tweetOpts(), {width: wallNatural});
     await Promise.all(list.map((p, i) =>
-      twttr.widgets.createTweet(tweetIdOf(p.url), cells[i], opts).catch(() => null)));
-    cells.forEach(c => { if(!c.querySelector('iframe')) c.remove(); });
-    if(!grid.querySelector('iframe')){
+      twttr.widgets.createTweet(tweetIdOf(p.url), built[i].inner, opts).catch(() => null)));
+
+    // 描画できなかったものは畳む
+    built.forEach(c => { if(!c.inner.querySelector('iframe')) c.cell.remove(); });
+    wallCells = built.filter(c => c.inner.querySelector('iframe'));
+    if(!wallCells.length){
       WALL.innerHTML = '<div class="xwnote">投稿を読み込めませんでした。</div>';
+      return;
     }
+    wallCells.forEach(c => { fitCell(c.inner); if(wro) wro.observe(c.inner); });
+  }
+
+  // 開くたびに並べ替える。押した1件があればそれが先頭。
+  async function openWallView(){
+    const lead = pendingLead;
+    pendingLead = null;
+    measureWall();
+    await buildWall();
+    fitWall();
+    orderWall(lead);
   }
 
   // ページ本体（タブ切り替え）から呼ばれる
   window.__xwall = {
-    open(){ if(WALL){ WALL.classList.add('on'); buildWall(); } HOST.hidden = true; },
+    open(){ if(WALL){ WALL.classList.add('on'); openWallView(); } HOST.hidden = true; },
     close(){ if(WALL) WALL.classList.remove('on'); if(HOST.dataset.ready) HOST.hidden = false; },
     count(){ return actives().length; }
   };
@@ -27486,7 +27485,7 @@ if(cmap){
     stage.innerHTML = '<div class="xph">読み込み中…</div>';
     measure();
 
-    const first = pickMany(count);
+    const first = pickMany(COUNT);
     if(!first.length) return giveUp(null);   // 候補なしは異常ではないので静かに隠す
 
     let pair;
@@ -27499,7 +27498,7 @@ if(cmap){
 
     const ph = stage.querySelector('.xph');
     if(ph) ph.remove();
-    reveal(pair, 'next');
+    reveal(pair);
     HOST.classList.remove('loading');
     HOST.classList.add('done');
     HOST.dataset.ready = '1';
