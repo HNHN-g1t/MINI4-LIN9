@@ -20,6 +20,7 @@ from datetime import datetime, timedelta, timezone
 
 import colormap_ui
 import paint_colors
+import x_embed_ui
 
 JST = timezone(timedelta(hours=9))
 
@@ -167,7 +168,7 @@ font-weight:700;cursor:pointer}
 .pager .gap{color:var(--ink3);font-size:12px;padding:0 2px}
 footer{max-width:1120px;margin:0 auto;padding:16px;font-size:11px;color:var(--ink3);border-top:1px solid var(--line)}
 @media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
-""" + colormap_ui.CSS
+""" + colormap_ui.CSS + x_embed_ui.CSS
 
 JS = """
 const q = document.getElementById('q');
@@ -360,7 +361,7 @@ syncChips();
 apply();
 const _hp = location.hash.match(/p=(\\d)+/);
 if(_hp){ page = parseInt(location.hash.replace(/[^0-9]/g, ''), 10) || 1; renderPage(); }
-""" + colormap_ui.JS
+""" + colormap_ui.JS + x_embed_ui.JS
 
 
 NOT_FOUND_HTML = """<!DOCTYPE html>
@@ -426,6 +427,11 @@ def copy_assets(outdir: str) -> None:
     # 独自ドメイン（mini4lin9.fun）用の CNAME。
     # DNSレコードの登録が済むまでは CNAME.pending のまま置いておく。
     # 有効化するときは CNAME.pending を CNAME にリネームするだけでよい。
+    # X投稿リスト（docs/data/x-featured-posts.json）は手で編集する運用のため、
+    # 生成時に触らない。ここでは存在の確認だけしておく。
+    if not os.path.exists(os.path.join(outdir, "data", "x-featured-posts.json")):
+        print("  注意: data/x-featured-posts.json が見つかりません（X投稿は非表示になります）")
+
     if os.path.exists("CNAME"):
         shutil.copy2("CNAME", os.path.join(outdir, "CNAME"))
 
@@ -530,6 +536,7 @@ def build(items: list[dict], outdir: str) -> str:
   <div class="tabs">{tab_html}</div>
 </header>
 <main>
+{x_embed_ui.SECTION}
   <div class="chips">{chip_html}</div>
 {cmap_html}
   <div class="count-line" id="countLine"></div>

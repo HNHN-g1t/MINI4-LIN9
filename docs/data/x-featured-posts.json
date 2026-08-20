@@ -1,0 +1,31 @@
+{
+  "sourceHashtags": [
+    "#m4condele",
+    "#コンデレ",
+    "#JC2026コンデレ1",
+    "#JC2026コンデレ2",
+    "#コジマコンデレ",
+    "#コジデレ",
+    "#ReFEEDコンデレ",
+    "#ReFEED"
+  ],
+  "displaySettings": {
+    "maxPosts": 1,
+    "random": true,
+    "avoidRecentCount": 5,
+    "autoRotate": false,
+    "hideThread": true,
+    "dnt": true,
+    "lang": "ja"
+  },
+  "posts": [
+    {
+      "id": "x-001",
+      "url": "<X_POST_URL>",
+      "hashtags": ["#m4condele"],
+      "active": true,
+      "addedAt": "2026-08-20",
+      "memo": ""
+    }
+  ]
+}
