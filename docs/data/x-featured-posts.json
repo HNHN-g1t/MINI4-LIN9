@@ -10,9 +10,9 @@
     "#ReFEED"
   ],
   "displaySettings": {
-    "maxPosts": 1,
+    "maxPosts": 2,
     "random": true,
-    "avoidRecentCount": 5,
+    "avoidRecentCount": 8,
     "autoRotate": false,
     "hideThread": true,
     "dnt": true,
