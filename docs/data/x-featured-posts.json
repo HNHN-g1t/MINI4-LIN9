@@ -22,7 +22,9 @@
     {
       "id": "x-001",
       "url": "https://x.com/yaaamadaaa_/status/1046017148424925189",
-      "hashtags": ["#m4condele"],
+      "hashtags": [
+        "#m4condele"
+      ],
       "active": true,
       "addedAt": "2026-08-20",
       "memo": "NEWマックスブレイカー"
@@ -66,6 +68,106 @@
       "active": true,
       "addedAt": "2026-08-20",
       "memo": "バーニングゴッドサン 冬仕様"
+    },
+    {
+      "id": "x-007",
+      "url": "https://x.com/tsukasan774/status/2081707478287536491",
+      "hashtags": [
+        "#JC2026コンデレ1"
+      ],
+      "active": true,
+      "addedAt": "2026-08-20",
+      "memo": "#コンデレ No.01 ／ ガンブラスター 2nd ignition"
+    },
+    {
+      "id": "x-008",
+      "url": "https://x.com/13Phyrexian/status/2079325933002170706",
+      "hashtags": [
+        "#JC2026コンデレ1"
+      ],
+      "active": true,
+      "addedAt": "2026-08-20",
+      "memo": "#コンデレ No.02 ／ GENUINE"
+    },
+    {
+      "id": "x-009",
+      "url": "https://x.com/yamazakiYu16305/status/2079902660162154908",
+      "hashtags": [
+        "#JC2026コンデレ1"
+      ],
+      "active": true,
+      "addedAt": "2026-08-20",
+      "memo": "#コンデレ No.03 ／ ジオグライダー SPORTS"
+    },
+    {
+      "id": "x-010",
+      "url": "https://x.com/03ziong/status/2081539799274680560",
+      "hashtags": [
+        "#JC2026コンデレ1"
+      ],
+      "active": true,
+      "addedAt": "2026-08-20",
+      "memo": "#コンデレ No.04 ／ ディノレーシング"
+    },
+    {
+      "id": "x-011",
+      "url": "https://x.com/zgmfx47a/status/2079164810215018978",
+      "hashtags": [
+        "#JC2026コンデレ1"
+      ],
+      "active": true,
+      "addedAt": "2026-08-20",
+      "memo": "#コンデレ No.05 ／ ゼノエアロ・スパイダー"
+    },
+    {
+      "id": "x-012",
+      "url": "https://x.com/motivilleneuve/status/2089237564947599713",
+      "hashtags": [
+        "#JC2026コンデレ2"
+      ],
+      "active": true,
+      "addedAt": "2026-08-20",
+      "memo": "#コンデレ No.06 ／ TaNaKa さん フリー部門"
+    },
+    {
+      "id": "x-013",
+      "url": "https://x.com/zork7i/status/2086784755341906258",
+      "hashtags": [
+        "#JC2026コンデレ2"
+      ],
+      "active": true,
+      "addedAt": "2026-08-20",
+      "memo": "#コンデレ No.07 ／ BLITZER-SONIC BLAZE SPECIAL"
+    },
+    {
+      "id": "x-014",
+      "url": "https://x.com/BassMs06r2/status/2085410302909448383",
+      "hashtags": [
+        "#JC2026コンデレ2"
+      ],
+      "active": true,
+      "addedAt": "2026-08-20",
+      "memo": "#コンデレ No.08 ／ Silver Bullet-RB"
+    },
+    {
+      "id": "x-015",
+      "url": "https://x.com/KK_illustrate/status/2087818757490217209",
+      "hashtags": [
+        "#JC2026コンデレ2"
+      ],
+      "active": true,
+      "addedAt": "2026-08-20",
+      "memo": "#コンデレ No.09 ／ GE.RM/"
+    },
+    {
+      "id": "x-016",
+      "url": "https://x.com/PandaFainted/status/2089101691459457416",
+      "hashtags": [
+        "#JC2026コンデレ2"
+      ],
+      "active": true,
+      "addedAt": "2026-08-20",
+      "memo": "#コンデレ No.10 ／ ADVAN Razorback"
     }
   ]
 }
