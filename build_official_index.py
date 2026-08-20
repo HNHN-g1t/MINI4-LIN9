@@ -28,7 +28,8 @@ JST = timezone(timedelta(hours=9))
 MERCARI_AFID = "1714548549"      # メルカリアンバサダー
 AMAZON_TAG = "hnhn03-22"         # Amazonアソシエイト
 RAKUTEN_AFID = "56ae2925.07c6f012.56ae2926.4d88b0cd"   # 楽天アフィリエイト
-VALUECOMMERCE_ID = ""            # ValueCommerce（申請中。IDが出たらここに入れる）
+VALUECOMMERCE_SID = "3778941"    # ValueCommerce サイトID
+VALUECOMMERCE_PID = "892682983"  # ValueCommerce LinkSwitch の vc_pid
 
 # 上段タブの並び（tamiya_catalog.json の genre_key に対応）。「すべて」は末尾に付く。
 GENRE_ORDER = [
@@ -90,8 +91,8 @@ def ec_links(item: dict) -> list[tuple[str, str, str]]:
         ("amazon", f"https://www.amazon.co.jp/s?k={q}&tag={AMAZON_TAG}", "sponsored noopener"),
         ("メルカリ", f"https://jp.mercari.com/search?keyword={mq}&afid={MERCARI_AFID}",
          "sponsored noopener"),
-        ("Yahoo!", f"https://shopping.yahoo.co.jp/search?p={q}", "noopener"),
-        ("ヤフオク", f"https://auctions.yahoo.co.jp/search/search?p={q}", "noopener"),
+        ("Yahoo!", f"https://shopping.yahoo.co.jp/search?p={q}", "sponsored noopener"),
+        ("ヤフオク", f"https://auctions.yahoo.co.jp/search/search?p={q}", "sponsored noopener"),
         ("楽天", rakuten_url, "sponsored noopener"),
     ]
 
@@ -553,12 +554,16 @@ def build(items: list[dict], outdir: str) -> str:
   商品写真は公式サイトから直接参照しています。ECリンクは各モールの検索結果を開きます。
   お気に入りはご利用中のブラウザ内にのみ保存され、サーバーには送信されません。<br>
   <b>【PR】</b>当サイトはアフィリエイトプログラム（メルカリアンバサダー、Amazonアソシエイト、
-  楽天アフィリエイト、ValueCommerce ※申請中）を利用しており、商品リンク経由の購入により
+  楽天アフィリエイト、ValueCommerce）を利用しており、商品リンク経由の購入により
   報酬を受け取る場合があります。
   Amazonアソシエイトとして適格販売により収入を得ています。<br>
   最終更新 {datetime.now(JST).strftime("%Y-%m-%d %H:%M JST")}
 </footer>
 <script>{JS}</script>
+<!-- ValueCommerce LinkSwitch: ページ内のYahoo!ショッピング・ヤフオクへのリンクを
+     自動でアフィリエイトリンクに差し替える。リンクのURLは書き換えない。 -->
+<script>var vc_pid = "{VALUECOMMERCE_PID}";</script>
+<script src="//aml.valuecommerce.com/vcdal.js" async></script>
 </body>
 </html>
 """
