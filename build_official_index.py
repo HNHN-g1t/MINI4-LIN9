@@ -112,7 +112,7 @@ header{background:var(--surface);border-bottom:1px solid var(--line);position:st
 .searchbox input{flex:1;border:1.5px solid var(--line);border-radius:8px;padding:8px 12px;font-size:13px;outline:none}
 .searchbox input:focus{border-color:var(--brand)}
 .tabs{max-width:1120px;margin:0 auto;display:flex;gap:4px;padding:0 16px;flex-wrap:wrap}
-.tab{padding:9px 20px;font-size:13.5px;font-weight:700;color:var(--ink2);cursor:pointer;
+.tab{padding:7.6px 20px;font-size:13.5px;font-weight:700;color:var(--ink2);cursor:pointer;
 background:var(--surface);border-radius:4px 4px 0 0;user-select:none;white-space:nowrap}
 .tab:hover{color:var(--brand);background:var(--brand-soft)}
 .tab.on{background:var(--brand);color:#fff}
@@ -120,6 +120,9 @@ background:var(--surface);border-radius:4px 4px 0 0;user-select:none;white-space
 .tab .n{font-size:11px;font-weight:600;color:var(--ink3);margin-left:6px}
 .tab.on .n{color:#cfe0fa}
 main{max-width:1120px;margin:0 auto;padding:12px 16px 40px}
+/* X Machines タブ表示中は商品一覧まわりを出さない */
+body.wall .chips,body.wall .cmap,body.wall .cmap-fab,body.wall .count-line,
+body.wall .pager,body.wall .grid,body.wall .empty{display:none !important}
 .chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px}
 .chip{background:var(--surface);border:1.5px solid var(--line);border-radius:999px;
 padding:5px 14px;font-size:12px;font-weight:600;cursor:pointer;user-select:none}
@@ -213,7 +216,7 @@ function paintFavs(){
 function syncChips(){
   // ジャンル未選択（すべて）・お気に入りのときは細分類を出さない。
   // ジャンル選択時は、そのジャンルに存在する細分類だけ出す。
-  const real = genre && genre !== 'fav';
+  const real = genre && genre !== 'fav' && genre !== 'xm';
   for(const ch of chips){
     const gs = ch.dataset.genres;
     ch.classList.toggle('hide', !(real && (!gs || gs.split(' ').includes(genre))));
@@ -227,7 +230,15 @@ function syncChips(){
   chipRow.style.display = (real && usable > 1) ? '' : 'none';
 }
 
+const WALL_GENRE = 'xm';
+
 function apply(resetPage){
+  // X Machines は商品一覧ではないので、絞り込みも件数もページ送りも使わない
+  const wall = genre === WALL_GENRE;
+  document.body.classList.toggle('wall', wall);
+  if(window.__xwall) wall ? window.__xwall.open() : window.__xwall.close();
+  if(wall) return;
+
   const terms = q.value.trim().toLowerCase().split(/\\s+/).filter(Boolean);
   matched = cards.filter(c => {
     const okGenre = !genre ? true
@@ -465,6 +476,8 @@ def build(items: list[dict], outdir: str) -> str:
         f'<div class="tab" data-genre="{k}">{html.escape(lb)}<span class="n">{genre_counts[k]}</span></div>'
         for k, lb in genres
     ) + (
+        f'<div class="tab" data-genre="{x_embed_ui.WALL_GENRE}">X Machines'
+        '<span class="n" id="xmN"></span></div>'
         f'<div class="tab on" data-genre="">すべて<span class="n">{len(items)}</span></div>'
         '<div class="tab fav" data-genre="fav">★ お気に入り<span class="n" id="favN">0</span></div>'
     )
@@ -538,6 +551,7 @@ def build(items: list[dict], outdir: str) -> str:
 </header>
 <main>
 {x_embed_ui.SECTION}
+{x_embed_ui.WALL_SECTION}
   <div class="chips">{chip_html}</div>
 {cmap_html}
   <div class="count-line" id="countLine"></div>
