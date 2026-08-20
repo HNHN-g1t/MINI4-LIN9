@@ -120,8 +120,17 @@ JS = """
     HOST.innerHTML = '<div class="xph">読み込み中…</div>';
 
     let done = false;
-    const timer = setTimeout(() => { if(!done) giveUp('埋め込みの描画がタイムアウトしました'); },
-                             RENDER_TIMEOUT);
+    const timer = setTimeout(() => {
+      if(done) return;
+      // 応答が遅いだけで描画自体は済んでいることがある。その場合は残す。
+      if(HOST.querySelector('iframe')){
+        HOST.classList.remove('loading');
+        HOST.classList.add('done');
+        done = true;
+        return;
+      }
+      giveUp('埋め込みの描画がタイムアウトしました');
+    }, RENDER_TIMEOUT);
 
     try{
       const twttr = await loadWidgets();
@@ -132,10 +141,13 @@ JS = """
         dnt: cfg.dnt !== false,
         lang: cfg.lang || 'ja'
       });
+      const alreadyShown = done;      // タイムアウト側で描画済みと判断していた場合
       done = true;
       clearTimeout(timer);
       // 削除・非公開などで描画されなかった場合は undefined が返る
-      if(!el) return giveUp('投稿を表示できませんでした（削除・非公開の可能性）');
+      if(!el && !HOST.querySelector('iframe') && !alreadyShown){
+        return giveUp('投稿を表示できませんでした（削除・非公開の可能性）');
+      }
       HOST.classList.remove('loading');
       HOST.classList.add('done');
     }catch(e){
