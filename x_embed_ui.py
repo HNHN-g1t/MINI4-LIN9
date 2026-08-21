@@ -207,7 +207,7 @@ JS = """
     scale = Math.min(1, col / bandNatural);
     HOST.style.setProperty('--xw', bandNatural + 'px');
     // 窓の高さは写真グリッドの高さそのもの。PC・スマホとも同じ考え方にする。
-    HOST.style.setProperty('--xh', Math.round(photoH() * scale) + 'px');
+    HOST.style.setProperty('--xh', Math.round(photoH() * scale) + extraTop() + 'px');
     HOST.style.setProperty('--xs', scale.toFixed(4));
     HOST.style.setProperty('--xgap', gap + 'px');
   }
@@ -228,6 +228,10 @@ JS = """
   // 写真の下端から投稿の下端までの高さ（日付＋アクション＋返信リンク）。
   // ここを増やすと窓が上へ、減らすと下へ動く。合わなければこの数値だけ直せばよい。
   const BELOW_PHOTO = 116;
+  // 窓を写真より上へ広げる量（画面px）。下端は固定なので、増やすと上に伸びる。
+  const extraTop = () => isMobile() ? 0 : 4;
+  // 投稿を下へずらす量（画面px）。増やすと中身が下がる。
+  const nudge = () => isMobile() ? 2 : 0;
 
   const photoH = () => (bandNatural - CONTENT_PAD * 2) * MEDIA_RATIO;
 
@@ -242,8 +246,9 @@ JS = """
       inner.style.setProperty('--yoff', '0px');
       return;
     }
-    // 窓の下端を写真の下端に合わせる（日付から下は窓の外に出る）
-    const target = h - BELOW_PHOTO - win;
+    // 窓の下端を写真の下端に合わせる（日付から下は窓の外に出る）。
+    // nudge は画面px指定なので、縮小前の座標に戻してから引く。
+    const target = h - BELOW_PHOTO - win - nudge() / scale;
     const off = Math.round(Math.max(0, Math.min(target, over)));
     inner.style.setProperty('--yoff', off + 'px');
   }
