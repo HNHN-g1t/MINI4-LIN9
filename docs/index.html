@@ -244,6 +244,8 @@ cursor:pointer;border-radius:8px;-webkit-tap-highlight-color:transparent}
 /* --xww = Xに描画させる素の幅 / --xws = 列幅に合わせた縮小率 */
 #xWall{--xww:250px;--xws:1;--xwgap:12px;display:none;margin:0 0 10px}
 #xWall.on{display:block}
+/* ページ送りは商品一覧と同じ見た目。body.wall で .pager を隠しているので上書きする */
+body.wall #xWall .pager.on{display:flex !important}
 .xwgrid{display:grid;gap:var(--xwgap);align-items:start;
 grid-template-columns:repeat(4,minmax(0,1fr))}
 @media(max-width:900px){
@@ -26806,7 +26808,7 @@ grid-template-columns:repeat(4,minmax(0,1fr))}
   楽天アフィリエイト、ValueCommerce）を利用しており、商品リンク経由の購入により
   報酬を受け取る場合があります。
   Amazonアソシエイトとして適格販売により収入を得ています。<br>
-  最終更新 2026-08-21 15:44 JST
+  最終更新 2026-08-21 15:53 JST
 </footer>
 <script>
 const q = document.getElementById('q');
@@ -27195,6 +27197,9 @@ if(cmap){
   const COUNT_PC = 4;           // PCで帯に並べる件数
   const COUNT_SP = 2;           // スマホで帯に並べる件数
   const WALL_GAP = 12;
+  const WALL_PER_PC = 12;       // X Machines の1ページ表示数（PC）
+  const WALL_PER_SP = 6;        // X Machines の1ページ表示数（スマホ）
+  const WALL_PAGE_WINDOW = 7;   // 数字ボタンを並べる最大数
   const DEFAULTS = {random:true, avoidRecentCount:8,
                     autoRotate:false, hideThread:true, dnt:true, lang:'ja'};
 
@@ -27202,10 +27207,14 @@ if(cmap){
   // Xに描かせる素の幅。並べたとき左右が余らないよう、最初の計測で決めて固定する
   // （途中で変えると描き直しになり、iframeが全部読み込み直しになるため）。
   let bandNatural = 250, bandFixed = false;
-  let stage = null, current = null, wallDone = false;
+  let stage = null, current = null, wallFixed = false;
   let wallCells = [], wallNatural = NATURAL, wallScale = 1, pendingLead = null;
+  let wallOrder = [];           // 開いたときに決めた並び（全件）
+  let wallPage = 1, wallPerPageNow = WALL_PER_PC;
+  let wallToken = 0;            // 描画中にページが変わったら捨てるための番号
   let bandIds = [];             // いまTOPの帯に出ている並び（X Machines の先頭に使う）
   const wallCols = () => isMobile() ? 2 : 4;
+  const wallPerPage = () => isMobile() ? WALL_PER_SP : WALL_PER_PC;
 
   const isMobile = () => window.matchMedia('(max-width:900px)').matches;
   const count = () => isMobile() ? COUNT_SP : COUNT_PC;
@@ -27468,7 +27477,17 @@ if(cmap){
     let rt = null;
     window.addEventListener('resize', () => {
       clearTimeout(rt);
-      rt = setTimeout(() => { measure(); centerAll(null); measureWall(); fitWall(); }, 180);
+      rt = setTimeout(() => {
+        measure(); centerAll(null); measureWall();
+        // PC⇔スマホをまたいだときは1ページの件数が変わるので組み直す
+        if(WALL && WALL.classList.contains('on') && wallPerPage() !== wallPerPageNow){
+          wallPerPageNow = wallPerPage();
+          wallPage = 1;
+          renderWallPage();
+        }else{
+          fitWall();
+        }
+      }, 180);
     });
   }
 
@@ -27479,7 +27498,10 @@ if(cmap){
     if(!WALL || !WALL.classList.contains('on')) return;
     const cols = wallCols();
     const col = Math.max(1, (WALL.clientWidth - WALL_GAP * (cols - 1)) / cols);
-    if(!wallDone) wallNatural = Math.round(Math.min(550, Math.max(NATURAL, col)));
+    if(!wallFixed){
+      wallNatural = Math.round(Math.min(550, Math.max(NATURAL, col)));
+      wallFixed = true;
+    }
     wallScale = Math.min(1, col / wallNatural);
     WALL.style.setProperty('--xww', wallNatural + 'px');
     WALL.style.setProperty('--xws', wallScale.toFixed(4));
@@ -27497,49 +27519,101 @@ if(cmap){
   }
   function fitWall(){ wallCells.forEach(c => fitCell(c.inner)); }
 
-  // 先頭の1段は、TOPの帯に出ていた並びをそのまま持ってくる。
-  // 押した1件があれば、その中でいちばん前に回す。
-  // 2段目以降はシャッフル。DOMは動かさず order だけ振る
-  // （動かすとiframeが読み込み直しになる）。
+  // 先頭は、TOPの帯に出ていた並びをそのまま持ってくる。
+  // 押した1件があれば、その中でいちばん前に回す。あとはシャッフル。
+  // 並び順は開いたときに1回だけ決め、ページを送っても崩れないようにする。
   function orderWall(leadId){
-    if(!wallCells.length) return;
-    const byId = id => wallCells.find(c => c.id === id);
+    const list = actives();
+    const byId = id => list.find(p => p.id === id);
 
-    // 帯に出ていたぶんを、帯と同じ順で先頭に置く
     let head = (bandIds || []).map(byId).filter(Boolean);
     if(leadId){
-      const i = head.findIndex(c => c.id === leadId);
+      const i = head.findIndex(p => p.id === leadId);
       if(i > 0) head = [head[i]].concat(head.filter((_, k) => k !== i));
       else if(i < 0 && byId(leadId)) head = [byId(leadId)].concat(head);
     }
-    const headIds = new Set(head.map(c => c.id));
+    const headIds = new Set(head.map(p => p.id));
 
-    const rest = wallCells.filter(c => !headIds.has(c.id));
+    const rest = list.filter(p => !headIds.has(p.id));
     for(let i = rest.length - 1; i > 0; i--){
       const j = Math.floor(Math.random() * (i + 1));
       const t = rest[i]; rest[i] = rest[j]; rest[j] = t;
     }
-    head.concat(rest).forEach((c, i) => { c.cell.style.order = i; });
+    wallOrder = head.concat(rest);
   }
 
-  async function buildWall(){
-    if(!WALL || wallDone) return;
-    wallDone = true;
-    const list = actives();
-    if(!list.length){
+  function wallPageCount(){
+    return Math.max(1, Math.ceil(wallOrder.length / wallPerPage()));
+  }
+
+  // 商品一覧のページ送りと同じ形。数字は WALL_PAGE_WINDOW 個までで、間は … にする。
+  function buildWallPager(el, total){
+    el.classList.toggle('on', total > 1);
+    if(total <= 1){ el.innerHTML = ''; return; }
+    const half = Math.floor(WALL_PAGE_WINDOW / 2);
+    const start = Math.max(1, Math.min(wallPage - half, total - WALL_PAGE_WINDOW + 1));
+    const end = Math.min(total, start + WALL_PAGE_WINDOW - 1);
+    const btn = (label, p, opt) =>
+      '<button type="button" data-p="' + p + '"' + (opt || '') + '>' + label + '</button>';
+    const parts = [btn('‹', wallPage - 1,
+      wallPage === 1 ? ' disabled aria-label="前のページ"' : ' aria-label="前のページ"')];
+    if(start > 1){
+      parts.push(btn('1', 1));
+      if(start > 2) parts.push('<span class="gap">…</span>');
+    }
+    for(let p = start; p <= end; p++){
+      parts.push(btn(p, p, p === wallPage ? ' aria-current="page"' : ''));
+    }
+    if(end < total){
+      if(end < total - 1) parts.push('<span class="gap">…</span>');
+      parts.push(btn(total, total));
+    }
+    parts.push(btn('›', wallPage + 1,
+      wallPage === total ? ' disabled aria-label="次のページ"' : ' aria-label="次のページ"'));
+    el.innerHTML = parts.join('');
+  }
+
+  // いまのページぶんだけ描く。前のページのiframeは捨てる（残すと重くなるため）。
+  async function renderWallPage(){
+    if(!WALL) return;
+    if(!wallOrder.length){
       WALL.innerHTML = '<div class="xwnote">表示できる投稿がありません。</div>';
       return;
     }
-    WALL.innerHTML = '<div class="xwnote">読み込み中…</div>';
+    const total = wallPageCount();
+    wallPage = Math.min(Math.max(1, wallPage), total);
+
     let twttr;
     try{ twttr = await loadWidgets(); }
     catch(e){
       WALL.innerHTML = '<div class="xwnote">投稿を読み込めませんでした。</div>';
       return;
     }
+
+    const token = ++wallToken;
+    if(wro) wallCells.forEach(c => wro.unobserve(c.inner));
+    wallCells = [];
+
+    WALL.innerHTML = '';
+    const pagerTop = document.createElement('nav');
+    pagerTop.className = 'pager xwpager';
+    pagerTop.setAttribute('aria-label', 'X Machines ページ送り（上）');
     const grid = document.createElement('div');
     grid.className = 'xwgrid';
-    const built = list.map(p => {
+    const pagerBottom = document.createElement('nav');
+    pagerBottom.className = 'pager xwpager';
+    pagerBottom.setAttribute('aria-label', 'X Machines ページ送り（下）');
+    WALL.appendChild(pagerTop);
+    WALL.appendChild(grid);
+    WALL.appendChild(pagerBottom);
+    buildWallPager(pagerTop, total);
+    buildWallPager(pagerBottom, total);
+
+    measureWall();
+    const per = wallPerPage();
+    wallPerPageNow = per;
+    const slice = wallOrder.slice((wallPage - 1) * per, (wallPage - 1) * per + per);
+    const built = slice.map(p => {
       const cell = document.createElement('div');
       cell.className = 'xwcell';
       const inner = document.createElement('div');
@@ -27548,43 +27622,61 @@ if(cmap){
       grid.appendChild(cell);
       return {id: (p && p.id) || '', cell, inner};
     });
-    WALL.innerHTML = '';
-    WALL.appendChild(grid);
 
     const opts = Object.assign(tweetOpts(), {width: wallNatural});
-    const jobs = list.map((p, i) =>
+    const jobs = slice.map((p, i) =>
       twttr.widgets.createTweet(tweetIdOf(p.url), built[i].inner, opts).catch(() => null));
-    // 1件でも応答が返らないと、この先の並び替えまで進めなくなる。
-    // 帯と同じように時間で打ち切る（描画済みのものはそのまま使える）。
+    // 1件でも応答が返らないと先に進めなくなるので、帯と同じように時間で打ち切る。
     let wt = null;
     const guard = new Promise(res => { wt = setTimeout(res, RENDER_TIMEOUT); });
     await Promise.race([Promise.all(jobs), guard]);
     clearTimeout(wt);
+    if(token !== wallToken) return;   // 描いている間にページが変わっていた
 
     // 描画できなかったものは畳む
     built.forEach(c => { if(!c.inner.querySelector('iframe')) c.cell.remove(); });
     wallCells = built.filter(c => c.inner.querySelector('iframe'));
-    if(!wallCells.length){
+    if(!wallCells.length && total === 1){
       WALL.innerHTML = '<div class="xwnote">投稿を読み込めませんでした。</div>';
       return;
     }
     wallCells.forEach(c => { fitCell(c.inner); if(wro) wro.observe(c.inner); });
   }
 
+  // ページ番号を押したら、そのページを描いて一覧の先頭へ戻す
+  if(WALL) WALL.addEventListener('click', e => {
+    const b = e.target.closest('.xwpager button[data-p]');
+    if(!b || b.disabled) return;
+    wallPage = parseInt(b.dataset.p, 10);
+    renderWallPage();
+    const top = WALL.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo({top: Math.max(0, top - 80), behavior: 'smooth'});
+  });
+
   // 開くたびに並べ替える。押した1件があればそれが先頭。
   async function openWallView(){
     const lead = pendingLead;
     pendingLead = null;
-    measureWall();
-    await buildWall();
-    fitWall();
     orderWall(lead);
+    wallPage = 1;
+    measureWall();
+    await renderWallPage();
+    fitWall();
   }
 
   // ページ本体（タブ切り替え）から呼ばれる
   window.__xwall = {
     open(){ if(WALL){ WALL.classList.add('on'); openWallView(); } HOST.hidden = true; },
-    close(){ if(WALL) WALL.classList.remove('on'); if(HOST.dataset.ready) HOST.hidden = false; },
+    close(){
+      if(WALL){
+        WALL.classList.remove('on');
+        if(wro) wallCells.forEach(c => wro.unobserve(c.inner));
+        wallCells = [];
+        wallToken++;                 // 描画中なら結果を捨てる
+        WALL.innerHTML = '';         // iframeを残さない
+      }
+      if(HOST.dataset.ready) HOST.hidden = false;
+    },
     count(){ return actives().length; }
   };
 
