@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>レースカレンダー｜ミニ四リン駆</title>
+<meta name="description" content="ミニ四駆のレース・イベント開催情報を都道府県別に見られるカレンダーです。">
+<link rel="icon" href="assets/favicon.png">
+<style>
+:root{
+  --bg:#f6f7f9; --surface:#fff; --line:#e2e6eb;
+  --ink:#1b1f24; --ink2:#4a5158; --ink3:#8b939c;
+  --brand:#1a5fd0; --red:#d32d3a;
+}
+:root:not([data-theme="light"]){}
+@media(prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#14171a; --surface:#1c2024; --line:#2c3238;
+    --ink:#eef1f4; --ink2:#b6bec6; --ink3:#828b94;
+    --brand:#5b9cff; --red:#ff6b76;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#14171a; --surface:#1c2024; --line:#2c3238;
+  --ink:#eef1f4; --ink2:#b6bec6; --ink3:#828b94;
+  --brand:#5b9cff; --red:#ff6b76;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+font-family:system-ui,-apple-system,"Segoe UI","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+line-height:1.6;-webkit-text-size-adjust:100%}
+.wrap{max-width:1120px;margin:0 auto;padding:14px 12px 40px}
+
+header{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:6px 0 14px}
+.logo{font-size:22px;font-weight:800;letter-spacing:.02em;text-decoration:none}
+.logo .a{color:var(--red)} .logo .b{color:var(--brand)}
+.back{margin-left:auto;font-size:13px;color:var(--brand);text-decoration:none}
+.back:hover{text-decoration:underline}
+h1{font-size:17px;margin:0 0 10px}
+
+/* 絞り込み */
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 12px}
+.bar select,.bar input{font:inherit;padding:7px 10px;border:1px solid var(--line);
+border-radius:8px;background:var(--surface);color:var(--ink);min-width:0}
+.bar input{flex:1 1 200px}
+.count{font-size:12px;color:var(--ink3);margin-left:auto}
+
+/* 月の見出し */
+.month{margin:22px 0 8px;font-size:15px;font-weight:700;color:var(--ink2);
+border-left:4px solid var(--brand);padding-left:8px}
+
+/* 一覧 */
+.list{display:grid;gap:8px}
+.row{display:grid;grid-template-columns:96px 78px 1fr;gap:10px;align-items:center;
+background:var(--surface);border:1px solid var(--line);border-radius:10px;
+padding:10px 12px;text-decoration:none;color:inherit}
+.row:hover{border-color:var(--brand)}
+.d{font-variant-numeric:tabular-nums;font-weight:700;font-size:14px}
+.d .wd{font-size:11px;color:var(--ink3);margin-left:4px;font-weight:500}
+.d.sat{color:#2f7ad6} .d.sun{color:var(--red)}
+.pf{font-size:12px;text-align:center;padding:3px 6px;border-radius:999px;
+background:rgba(26,95,208,.10);color:var(--brand);white-space:nowrap;
+overflow:hidden;text-overflow:ellipsis}
+/* 会場名は原文のまま持ち、表示のときだけ2行で省略する */
+.sp{font-size:13px;color:var(--ink2);display:-webkit-box;-webkit-line-clamp:2;
+-webkit-box-orient:vertical;overflow:hidden}
+.empty{padding:28px 10px;text-align:center;color:var(--ink3);font-size:13px}
+
+@media(max-width:600px){
+  .row{grid-template-columns:74px 1fr;row-gap:4px;padding:9px 10px}
+  .pf{grid-row:1;grid-column:2;justify-self:start}
+  .sp{grid-column:1 / -1}
+}
+
+footer{margin-top:32px;padding-top:14px;border-top:1px solid var(--line);
+font-size:12px;color:var(--ink3)}
+footer p{margin:4px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <a class="logo" href="index.html"><span class="a">ミニ四</span><span class="b">リン駆</span></a>
+  <a class="back" href="index.html">← パーツカタログへ戻る</a>
+</header>
+
+<h1>レースカレンダー</h1>
+
+<div class="bar">
+  <select id="pref" aria-label="都道府県で絞り込む"><option value="">すべての都道府県</option></select>
+  <select id="range" aria-label="期間で絞り込む">
+    <option value="0">これからの開催すべて</option>
+    <option value="1">1ヶ月以内</option>
+    <option value="3">3ヶ月以内</option>
+    <option value="6">6ヶ月以内</option>
+  </select>
+  <input id="q" type="search" placeholder="会場名で探す" aria-label="会場名で探す">
+  <span class="count" id="count"></span>
+</div>
+
+<div id="list" class="list"></div>
+
+<footer>
+  <p id="lastChecked">開催情報 最終確認日: 2026-08-21 ／ 最新情報は必ず主催ショップおよびタミヤ公式サイトでご確認ください</p>
+  <p>出典: <a href="https://www.tamiya.com/japan/event/index.html" rel="noopener">タミヤ公式 イベント一覧</a></p>
+</footer>
+
+</div>
+
+<script>
+// ここから下の EVENTS は review_events.py が丸ごと差し替える。
+// 手で直しても構わないが、形（キーの並びと1件1行）は崩さないこと。
+const EVENTS = [
+  { date:'2026-08-21', pref:'shizuoka', label:'静岡', shop:'グランドメルキュール浜名湖リゾート＆スパ', url:'https://www.tamiya.com/japan/event/tamiya_event_28507' },
+  { date:'2026-08-22', pref:'kyoto', label:'京都', shop:'ホビーショップ44', url:'https://www.tamiya.com/japan/event/tamiya_event_28280' },
+  { date:'2026-08-22', pref:'hyogo', label:'兵庫', shop:'GR Garage西宮・ダイハツ西宮建石', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_073' },
+  { date:'2026-08-22', pref:'hokkaido', label:'北海道', shop:'おもちゃの平野 本店', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_072' },
+  { date:'2026-08-22', pref:'chiba', label:'千葉', shop:'コジマ×ビックカメラ 習志野店', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_144' },
+  { date:'2026-08-22', pref:'osaka', label:'大阪', shop:'ミニ四駆サーキット ベテル', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707B_009' },
+  { date:'2026-08-22', pref:'ehime', label:'愛媛', shop:'[受付終了] 8/22 ミニ四駆ジャパンカップ2026 愛媛大会 前日練習', url:'https://www.tamiya.com/japan/event/jc26_entry_ehime_0822' },
+  { date:'2026-08-22', pref:'aichi', label:'愛知', shop:'工房ひなゆめ', url:'https://www.tamiya.com/japan/event/tamiya_event_26730' },
+  { date:'2026-08-22', pref:'kanagawa', label:'神奈川', shop:'HP CIRCUIT CLUB', url:'https://www.tamiya.com/japan/event/tamiya_event_28283' },
+  { date:'2026-08-22', pref:'kanagawa', label:'神奈川', shop:'タミヤプラモデルファクトリー トレッサ横浜店(南棟)', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_096' },
+  { date:'2026-08-22', pref:'shizuoka', label:'静岡', shop:'グランドメルキュール浜名湖リゾート＆スパ', url:'https://www.tamiya.com/japan/event/tamiya_event_28508' },
+  { date:'2026-08-23', pref:'mie', label:'三重', shop:'ポストホビー松阪店', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_087' },
+  { date:'2026-08-23', pref:'kyoto', label:'京都', shop:'ホビーショップ44', url:'https://www.tamiya.com/japan/event/tamiya_event_28281' },
+  { date:'2026-08-23', pref:'hokkaido', label:'北海道', shop:'BOOKOFF DCM上磯店', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_074' },
+  { date:'2026-08-23', pref:'hokkaido', label:'北海道', shop:'ホビーショップ ロックス', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_075' },
+  { date:'2026-08-23', pref:'chiba', label:'千葉', shop:'九十九里ふじ模型', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_083' },
+  { date:'2026-08-23', pref:'wakayama', label:'和歌山', shop:'和歌山模型', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_089' },
+  { date:'2026-08-23', pref:'saitama', label:'埼玉', shop:'るーく', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_082' },
+  { date:'2026-08-23', pref:'osaka', label:'大阪', shop:'TOY\'s きゃっぷ', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_088' },
+  { date:'2026-08-23', pref:'osaka', label:'大阪', shop:'コジマxビックカメラ大東店', url:'https://www.tamiya.com/japan/event/tamiya_event_27292' },
+  { date:'2026-08-23', pref:'osaka', label:'大阪', shop:'コジマ×ビックカメラ 大東店', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_146' },
+  { date:'2026-08-23', pref:'osaka', label:'大阪', shop:'ミニ四駆サーキット ベテル', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707C_004' },
+  { date:'2026-08-23', pref:'miyagi', label:'宮城', shop:'サニーランド フォルテ店', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_080' },
+  { date:'2026-08-23', pref:'miyazaki', label:'宮崎', shop:'ニッセイホビー', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_095' },
+  { date:'2026-08-23', pref:'toyama', label:'富山', shop:'おもちゃのバンビ 本郷店', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707B_011' },
+  { date:'2026-08-23', pref:'yamaguchi', label:'山口', shop:'掘り出しパラダイス 古着市場 防府店', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_093' },
+  { date:'2026-08-23', pref:'yamanashi', label:'山梨', shop:'コジマxビックカメラ甲府店', url:'https://www.tamiya.com/japan/event/tamiya_event_27291' },
+  { date:'2026-08-23', pref:'yamanashi', label:'山梨', shop:'コジマ×ビックカメラ 甲府店', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_145' },
+  { date:'2026-08-23', pref:'iwate', label:'岩手', shop:'トイ・ワークス', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_079' },
+  { date:'2026-08-23', pref:'iwate', label:'岩手', shop:'ホビーショップ･パワーナイン', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_078' },
+  { date:'2026-08-23', pref:'hiroshima', label:'広島', shop:'Yellow', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_091' },
+  { date:'2026-08-23', pref:'hiroshima', label:'広島', shop:'こいのぼり', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_092' },
+  { date:'2026-08-23', pref:'tokushima', label:'徳島', shop:'ホビーベースパレパレ', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_094' },
+  { date:'2026-08-23', pref:'ehime', label:'愛媛', shop:'[受付終了] 8/23 ミニ四駆ジャパンカップ2026 愛媛大会', url:'https://www.tamiya.com/japan/event/jc26_entry_ehime_0823' },
+  { date:'2026-08-23', pref:'aichi', label:'愛知', shop:'(有)トイズタウン 本店', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_086' },
+  { date:'2026-08-23', pref:'aichi', label:'愛知', shop:'iiba(イーバ)蒲郡', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707B_012' },
+  { date:'2026-08-23', pref:'aichi', label:'愛知', shop:'ハッピーランド はだ', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_085' },
+  { date:'2026-08-23', pref:'tochigi', label:'栃木', shop:'おもちゃのマンネンヤ', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_081' },
+  { date:'2026-08-23', pref:'okinawa', label:'沖縄', shop:'コジマ×ビックカメラ 那覇店', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_147' },
+  { date:'2026-08-23', pref:'kanagawa', label:'神奈川', shop:'HP CIRCUIT CLUB', url:'https://www.tamiya.com/japan/event/tamiya_event_28282' },
+  { date:'2026-08-23', pref:'kanagawa', label:'神奈川', shop:'トイプラザビットワン', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707B_010' },
+  { date:'2026-08-23', pref:'kanagawa', label:'神奈川', shop:'ホビーショップ だいまつ', url:'https://www.tamiya.com/japan/event/tamiya_event_28443' },
+  { date:'2026-08-23', pref:'akita', label:'秋田', shop:'アニメヒーローショップ とらのあな', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_076' },
+  { date:'2026-08-23', pref:'aomori', label:'青森', shop:'コムカイ模型', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_077' },
+  { date:'2026-08-23', pref:'shizuoka', label:'静岡', shop:'グランドメルキュール浜名湖リゾート＆スパ', url:'https://www.tamiya.com/japan/event/tamiya_event_28509' },
+  { date:'2026-08-23', pref:'shizuoka', label:'静岡', shop:'静岡ホビースクエア オフィシャルショップ', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_084' },
+  { date:'2026-08-23', pref:'tottori', label:'鳥取', shop:'ホビーショップ ねねね', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_090' },
+  { date:'2026-08-24', pref:'shizuoka', label:'静岡', shop:'グランドメルキュール浜名湖リゾート＆スパ', url:'https://www.tamiya.com/japan/event/tamiya_event_28510' },
+  { date:'2026-08-25', pref:'gunma', label:'群馬', shop:'DKサーキット', url:'https://www.tamiya.com/japan/event/tamiya_event_28277' },
+  { date:'2026-08-25', pref:'shizuoka', label:'静岡', shop:'グランドメルキュール浜名湖リゾート＆スパ', url:'https://www.tamiya.com/japan/event/tamiya_event_28511' },
+  { date:'2026-08-26', pref:'shizuoka', label:'静岡', shop:'グランドメルキュール浜名湖リゾート＆スパ', url:'https://www.tamiya.com/japan/event/tamiya_event_28512' },
+  { date:'2026-08-27', pref:'shizuoka', label:'静岡', shop:'グランドメルキュール浜名湖リゾート＆スパ', url:'https://www.tamiya.com/japan/event/tamiya_event_28513' },
+  { date:'2026-08-28', pref:'hyogo', label:'兵庫', shop:'ミニ四駆カフェ&バー Guild (ギルド)', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707B_013' },
+  { date:'2026-08-28', pref:'shizuoka', label:'静岡', shop:'グランドメルキュール浜名湖リゾート＆スパ', url:'https://www.tamiya.com/japan/event/tamiya_event_28514' },
+  { date:'2026-08-29', pref:'hyogo', label:'兵庫', shop:'（株）てんと線 KHDSステーション', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707B_015' },
+  { date:'2026-08-29', pref:'hokkaido', label:'北海道', shop:'MEGAドン・キホーテ 苫小牧店', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_071' },
+  { date:'2026-08-29', pref:'oita', label:'大分', shop:'T.H.M.F ヒタハシリ', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_099' },
+  { date:'2026-08-29', pref:'osaka', label:'大阪', shop:'3249ROOM', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707C_009' },
+  { date:'2026-08-29', pref:'ehime', label:'愛媛', shop:'リンクスフジヤ', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_098' },
+  { date:'2026-08-29', pref:'tochigi', label:'栃木', shop:'コジマ×ビックカメラ 宇都宮本店', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_148' },
+  { date:'2026-08-29', pref:'ishikawa', label:'石川', shop:'G-MAX', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707B_014' },
+  { date:'2026-08-29', pref:'fukuoka', label:'福岡', shop:'コジマ×ビックカメラ 小倉店', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_149' },
+  { date:'2026-08-29', pref:'shizuoka', label:'静岡', shop:'グランドメルキュール浜名湖リゾート＆スパ', url:'https://www.tamiya.com/japan/event/tamiya_event_28515' },
+  { date:'2026-08-29', pref:'tottori', label:'鳥取', shop:'ホビーショップ エース', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_097' },
+  { date:'2026-08-30', pref:'kyoto', label:'京都', shop:'ホビーショップ バンビーノ', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_122' },
+  { date:'2026-08-30', pref:'hyogo', label:'兵庫', shop:'(株)タケモト模型', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_126' },
+  { date:'2026-08-30', pref:'hyogo', label:'兵庫', shop:'ヴィーナスタウン花北', url:'https://www.tamiya.com/japan/event/tamiya_event_28473' },
+  { date:'2026-08-30', pref:'hyogo', label:'兵庫', shop:'（株）てんと線 KHDSステーション', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707C_008' },
+  { date:'2026-08-30', pref:'hokkaido', label:'北海道', shop:'HSくしろベース', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_100' },
+  { date:'2026-08-30', pref:'chiba', label:'千葉', shop:'(有)ハチピー模型店', url:'https://www.tamiya.com/japan/event/tamiya_event_28439' },
+  { date:'2026-08-30', pref:'chiba', label:'千葉', shop:'流山ミニ四駆クラブ', url:'https://www.tamiya.com/japan/event/tamiya_event_28493' },
+  { date:'2026-08-30', pref:'wakayama', label:'和歌山', shop:'白崎青少年の家 SHIRASAKI BASE', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_125' },
+  { date:'2026-08-30', pref:'saitama', label:'埼玉', shop:'TSUNOI Mini4WD Site', url:'https://www.tamiya.com/japan/event/tamiya_event_28650' },
+  { date:'2026-08-30', pref:'oita', label:'大分', shop:'RCショップ STEP UP', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_133' },
+  { date:'2026-08-30', pref:'osaka', label:'大阪', shop:'3249ROOM', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707B_016' },
+  { date:'2026-08-30', pref:'osaka', label:'大阪', shop:'みどり文具店', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_121' },
+  { date:'2026-08-30', pref:'osaka', label:'大阪', shop:'リーガロイヤルホテル大阪の文化教室 エコール ド ロイヤル', url:'https://www.tamiya.com/japan/event/tamiya_event_27789' },
+  { date:'2026-08-30', pref:'osaka', label:'大阪', shop:'リーガロイヤルホテル大阪の文化教室「エコール ド ロイヤル」', url:'https://www.tamiya.com/japan/event/tamiya_event_27790' },
+  { date:'2026-08-30', pref:'osaka', label:'大阪', shop:'リーガロイヤルホテル大阪の文化教室「エコール ド ロイヤル」', url:'https://www.tamiya.com/japan/event/tamiya_event_28651' },
+  { date:'2026-08-30', pref:'nara', label:'奈良', shop:'バンビ 生駒店', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_123' },
+  { date:'2026-08-30', pref:'nara', label:'奈良', shop:'バンビ大宇陀店', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_124' },
+  { date:'2026-08-30', pref:'miyagi', label:'宮城', shop:'キッズウォーカー柴田店', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_102' },
+  { date:'2026-08-30', pref:'miyagi', label:'宮城', shop:'コジマ×ビックカメラ 多賀城店', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_151' },
+  { date:'2026-08-30', pref:'toyama', label:'富山', shop:'Party room', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_109' },
+  { date:'2026-08-30', pref:'gifu', label:'岐阜', shop:'TOMOZONE', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_117' },
+  { date:'2026-08-30', pref:'gifu', label:'岐阜', shop:'アラジン', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_119' },
+  { date:'2026-08-30', pref:'gifu', label:'岐阜', shop:'エンスージア', url:'https://www.tamiya.com/japan/event/tamiya_event_28442' },
+  { date:'2026-08-30', pref:'gifu', label:'岐阜', shop:'大光模型', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_116' },
+  { date:'2026-08-30', pref:'gifu', label:'岐阜', shop:'大垣模型', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_118' },
+  { date:'2026-08-30', pref:'okayama', label:'岡山', shop:'ゆめらんど児島店', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_129' },
+  { date:'2026-08-30', pref:'okayama', label:'岡山', shop:'古本市場 平井店', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_128' },
+  { date:'2026-08-30', pref:'iwate', label:'岩手', shop:'(有)サンホビー アンクル', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_101' },
+  { date:'2026-08-30', pref:'iwate', label:'岩手', shop:'アメリカン パラダイス 北上店', url:'https://www.tamiya.com/japan/event/tamiya_event_28440' },
+  { date:'2026-08-30', pref:'iwate', label:'岩手', shop:'コジマ×ビックカメラ 盛岡店', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_150' },
+  { date:'2026-08-30', pref:'shimane', label:'島根', shop:'ベニヤ模型 本店', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_127' },
+  { date:'2026-08-30', pref:'ehime', label:'愛媛', shop:'富士教材(有)', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_131' },
+  { date:'2026-08-30', pref:'aichi', label:'愛知', shop:'タム･タム 豊橋店', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_114' },
+  { date:'2026-08-30', pref:'aichi', label:'愛知', shop:'ヤシマホビー', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_115' },
+  { date:'2026-08-30', pref:'niigata', label:'新潟', shop:'サントピアワールド（株）', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_108' },
+  { date:'2026-08-30', pref:'okinawa', label:'沖縄', shop:'コジマ×ビックカメラ 那覇店', url:'https://www.tamiya.com/japan/event/tamiya_event_28438' },
+  { date:'2026-08-30', pref:'shiga', label:'滋賀', shop:'守山玩具', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_120' },
+  { date:'2026-08-30', pref:'kanagawa', label:'神奈川', shop:'HOBBY SHOP たからばこ', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_104' },
+  { date:'2026-08-30', pref:'kanagawa', label:'神奈川', shop:'M Atsugi Racing', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_105' },
+  { date:'2026-08-30', pref:'kanagawa', label:'神奈川', shop:'サムカワサーキット', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_107' },
+  { date:'2026-08-30', pref:'kanagawa', label:'神奈川', shop:'ラジコンカー練習場･元気っ子さん', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_103' },
+  { date:'2026-08-30', pref:'kanagawa', label:'神奈川', shop:'永野商店', url:'https://www.tamiya.com/japan/event/tamiya_event_28441' },
+  { date:'2026-08-30', pref:'kanagawa', label:'神奈川', shop:'神奈川レジャーランド厚木店', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_106' },
+  { date:'2026-08-30', pref:'fukui', label:'福井', shop:'ジョーシン福井本店キッズランド', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_110' },
+  { date:'2026-08-30', pref:'fukushima', label:'福島', shop:'コジマxビックカメラ会津若松店', url:'https://www.tamiya.com/japan/event/tamiya_event_27294' },
+  { date:'2026-08-30', pref:'fukushima', label:'福島', shop:'コジマ×ビックカメラ 会津若松店', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_152' },
+  { date:'2026-08-30', pref:'nagasaki', label:'長崎', shop:'夢人 -Yu-Jin-', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_132' },
+  { date:'2026-08-30', pref:'nagano', label:'長野', shop:'(有)ホビーショップ丸信', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_112' },
+  { date:'2026-08-30', pref:'nagano', label:'長野', shop:'ミックスセレクトショップ', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_111' },
+  { date:'2026-08-30', pref:'shizuoka', label:'静岡', shop:'コジマ×ビックカメラ 静岡店', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_153' },
+  { date:'2026-08-30', pref:'shizuoka', label:'静岡', shop:'マルシン模型', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_113' },
+  { date:'2026-08-30', pref:'kagawa', label:'香川', shop:'Garage Hangout', url:'https://www.tamiya.com/japan/event/m4stc2026_4th_0707_130' },
+  { date:'2026-08-31', pref:'fukuoka', label:'福岡', shop:'ホビーショップ飛鷹', url:'https://www.tamiya.com/japan/event/tamiya_event_28279' },
+  { date:'2026-09-01', pref:'ibaraki', label:'茨城', shop:'ハネトレ', url:'https://www.tamiya.com/japan/event/tamiya_event_28638' },
+  { date:'2026-09-05', pref:'iwate', label:'岩手', shop:'ホビーショップ･パワーナイン', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_001' },
+  { date:'2026-09-05', pref:'hiroshima', label:'広島', shop:'ヤマダデンキ テックランド広島アルパーク店', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_002' },
+  { date:'2026-09-05', pref:'tokyo', label:'東京', shop:'町田福祉園事業推進係', url:'https://www.tamiya.com/japan/event/tamiya_event_28647' },
+  { date:'2026-09-05', pref:'shizuoka', label:'静岡', shop:'[8/23まで受付] 9/5 ミニ四駆ジャパンカップ2026 掛川大会 前日練習', url:'https://www.tamiya.com/japan/event/jc26_entry_kakegawa_0905' },
+  { date:'2026-09-06', pref:'kyoto', label:'京都', shop:'ホビーショップ バンビーノ', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_010' },
+  { date:'2026-09-06', pref:'hokkaido', label:'北海道', shop:'ホビーショップ てづか', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_003' },
+  { date:'2026-09-06', pref:'osaka', label:'大阪', shop:'BACK DOOR presents「CIRCLE RUN」', url:'https://www.tamiya.com/japan/event/tamiya_event_28673' },
+  { date:'2026-09-06', pref:'miyagi', label:'宮城', shop:'コジマ×ビックカメラ 泉中央店', url:'https://www.tamiya.com/japan/event/tamiya_event_28784' },
+  { date:'2026-09-06', pref:'miyazaki', label:'宮崎', shop:'ラジコン&プラモショップ ヘリポート', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_015' },
+  { date:'2026-09-06', pref:'miyazaki', label:'宮崎', shop:'模型の国トヤマ', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_014' },
+  { date:'2026-09-06', pref:'yamanashi', label:'山梨', shop:'くぼたニコニコ堂', url:'https://www.tamiya.com/japan/event/tamiya_event_28663' },
+  { date:'2026-09-06', pref:'okayama', label:'岡山', shop:'おもちゃの国 にしおか本店', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_011' },
+  { date:'2026-09-06', pref:'ehime', label:'愛媛', shop:'IMABARI factory', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_012' },
+  { date:'2026-09-06', pref:'ehime', label:'愛媛', shop:'今治ミニ四駆クラブ/今治模型社', url:'https://www.tamiya.com/japan/event/tamiya_event_28654' },
+  { date:'2026-09-06', pref:'aichi', label:'愛知', shop:'おもちゃのミッキー曙店', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_009' },
+  { date:'2026-09-06', pref:'aichi', label:'愛知', shop:'工房ひなゆめ', url:'https://www.tamiya.com/japan/event/tamiya_event_26723' },
+  { date:'2026-09-06', pref:'niigata', label:'新潟', shop:'パル みかわや', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_006' },
+  { date:'2026-09-06', pref:'tokyo', label:'東京', shop:'TAMIYA PLAMODEL FACTORY TOKYO', url:'https://www.tamiya.com/japan/event/tamiya_event_28664' },
+  { date:'2026-09-06', pref:'ishikawa', label:'石川', shop:'みなと模型 若宮店', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_007' },
+  { date:'2026-09-06', pref:'ishikawa', label:'石川', shop:'みなと模型 金沢店', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_008' },
+  { date:'2026-09-06', pref:'ibaraki', label:'茨城', shop:'(有)おもちゃのおかざき', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_005' },
+  { date:'2026-09-06', pref:'ibaraki', label:'茨城', shop:'勝田ラジコン模型', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_004' },
+  { date:'2026-09-06', pref:'nagasaki', label:'長崎', shop:'(有)宇宙模型', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_013' },
+  { date:'2026-09-06', pref:'shizuoka', label:'静岡', shop:'[8/23まで受付] 9/6 ミニ四駆ジャパンカップ2026 掛川大会', url:'https://www.tamiya.com/japan/event/jc26_entry_kakegawa_0906' },
+  { date:'2026-09-06', pref:'kagoshima', label:'鹿児島', shop:'がらっぱ堂', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_016' },
+  { date:'2026-09-09', pref:'hiroshima', label:'広島', shop:'こいのぼり', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_018' },
+  { date:'2026-09-09', pref:'tokyo', label:'東京', shop:'EDM', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_017' },
+  { date:'2026-09-12', pref:'kyoto', label:'京都', shop:'舞鶴電脳工作室', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_024' },
+  { date:'2026-09-12', pref:'hyogo', label:'兵庫', shop:'PROSTミニ四駆サーキット＆ラボ', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_025' },
+  { date:'2026-09-12', pref:'hokkaido', label:'北海道', shop:'OHMツインサーキット', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_019' },
+  { date:'2026-09-12', pref:'saitama', label:'埼玉', shop:'HD-BASE', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_020' },
+  { date:'2026-09-12', pref:'saitama', label:'埼玉', shop:'るーく', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_021' },
+  { date:'2026-09-12', pref:'osaka', label:'大阪', shop:'ミニ四駆サーキット ベテル', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_023' },
+  { date:'2026-09-12', pref:'gifu', label:'岐阜', shop:'株式会社エーモン', url:'https://www.tamiya.com/japan/event/tamiya_event_28781' },
+  { date:'2026-09-12', pref:'okayama', label:'岡山', shop:'[8/30まで受付]9/12 ミニ四駆ジャパンカップ2026 岡山大会 前日練習', url:'https://www.tamiya.com/japan/event/jc26_entry_okayama_0912' },
+  { date:'2026-09-12', pref:'tokyo', label:'東京', shop:'ドリム', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_022' },
+  { date:'2026-09-13', pref:'mie', label:'三重', shop:'おもちゃのドリームハウス', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_043' },
+  { date:'2026-09-13', pref:'mie', label:'三重', shop:'万代書店 鈴鹿店', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_042' },
+  { date:'2026-09-13', pref:'hyogo', label:'兵庫', shop:'アマドゥ', url:'https://www.tamiya.com/japan/event/tamiya_event_28653' },
+  { date:'2026-09-13', pref:'chiba', label:'千葉', shop:'RC･HIROBAらじこんひろば', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_035' },
+  { date:'2026-09-13', pref:'chiba', label:'千葉', shop:'コジマ×ビックカメラ 柏店', url:'https://www.tamiya.com/japan/event/tamiya_event_28783' },
+  { date:'2026-09-13', pref:'chiba', label:'千葉', shop:'ホビーショップ橘花', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_034' },
+  { date:'2026-09-13', pref:'wakayama', label:'和歌山', shop:'和歌山模型', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_045' },
+  { date:'2026-09-13', pref:'saitama', label:'埼玉', shop:'タムタム大宮店', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_032' },
+  { date:'2026-09-13', pref:'saitama', label:'埼玉', shop:'若林モケイ花園店', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_033' },
+  { date:'2026-09-13', pref:'osaka', label:'大阪', shop:'RCアドバイザー チャンプ', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_044' },
+  { date:'2026-09-13', pref:'yamaguchi', label:'山口', shop:'ホビーショップ ムック', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_047' },
+  { date:'2026-09-13', pref:'yamagata', label:'山形', shop:'ローリングパークナカノ', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_029' },
+  { date:'2026-09-13', pref:'gifu', label:'岐阜', shop:'株式会社エーモン', url:'https://www.tamiya.com/japan/event/tamiya_event_28779' },
+  { date:'2026-09-13', pref:'okayama', label:'岡山', shop:'[8/30まで受付]9/13 ミニ四駆ジャパンカップ2026 岡山大会', url:'https://www.tamiya.com/japan/event/jc26_entry_okayama_0913' },
+  { date:'2026-09-13', pref:'iwate', label:'岩手', shop:'(有)サンホビー アンクル', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_028' },
+  { date:'2026-09-13', pref:'hiroshima', label:'広島', shop:'ユメコロ', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_046' },
+  { date:'2026-09-13', pref:'ehime', label:'愛媛', shop:'ホビーショップ 井上', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_048' },
+  { date:'2026-09-13', pref:'aichi', label:'愛知', shop:'与三郎', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_041' },
+  { date:'2026-09-13', pref:'aichi', label:'愛知', shop:'東海ラジコン', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_040' },
+  { date:'2026-09-13', pref:'tokyo', label:'東京', shop:'Mini4wdGEEKSイベント事業部 エキラボniri', url:'https://www.tamiya.com/japan/event/tamiya_event_27815' },
+  { date:'2026-09-13', pref:'tokyo', label:'東京', shop:'えのもとサーキット', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_036' },
+  { date:'2026-09-13', pref:'kanagawa', label:'神奈川', shop:'Hobby Space ウーパー', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_037' },
+  { date:'2026-09-13', pref:'fukuoka', label:'福岡', shop:'Cafe&Bar4×4', url:'https://www.tamiya.com/japan/event/tamiya_event_28632' },
+  { date:'2026-09-13', pref:'gunma', label:'群馬', shop:'DKサーキット', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_031' },
+  { date:'2026-09-13', pref:'gunma', label:'群馬', shop:'タカサキハンズ', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_030' },
+  { date:'2026-09-13', pref:'nagano', label:'長野', shop:'ミックスセレクトショップ', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_038' },
+  { date:'2026-09-13', pref:'aomori', label:'青森', shop:'(有)工藤模型', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_026' },
+  { date:'2026-09-13', pref:'aomori', label:'青森', shop:'アメリカンパラダイス浪館店', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_027' },
+  { date:'2026-09-13', pref:'shizuoka', label:'静岡', shop:'おもちゃのポッポ', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_039' },
+  { date:'2026-09-13', pref:'shizuoka', label:'静岡', shop:'コジマxビックカメラ沼津店', url:'https://www.tamiya.com/japan/event/tamiya_event_27295' },
+  { date:'2026-09-16', pref:'aichi', label:'愛知', shop:'工房ひなゆめ', url:'https://www.tamiya.com/japan/event/tamiya_event_26731' },
+  { date:'2026-09-19', pref:'kyoto', label:'京都', shop:'ホビーショップ44', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_051' },
+  { date:'2026-09-19', pref:'hyogo', label:'兵庫', shop:'GR Garage西宮・ダイハツ西宮建石', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_052' },
+  { date:'2026-09-19', pref:'osaka', label:'大阪', shop:'ミニ四駆 BAR 100R', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_050' },
+  { date:'2026-09-19', pref:'ehime', label:'愛媛', shop:'リンクスフジヤ', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_053' },
+  { date:'2026-09-19', pref:'aichi', label:'愛知', shop:'工房ひなゆめ', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_049' },
+  { date:'2026-09-19', pref:'tokyo', label:'東京', shop:'[9/6まで受付]9/19 ミニ四駆ジャパンカップ2026 東京大会2D', url:'https://www.tamiya.com/japan/event/jc26_entry_tokyo2d_0919' },
+  { date:'2026-09-19', pref:'shizuoka', label:'静岡', shop:'NMC (フジモト☆未来ラボ ミニ四駆サーキット)', url:'https://www.tamiya.com/japan/event/tamiya_event_28662' },
+  { date:'2026-09-20', pref:'mie', label:'三重', shop:'ポストホビー松阪店', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_063' },
+  { date:'2026-09-20', pref:'hyogo', label:'兵庫', shop:'mini4wd Circuit Pub TaMaRacing', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_065' },
+  { date:'2026-09-20', pref:'hokkaido', label:'北海道', shop:'BOOKOFF DCM上磯店', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_054' },
+  { date:'2026-09-20', pref:'chiba', label:'千葉', shop:'九十九里ふじ模型', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_057' },
+  { date:'2026-09-20', pref:'osaka', label:'大阪', shop:'トイ･ホビーハウス ロビンフット', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_064' },
+  { date:'2026-09-20', pref:'okayama', label:'岡山', shop:'大成玩具', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_067' },
+  { date:'2026-09-20', pref:'iwate', label:'岩手', shop:'アメリカン パラダイス 北上店', url:'https://www.tamiya.com/japan/event/tamiya_event_28661' },
+  { date:'2026-09-20', pref:'iwate', label:'岩手', shop:'トイ・ワークス', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_056' },
+  { date:'2026-09-20', pref:'shimane', label:'島根', shop:'FreePIT', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_066' },
+  { date:'2026-09-20', pref:'ehime', label:'愛媛', shop:'今治模型社', url:'https://www.tamiya.com/japan/event/tamiya_event_28656' },
+  { date:'2026-09-20', pref:'aichi', label:'愛知', shop:'(有)トイズタウン 本店', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_060' },
+  { date:'2026-09-20', pref:'aichi', label:'愛知', shop:'ホビーショップ ハピネス', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_059' },
+  { date:'2026-09-20', pref:'aichi', label:'愛知', shop:'モリヤマホビー', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_061' },
+  { date:'2026-09-20', pref:'aichi', label:'愛知', shop:'焼肉太郎 一宮店', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_062' },
+  { date:'2026-09-20', pref:'niigata', label:'新潟', shop:'ホットボックス', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_058' },
+  { date:'2026-09-20', pref:'tokyo', label:'東京', shop:'[9/6まで受付]9/20 ミニ四駆ジャパンカップ2026 東京大会2', url:'https://www.tamiya.com/japan/event/jc26_entry_tokyo2_0920' },
+  { date:'2026-09-20', pref:'okinawa', label:'沖縄', shop:'トイパラダイスBANBAN21具志川店', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_069' },
+  { date:'2026-09-20', pref:'akita', label:'秋田', shop:'アニメヒーローショップ とらのあな', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_055' },
+  { date:'2026-09-20', pref:'kagoshima', label:'鹿児島', shop:'合同会社フリーワークス ミニ四駆ガレージ ノーコンティニュー', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_068' },
+  { date:'2026-09-21', pref:'tokyo', label:'東京', shop:'SIG.WORKS/GARAGE', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_070' },
+  { date:'2026-09-22', pref:'iwate', label:'岩手', shop:'コジマxビックカメラ盛岡店', url:'https://www.tamiya.com/japan/event/tamiya_event_27296' },
+  { date:'2026-09-22', pref:'hiroshima', label:'広島', shop:'コジマxビックカメラ宇品店', url:'https://www.tamiya.com/japan/event/tamiya_event_27297' },
+  { date:'2026-09-22', pref:'ibaraki', label:'茨城', shop:'チャイルドハウス ドリーム', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_071' },
+  { date:'2026-09-23', pref:'chiba', label:'千葉', shop:'ラジコン天国 ROUTE66＆YONTAMA', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_072' },
+  { date:'2026-09-23', pref:'saitama', label:'埼玉', shop:'ドルフィンベース', url:'https://www.tamiya.com/japan/event/tamiya_event_28631' },
+  { date:'2026-09-23', pref:'hiroshima', label:'広島', shop:'お宝バンク', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_076' },
+  { date:'2026-09-23', pref:'niigata', label:'新潟', shop:'サントピアワールド（株）', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_073' },
+  { date:'2026-09-23', pref:'fukui', label:'福井', shop:'金魚屋ぐらっしゅ', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_074' },
+  { date:'2026-09-23', pref:'nagano', label:'長野', shop:'はま屋 松本店', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_075' },
+  { date:'2026-09-26', pref:'hokkaido', label:'北海道', shop:'イリジョン', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_077' },
+  { date:'2026-09-26', pref:'oita', label:'大分', shop:'T.H.M.F ヒタハシリ', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_080' },
+  { date:'2026-09-26', pref:'aichi', label:'愛知', shop:'フクシマヤ', url:'https://www.tamiya.com/japan/event/tamiya_event_28660' },
+  { date:'2026-09-26', pref:'ishikawa', label:'石川', shop:'G-MAX', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_079' },
+  { date:'2026-09-26', pref:'kanagawa', label:'神奈川', shop:'HP CIRCUIT CLUB', url:'https://www.tamiya.com/japan/event/tamiya_event_28630' },
+  { date:'2026-09-26', pref:'kanagawa', label:'神奈川', shop:'タミヤプラモデルファクトリー トレッサ横浜店(南棟)', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_078' },
+  { date:'2026-09-27', pref:'hyogo', label:'兵庫', shop:'(株)タケモト模型', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_099' },
+  { date:'2026-09-27', pref:'chiba', label:'千葉', shop:'(有)ハチピー模型店', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_083' },
+  { date:'2026-09-27', pref:'chiba', label:'千葉', shop:'コジマ×ビックカメラ ワンズモール稲毛店', url:'https://www.tamiya.com/japan/event/tamiya_event_28782' },
+  { date:'2026-09-27', pref:'oita', label:'大分', shop:'RCショップ STEP UP', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_113' },
+  { date:'2026-09-27', pref:'osaka', label:'大阪', shop:'JEUGIAカルチャーセンター イオンタウン豊中緑丘', url:'https://www.tamiya.com/japan/event/tamiya_event_27263' },
+  { date:'2026-09-27', pref:'osaka', label:'大阪', shop:'TOY\'s きゃっぷ', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_096' },
+  { date:'2026-09-27', pref:'osaka', label:'大阪', shop:'みどり文具店', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_097' },
+  { date:'2026-09-27', pref:'nara', label:'奈良', shop:'バンビ大宇陀店', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_098' },
+  { date:'2026-09-27', pref:'miyazaki', label:'宮崎', shop:'ニッセイホビー', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_114' },
+  { date:'2026-09-27', pref:'toyama', label:'富山', shop:'Party room', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_088' },
+  { date:'2026-09-27', pref:'yamaguchi', label:'山口', shop:'掘り出しパラダイス 古着市場 防府店', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_107' },
+  { date:'2026-09-27', pref:'gifu', label:'岐阜', shop:'TOMOZONE', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_093' },
+  { date:'2026-09-27', pref:'gifu', label:'岐阜', shop:'大光模型', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_092' },
+  { date:'2026-09-27', pref:'gifu', label:'岐阜', shop:'大垣模型', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_094' },
+  { date:'2026-09-27', pref:'okayama', label:'岡山', shop:'ゆめらんど児島店', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_104' },
+  { date:'2026-09-27', pref:'okayama', label:'岡山', shop:'タカノプランニング HOKUBOBASE', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_105' },
+  { date:'2026-09-27', pref:'shimane', label:'島根', shop:'おおとり模型', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_102' },
+  { date:'2026-09-27', pref:'shimane', label:'島根', shop:'ホビーショップ ウエスト', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_101' },
+  { date:'2026-09-27', pref:'shimane', label:'島根', shop:'地球堂模型店', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_103' },
+  { date:'2026-09-27', pref:'hiroshima', label:'広島', shop:'Yellow', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_106' },
+  { date:'2026-09-27', pref:'tokushima', label:'徳島', shop:'ホビーベースパレパレ', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_108' },
+  { date:'2026-09-27', pref:'ehime', label:'愛媛', shop:'IMABARI factory', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_110' },
+  { date:'2026-09-27', pref:'ehime', label:'愛媛', shop:'今治ミニ四駆クラブ/イマバリベース/今治模型社', url:'https://www.tamiya.com/japan/event/tamiya_event_28658' },
+  { date:'2026-09-27', pref:'ehime', label:'愛媛', shop:'富士教材(有)', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_109' },
+  { date:'2026-09-27', pref:'aichi', label:'愛知', shop:'iiba(イーバ)蒲郡', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_091' },
+  { date:'2026-09-27', pref:'aichi', label:'愛知', shop:'なごネットミニ四駆走行会', url:'https://www.tamiya.com/japan/event/tamiya_event_28640' },
+  { date:'2026-09-27', pref:'niigata', label:'新潟', shop:'コジマxビックカメラ新潟店', url:'https://www.tamiya.com/japan/event/tamiya_event_27299' },
+  { date:'2026-09-27', pref:'tokyo', label:'東京', shop:'お宝あっとマーケット町田店', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_084' },
+  { date:'2026-09-27', pref:'tochigi', label:'栃木', shop:'おもちゃのマンネンヤ', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_081' },
+  { date:'2026-09-27', pref:'shiga', label:'滋賀', shop:'守山玩具', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_095' },
+  { date:'2026-09-27', pref:'kanagawa', label:'神奈川', shop:'HOBBY SHOP たからばこ', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_086' },
+  { date:'2026-09-27', pref:'kanagawa', label:'神奈川', shop:'コジマxビックカメラ港北東急S.C.店', url:'https://www.tamiya.com/japan/event/tamiya_event_27298' },
+  { date:'2026-09-27', pref:'kanagawa', label:'神奈川', shop:'サムカワサーキット', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_087' },
+  { date:'2026-09-27', pref:'kanagawa', label:'神奈川', shop:'永野商店', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_085' },
+  { date:'2026-09-27', pref:'fukuoka', label:'福岡', shop:'ホビーショップ飛鷹', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_111' },
+  { date:'2026-09-27', pref:'gunma', label:'群馬', shop:'KIT BOY', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_082' },
+  { date:'2026-09-27', pref:'nagasaki', label:'長崎', shop:'ワールドキング長崎', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_112' },
+  { date:'2026-09-27', pref:'nagano', label:'長野', shop:'(有)ホビーショップ丸信', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_089' },
+  { date:'2026-09-27', pref:'shizuoka', label:'静岡', shop:'マルシン模型', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_090' },
+  { date:'2026-09-27', pref:'tottori', label:'鳥取', shop:'ホビーショップ ねねね', url:'https://www.tamiya.com/japan/event/m4stsc2026_0806_100' },
+  { date:'2026-10-04', pref:'ehime', label:'愛媛', shop:'今治ミニ四駆クラブ', url:'https://www.tamiya.com/japan/event/tamiya_event_28655' },
+  { date:'2026-10-04', pref:'aichi', label:'愛知', shop:'工房ひなゆめ', url:'https://www.tamiya.com/japan/event/tamiya_event_26724' },
+  { date:'2026-10-04', pref:'kumamoto', label:'熊本', shop:'コジマxビックカメラ熊本店', url:'https://www.tamiya.com/japan/event/tamiya_event_27300' },
+  { date:'2026-10-12', pref:'hokkaido', label:'北海道', shop:'コジマxビックカメラ新さっぽろデュオ店', url:'https://www.tamiya.com/japan/event/tamiya_event_27301' },
+  { date:'2026-10-18', pref:'ehime', label:'愛媛', shop:'今治模型社', url:'https://www.tamiya.com/japan/event/tamiya_event_28657' },
+  { date:'2026-10-18', pref:'tokyo', label:'東京', shop:'コジマxビックカメラ江北駅前店', url:'https://www.tamiya.com/japan/event/tamiya_event_27302' },
+  { date:'2026-10-24', pref:'aichi', label:'愛知', shop:'工房ひなゆめ', url:'https://www.tamiya.com/japan/event/tamiya_event_26732' },
+  { date:'2026-10-25', pref:'ehime', label:'愛媛', shop:'今治ミニ四駆クラブ/イマバリベース/今治模型社', url:'https://www.tamiya.com/japan/event/tamiya_event_28659' },
+  { date:'2026-10-25', pref:'okinawa', label:'沖縄', shop:'コジマxビックカメラ那覇店', url:'https://www.tamiya.com/japan/event/tamiya_event_27303' },
+  { date:'2026-11-08', pref:'osaka', label:'大阪', shop:'JEUGIAカルチャーセンター イオンタウン豊中緑丘', url:'https://www.tamiya.com/japan/event/tamiya_event_27265' },
+  { date:'2026-11-08', pref:'aichi', label:'愛知', shop:'工房ひなゆめ', url:'https://www.tamiya.com/japan/event/tamiya_event_26725' },
+  { date:'2026-11-15', pref:'shizuoka', label:'静岡', shop:'コジマxビックカメラ静岡店', url:'https://www.tamiya.com/japan/event/tamiya_event_27304' },
+  { date:'2026-11-21', pref:'aichi', label:'愛知', shop:'工房ひなゆめ', url:'https://www.tamiya.com/japan/event/tamiya_event_26733' },
+  { date:'2026-12-06', pref:'aichi', label:'愛知', shop:'工房ひなゆめ', url:'https://www.tamiya.com/japan/event/tamiya_event_26726' },
+  { date:'2026-12-12', pref:'shizuoka', label:'静岡', shop:'12/12（土） ミニ四駆 TSUMAGOI CUP2026', url:'https://www.tamiya.com/japan/event/tsumagoicup20261212' },
+  { date:'2026-12-13', pref:'shizuoka', label:'静岡', shop:'12/13（日） ミニ四駆 TSUMAGOI CUP2026', url:'https://www.tamiya.com/japan/event/event/tsumagoicup20261213' },
+  { date:'2026-12-19', pref:'aichi', label:'愛知', shop:'工房ひなゆめ', url:'https://www.tamiya.com/japan/event/tamiya_event_26734' },
+];
+
+// 都道府県キー → 日本語表記
+const PREF_LABELS = {
+  hokkaido:'北海道', aomori:'青森', iwate:'岩手', miyagi:'宮城', akita:'秋田',
+  yamagata:'山形', fukushima:'福島', ibaraki:'茨城', tochigi:'栃木', gunma:'群馬',
+  saitama:'埼玉', chiba:'千葉', tokyo:'東京', kanagawa:'神奈川', niigata:'新潟',
+  toyama:'富山', ishikawa:'石川', fukui:'福井', yamanashi:'山梨', nagano:'長野',
+  gifu:'岐阜', shizuoka:'静岡', aichi:'愛知', mie:'三重', shiga:'滋賀',
+  kyoto:'京都', osaka:'大阪', hyogo:'兵庫', nara:'奈良', wakayama:'和歌山',
+  tottori:'鳥取', shimane:'島根', okayama:'岡山', hiroshima:'広島', yamaguchi:'山口',
+  tokushima:'徳島', kagawa:'香川', ehime:'愛媛', kochi:'高知', fukuoka:'福岡',
+  saga:'佐賀', nagasaki:'長崎', kumamoto:'熊本', oita:'大分', miyazaki:'宮崎',
+  kagoshima:'鹿児島', okinawa:'沖縄'
+};
+const WD = ['日','月','火','水','木','金','土'];
+
+const $pref = document.getElementById('pref');
+const $range = document.getElementById('range');
+const $q = document.getElementById('q');
+const $list = document.getElementById('list');
+const $count = document.getElementById('count');
+
+// 今日の0時。過ぎた開催は出さない。
+const today = (() => { const d = new Date(); d.setHours(0,0,0,0); return d; })();
+const asDate = s => { const [y,m,d] = String(s).split('-').map(Number);
+  return new Date(y, (m||1)-1, d||1); };
+
+// 都道府県の選択肢は、実際に開催があるものだけ出す
+(() => {
+  const keys = [...new Set(EVENTS.map(e => e.pref))]
+    .filter(k => PREF_LABELS[k])
+    .sort((a,b) => Object.keys(PREF_LABELS).indexOf(a) - Object.keys(PREF_LABELS).indexOf(b));
+  for(const k of keys){
+    const o = document.createElement('option');
+    o.value = k; o.textContent = PREF_LABELS[k];
+    $pref.appendChild(o);
+  }
+})();
+
+function render(){
+  const pf = $pref.value;
+  const months = parseInt($range.value, 10) || 0;
+  const q = $q.value.trim();
+  let limit = null;
+  if(months){ limit = new Date(today); limit.setMonth(limit.getMonth() + months); }
+
+  const rows = EVENTS
+    .filter(e => {
+      const d = asDate(e.date);
+      if(d < today) return false;                     // 済んだ開催は出さない
+      if(limit && d > limit) return false;
+      if(pf && e.pref !== pf) return false;
+      if(q && !(e.shop || '').includes(q)) return false;
+      return true;
+    })
+    .sort((a,b) => a.date.localeCompare(b.date) || (a.label||'').localeCompare(b.label||''));
+
+  $count.textContent = rows.length ? rows.length + '件' : '';
+  $list.innerHTML = '';
+  if(!rows.length){
+    $list.innerHTML = '<div class="empty">条件に合う開催情報がありません。</div>';
+    return;
+  }
+
+  let month = '';
+  for(const e of rows){
+    const d = asDate(e.date);
+    const key = d.getFullYear() + '-' + (d.getMonth() + 1);
+    if(key !== month){
+      month = key;
+      const h = document.createElement('div');
+      h.className = 'month';
+      h.textContent = d.getFullYear() + '年 ' + (d.getMonth() + 1) + '月';
+      $list.appendChild(h);
+    }
+    const a = document.createElement('a');
+    a.className = 'row';
+    a.href = e.url; a.target = '_blank'; a.rel = 'noopener';
+    const wd = d.getDay();
+    a.innerHTML =
+      '<span class="d ' + (wd === 0 ? 'sun' : wd === 6 ? 'sat' : '') + '">' +
+        (d.getMonth() + 1) + '/' + d.getDate() +
+        '<span class="wd">(' + WD[wd] + ')</span></span>' +
+      '<span class="pf"></span><span class="sp"></span>';
+    a.querySelector('.pf').textContent = e.label || '?';
+    a.querySelector('.sp').textContent = e.shop || '';
+    $list.appendChild(a);
+  }
+}
+
+$pref.addEventListener('change', render);
+$range.addEventListener('change', render);
+$q.addEventListener('input', render);
+render();
+</script>
+</body>
+</html>

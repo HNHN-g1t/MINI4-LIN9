@@ -10,3 +10,8 @@ _tamiya_*.html
 
 # デザイン確認用の一時プレビュー
 _preview_colormap.html
+
+# レース開催情報の取り込み用（生成物・一時ファイル）
+cache/
+events_draft.json
+docs/race.html.bak

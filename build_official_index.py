@@ -118,6 +118,8 @@ background:var(--surface);border-radius:4px 4px 0 0;user-select:none;white-space
 .tab:hover{color:var(--brand);background:var(--brand-soft)}
 .tab.on{background:var(--brand);color:#fff}
 .tab.on:hover{background:var(--brand);color:#fff}
+/* 別ページへ飛ぶタブ。押しても選択状態にはならないので、リンクとして出す。 */
+.tab.link{text-decoration:none;display:inline-block}
 .tab .n{font-size:11px;font-weight:600;color:var(--ink3);margin-left:6px}
 .tab.on .n{color:#cfe0fa}
 main{max-width:1120px;margin:0 auto;padding:12px 16px 40px}
@@ -177,7 +179,8 @@ footer{max-width:1120px;margin:0 auto;padding:16px;font-size:11px;color:var(--in
 
 JS = """
 const q = document.getElementById('q');
-const tabs = [...document.querySelectorAll('.tab')];
+// .link は別ページへのリンクなので、切り替えの対象からは外す
+const tabs = [...document.querySelectorAll('.tab:not(.link)')];
 const chips = [...document.querySelectorAll('.chip')];
 const chipRow = document.querySelector('.chips');
 const cards = [...document.querySelectorAll('.it')];
@@ -481,6 +484,8 @@ def build(items: list[dict], outdir: str) -> str:
         '<span class="n" id="xmN"></span></div>'
         f'<div class="tab on" data-genre="">すべて<span class="n">{len(items)}</span></div>'
         '<div class="tab fav" data-genre="fav">★ お気に入り<span class="n" id="favN">0</span></div>'
+        # レースカレンダーは別ページ。タブと同じ見た目のリンクで並べる。
+        '<a class="tab link" href="race.html">レース開催情報</a>'
     )
 
     # 下段チップ（細分類）。同じ分類名が複数ジャンルに出るので1つにまとめ、

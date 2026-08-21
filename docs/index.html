@@ -31,6 +31,8 @@ background:var(--surface);border-radius:4px 4px 0 0;user-select:none;white-space
 .tab:hover{color:var(--brand);background:var(--brand-soft)}
 .tab.on{background:var(--brand);color:#fff}
 .tab.on:hover{background:var(--brand);color:#fff}
+/* 別ページへ飛ぶタブ。押しても選択状態にはならないので、リンクとして出す。 */
+.tab.link{text-decoration:none;display:inline-block}
 .tab .n{font-size:11px;font-weight:600;color:var(--ink3);margin-left:6px}
 .tab.on .n{color:#cfe0fa}
 main{max-width:1120px;margin:0 auto;padding:12px 16px 40px}
@@ -267,7 +269,7 @@ grid-template-columns:repeat(4,minmax(0,1fr))}
     <div class="searchbox"><input id="q" type="search"
       placeholder="品番・商品名で検索（例：15435 / ローラー / ニッパー / エンペラー）"></div>
   </div>
-  <div class="tabs"><div class="tab" data-genre="parts">GUパーツ<span class="n">243</span></div><div class="tab" data-genre="limited">限定パーツ<span class="n">83</span></div><div class="tab" data-genre="ao">AOパーツ<span class="n">42</span></div><div class="tab" data-genre="kit">キット<span class="n">467</span></div><div class="tab" data-genre="paint">塗料<span class="n">482</span></div><div class="tab" data-genre="tool">ツール<span class="n">152</span></div><div class="tab" data-genre="xm">X Machines<span class="n" id="xmN"></span></div><div class="tab on" data-genre="">すべて<span class="n">1469</span></div><div class="tab fav" data-genre="fav">★ お気に入り<span class="n" id="favN">0</span></div></div>
+  <div class="tabs"><div class="tab" data-genre="parts">GUパーツ<span class="n">243</span></div><div class="tab" data-genre="limited">限定パーツ<span class="n">83</span></div><div class="tab" data-genre="ao">AOパーツ<span class="n">42</span></div><div class="tab" data-genre="kit">キット<span class="n">467</span></div><div class="tab" data-genre="paint">塗料<span class="n">482</span></div><div class="tab" data-genre="tool">ツール<span class="n">152</span></div><div class="tab" data-genre="xm">X Machines<span class="n" id="xmN"></span></div><div class="tab on" data-genre="">すべて<span class="n">1469</span></div><div class="tab fav" data-genre="fav">★ お気に入り<span class="n" id="favN">0</span></div><a class="tab link" href="race.html">レース開催情報</a></div>
 </header>
 <main>
   <section id="xFeatured" aria-label="X の投稿" hidden></section>
@@ -26810,11 +26812,12 @@ grid-template-columns:repeat(4,minmax(0,1fr))}
   楽天アフィリエイト、ValueCommerce）を利用しており、商品リンク経由の購入により
   報酬を受け取る場合があります。
   Amazonアソシエイトとして適格販売により収入を得ています。<br>
-  最終更新 2026-08-21 17:42 JST
+  最終更新 2026-08-21 18:42 JST
 </footer>
 <script>
 const q = document.getElementById('q');
-const tabs = [...document.querySelectorAll('.tab')];
+// .link は別ページへのリンクなので、切り替えの対象からは外す
+const tabs = [...document.querySelectorAll('.tab:not(.link)')];
 const chips = [...document.querySelectorAll('.chip')];
 const chipRow = document.querySelector('.chips');
 const cards = [...document.querySelectorAll('.it')];
