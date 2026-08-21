@@ -193,7 +193,7 @@ opacity:0;pointer-events:none;transition:opacity .2s}
 
 /* ---- TOPの帯：縮小サムネを並べ、押すと X Machines へ送る ---- */
 /* --xw = Xに描画させる素の幅 / --xs = 縮小率 / --xh = 切り詰めた表示高さ */
-#xFeatured{--xw:250px;--xs:1;--xgap:6px;--xh:225px;
+#xFeatured{--xw:250px;--xs:1;--xgap:6px;--xh:280px;
 max-width:1120px;margin:0 auto 8px;padding:0;position:relative}
 #xFeatured[hidden]{display:none}
 #xFeatured.loading{min-height:90px;border:1px solid var(--line);border-radius:10px;
@@ -245,7 +245,10 @@ cursor:pointer;border-radius:8px;-webkit-tap-highlight-color:transparent}
 #xWall{--xww:250px;--xws:1;--xwgap:12px;display:none;margin:0 0 10px}
 #xWall.on{display:block}
 .xwgrid{display:grid;gap:var(--xwgap);align-items:start;
-grid-template-columns:repeat(2,minmax(0,1fr))}
+grid-template-columns:repeat(4,minmax(0,1fr))}
+@media(max-width:900px){
+  .xwgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
 /* 押した1件を先頭に置くため order を使う。DOMは動かさない（iframeが再読込されるため） */
 .xwcell{min-width:0;overflow:hidden}
 .xwcell > .xwinner{width:var(--xww);transform:scale(var(--xws));transform-origin:top left}
@@ -26803,7 +26806,7 @@ grid-template-columns:repeat(2,minmax(0,1fr))}
   楽天アフィリエイト、ValueCommerce）を利用しており、商品リンク経由の購入により
   報酬を受け取る場合があります。
   Amazonアソシエイトとして適格販売により収入を得ています。<br>
-  最終更新 2026-08-21 09:37 JST
+  最終更新 2026-08-21 10:04 JST
 </footer>
 <script>
 const q = document.getElementById('q');
@@ -27191,7 +27194,6 @@ if(cmap){
   const NATURAL = 250;          // Xの埋め込みが受け付ける最小幅
   const COUNT_PC = 4;           // PCで帯に並べる件数
   const COUNT_SP = 3;           // スマホで帯に並べる件数
-  const WALL_COLS = 2;          // X Machines の列数
   const WALL_GAP = 12;
   const DEFAULTS = {random:true, avoidRecentCount:8,
                     autoRotate:false, hideThread:true, dnt:true, lang:'ja'};
@@ -27199,6 +27201,8 @@ if(cmap){
   let cfg = DEFAULTS, allPosts = [], scale = 1;
   let stage = null, current = null, wallDone = false;
   let wallCells = [], wallNatural = NATURAL, wallScale = 1, pendingLead = null;
+  let bandIds = [];             // いまTOPの帯に出ている並び（X Machines の先頭に使う）
+  const wallCols = () => isMobile() ? 2 : 4;
 
   const isMobile = () => window.matchMedia('(max-width:900px)').matches;
   const count = () => isMobile() ? COUNT_SP : COUNT_PC;
@@ -27348,6 +27352,9 @@ if(cmap){
 
   // 仕込んだ枠の中でXに描かせる。1件も描けなければ null を返して片付ける。
   async function fillPair(list){
+    // いま帯に出す並びを控えておく。X Machines を開いたとき、
+    // この順のまま先頭の1段に置くため。
+    bandIds = list.map(p => p && p.id).filter(Boolean);
     const twttr = await loadWidgets();
     const {pair, inners} = stagePair(list);
     const opts = tweetOpts();
@@ -27412,7 +27419,8 @@ if(cmap){
   // （変えると描き直しになり、iframeが全部読み込み直しになるため）。
   function measureWall(){
     if(!WALL || !WALL.classList.contains('on')) return;
-    const col = Math.max(1, (WALL.clientWidth - WALL_GAP * (WALL_COLS - 1)) / WALL_COLS);
+    const cols = wallCols();
+    const col = Math.max(1, (WALL.clientWidth - WALL_GAP * (cols - 1)) / cols);
     if(!wallDone) wallNatural = Math.round(Math.min(550, Math.max(NATURAL, col)));
     wallScale = Math.min(1, col / wallNatural);
     WALL.style.setProperty('--xww', wallNatural + 'px');
@@ -27431,17 +27439,29 @@ if(cmap){
   }
   function fitWall(){ wallCells.forEach(c => fitCell(c.inner)); }
 
-  // 押した1件を先頭に、残りをシャッフルして並べる。
-  // DOMは動かさず order だけ振る（動かすとiframeが読み込み直しになる）。
+  // 先頭の1段は、TOPの帯に出ていた並びをそのまま持ってくる。
+  // 押した1件があれば、その中でいちばん前に回す。
+  // 2段目以降はシャッフル。DOMは動かさず order だけ振る
+  // （動かすとiframeが読み込み直しになる）。
   function orderWall(leadId){
     if(!wallCells.length) return;
-    const rest = wallCells.filter(c => c.id !== leadId);
+    const byId = id => wallCells.find(c => c.id === id);
+
+    // 帯に出ていたぶんを、帯と同じ順で先頭に置く
+    let head = (bandIds || []).map(byId).filter(Boolean);
+    if(leadId){
+      const i = head.findIndex(c => c.id === leadId);
+      if(i > 0) head = [head[i]].concat(head.filter((_, k) => k !== i));
+      else if(i < 0 && byId(leadId)) head = [byId(leadId)].concat(head);
+    }
+    const headIds = new Set(head.map(c => c.id));
+
+    const rest = wallCells.filter(c => !headIds.has(c.id));
     for(let i = rest.length - 1; i > 0; i--){
       const j = Math.floor(Math.random() * (i + 1));
       const t = rest[i]; rest[i] = rest[j]; rest[j] = t;
     }
-    const lead = wallCells.find(c => c.id === leadId);
-    (lead ? [lead].concat(rest) : rest).forEach((c, i) => { c.cell.style.order = i; });
+    head.concat(rest).forEach((c, i) => { c.cell.style.order = i; });
   }
 
   async function buildWall(){
@@ -27474,8 +27494,14 @@ if(cmap){
     WALL.appendChild(grid);
 
     const opts = Object.assign(tweetOpts(), {width: wallNatural});
-    await Promise.all(list.map((p, i) =>
-      twttr.widgets.createTweet(tweetIdOf(p.url), built[i].inner, opts).catch(() => null)));
+    const jobs = list.map((p, i) =>
+      twttr.widgets.createTweet(tweetIdOf(p.url), built[i].inner, opts).catch(() => null));
+    // 1件でも応答が返らないと、この先の並び替えまで進めなくなる。
+    // 帯と同じように時間で打ち切る（描画済みのものはそのまま使える）。
+    let wt = null;
+    const guard = new Promise(res => { wt = setTimeout(res, RENDER_TIMEOUT); });
+    await Promise.race([Promise.all(jobs), guard]);
+    clearTimeout(wt);
 
     // 描画できなかったものは畳む
     built.forEach(c => { if(!c.inner.querySelector('iframe')) c.cell.remove(); });
