@@ -13,6 +13,7 @@
 import html
 import json
 import os
+import re
 import shutil
 import sys
 import urllib.parse
@@ -590,9 +591,51 @@ def build(items: list[dict], outdir: str) -> str:
     return path
 
 
+X_POSTS_JSON = "docs/data/x-featured-posts.json"
+# 投稿URLはこの形以外を認めない。/status/ が抜けると投稿IDを取り出せず、
+# 画面上は「その投稿だけ無かったこと」になってしまうため。
+X_URL_RE = re.compile(r"^https://(?:x|twitter)\.com/[^/]+/status/\d+$")
+
+
+def check_x_posts() -> list:
+    """X投稿JSONを点検し、問題点を文章のリストで返す。"""
+    if not os.path.exists(X_POSTS_JSON):
+        return []
+    try:
+        with open(X_POSTS_JSON, encoding="utf-8") as f:
+            data = json.load(f)
+    except Exception as e:
+        return ["%s を読めません: %s" % (X_POSTS_JSON, e)]
+
+    posts = data.get("posts") or []
+    problems, seen_ids, seen_urls = [], set(), set()
+    for i, p in enumerate(posts):
+        where = (p or {}).get("id") or "%d番目" % (i + 1)
+        url = (p or {}).get("url")
+        if not isinstance(url, str) or not X_URL_RE.match(url):
+            problems.append("%s: URLの形が違います → %r" % (where, url))
+        elif url in seen_urls:
+            problems.append("%s: URLが重複しています → %s" % (where, url))
+        else:
+            seen_urls.add(url)
+        pid = (p or {}).get("id")
+        if pid in seen_ids:
+            problems.append("%s: idが重複しています" % where)
+        seen_ids.add(pid)
+        if (p or {}).get("active") not in (True, False):
+            problems.append("%s: active が true/false ではありません" % where)
+    return problems
+
+
 def main() -> int:
     here = os.path.dirname(os.path.abspath(__file__))
     os.chdir(here)
+    problems = check_x_posts()
+    if problems:
+        print("エラー: %s に問題があります。" % X_POSTS_JSON, file=sys.stderr)
+        for m in problems:
+            print("  - " + m, file=sys.stderr)
+        return 1
     if not os.path.exists("tamiya_catalog.json"):
         print("エラー: tamiya_catalog.json がありません。先に py fetch_tamiya_catalog.py を実行してください。", file=sys.stderr)
         return 1
