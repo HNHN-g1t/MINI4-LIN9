@@ -82,6 +82,8 @@ grid-template-columns:repeat(4,minmax(0,1fr))}
 }
 /* 押した1件を先頭に置くため order を使う。DOMは動かさない（iframeが再読込されるため） */
 .xwcell{min-width:0;overflow:hidden}
+/* 描く前の枠。高さを先に取っておかないと全部が「画面内」と判定されてしまう */
+.xwcell.xwait{border:1px solid var(--line);border-radius:12px;background:var(--surface)}
 .xwcell > .xwinner{width:var(--xww);transform:scale(var(--xws));transform-origin:top left}
 .xwcell .twitter-tweet{margin:0 !important}
 .xwnote{font-size:11px;color:var(--ink3);margin:0 0 10px}
@@ -118,6 +120,11 @@ JS = """
   let wallOrder = [];           // 開いたときに決めた並び（全件）
   let wallPage = 1, wallPerPageNow = WALL_PER_PC;
   let wallToken = 0;            // 描画中にページが変わったら捨てるための番号
+  let wtt = null;               // 読み込んだ widgets.js
+  let wallQueue = [], wallDrain = null;   // 描く順番待ち
+  let wallSweepTimer = null, wallSweepBound = false;
+  let wallPoll = null, wallPollLeft = 0;
+  const WALL_NEAR = 100;        // 画面からこのpx以内に来たら描き始める
   let bandIds = [];             // いまTOPの帯に出ている並び（X Machines の先頭に使う）
   const wallCols = () => isMobile() ? 2 : 4;
   const wallPerPage = () => isMobile() ? WALL_PER_SP : WALL_PER_PC;
@@ -420,6 +427,7 @@ JS = """
   function fitCell(inner){
     const cell = inner.parentElement;
     if(!cell) return;
+    if(!inner.querySelector('iframe')) return;   // 描く前の枠は高さを保つ
     const h = inner.offsetHeight;
     cell.style.height = h ? Math.ceil(h * wallScale) + 'px' : '';
   }
@@ -489,14 +497,13 @@ JS = """
     const total = wallPageCount();
     wallPage = Math.min(Math.max(1, wallPage), total);
 
-    let twttr;
-    try{ twttr = await loadWidgets(); }
+    try{ wtt = await loadWidgets(); }
     catch(e){
       WALL.innerHTML = '<div class="xwnote">投稿を読み込めませんでした。</div>';
       return;
     }
 
-    const token = ++wallToken;
+    ++wallToken;
     if(wro) wallCells.forEach(c => wro.unobserve(c.inner));
     wallCells = [];
 
@@ -519,34 +526,117 @@ JS = """
     const per = wallPerPage();
     wallPerPageNow = per;
     const slice = wallOrder.slice((wallPage - 1) * per, (wallPage - 1) * per + per);
+    // 描く前でも場所を取らせる。高さが0だと全セルが「画面内」と判定されてしまう。
+    const holdH = Math.round(420 * wallScale);
     const built = slice.map(p => {
       const cell = document.createElement('div');
-      cell.className = 'xwcell';
+      cell.className = 'xwcell xwait';
+      cell.style.height = holdH + 'px';
       const inner = document.createElement('div');
       inner.className = 'xwinner';
       cell.appendChild(inner);
       grid.appendChild(cell);
-      return {id: (p && p.id) || '', cell, inner};
+      return {id: (p && p.id) || '', post: p, cell, inner,
+              built: false, queued: false, done: false, since: 0};
     });
 
-    const opts = Object.assign(tweetOpts(), {width: wallNatural});
-    const jobs = slice.map((p, i) =>
-      twttr.widgets.createTweet(tweetIdOf(p.url), built[i].inner, opts).catch(() => null));
-    // 1件でも応答が返らないと先に進めなくなるので、帯と同じように時間で打ち切る。
-    let wt = null;
-    const guard = new Promise(res => { wt = setTimeout(res, RENDER_TIMEOUT); });
-    await Promise.race([Promise.all(jobs), guard]);
-    clearTimeout(wt);
-    if(token !== wallToken) return;   // 描いている間にページが変わっていた
+    wallCells = built;
 
-    // 描画できなかったものは畳む
-    built.forEach(c => { if(!c.inner.querySelector('iframe')) c.cell.remove(); });
-    wallCells = built.filter(c => c.inner.querySelector('iframe'));
-    if(!wallCells.length && total === 1){
-      WALL.innerHTML = '<div class="xwnote">投稿を読み込めませんでした。</div>';
+    // 一度に全部作ると、画面の外にあるぶんまでXに取りに行って重くなる。
+    // 画面に近いものから順に、間を空けて1件ずつ作る。
+    wallQueue = [];
+    bindWallSweep();
+    wallSweep();
+  }
+
+  // 画面に近いセルを順番待ちに入れる。スクロールのたびに呼ぶ。
+  function wallSweep(){
+    if(!WALL || !WALL.classList.contains('on')) return;
+    const vh = window.innerHeight || document.documentElement.clientHeight || 0;
+    let added = false;
+    for(const c of wallCells){
+      if(c.built || c.queued) continue;
+      const r = c.cell.getBoundingClientRect();
+      if(r.bottom > -WALL_NEAR && r.top < vh + WALL_NEAR){
+        c.queued = true;
+        wallQueue.push(c);
+        added = true;
+      }
+    }
+    if(added) drainWallQueue();
+  }
+
+  // スクロールのたびに測ると重いので、少し間引く
+  function wallSweepSoon(){
+    if(wallSweepTimer) return;
+    wallSweepTimer = setTimeout(() => { wallSweepTimer = null; wallSweep(); }, 150);
+  }
+  function bindWallSweep(){
+    if(wallSweepBound) return;
+    wallSweepBound = true;
+    window.addEventListener('scroll', wallSweepSoon, {passive: true});
+    window.addEventListener('resize', wallSweepSoon);
+  }
+
+  // 順番待ちを少しずつ処理する。まとめて作ると画面が固まるため。
+  function drainWallQueue(){
+    if(wallDrain) return;
+    wallDrain = setInterval(() => {
+      const c = wallQueue.shift();
+      if(!c){
+        clearInterval(wallDrain); wallDrain = null;
+        wallSweep();               // 描いた結果、次のセルが画面に近づいたかも
+        return;
+      }
+      buildWallCell(c);
+    }, 140);
+  }
+
+  // セル1件を描く。ページが変わっていたら結果を捨てる。
+  function buildWallCell(c){
+    if(!wtt || c.built) return;
+    c.built = true;
+    c.since = Date.now();
+    const token = wallToken;
+    const opts = Object.assign(tweetOpts(), {width: wallNatural});
+    wtt.widgets.createTweet(tweetIdOf(c.post.url), c.inner, opts)
+      .then(() => { if(token === wallToken){ settleCell(c); wallSweepSoon(); } })
+      .catch(() => { if(token === wallToken){ c.done = true; c.cell.remove(); } });
+    startWallPoll();
+  }
+
+  // 枠を本来の高さに戻す。Xからの通知が来なくても、iframeが入っていれば仕上げる。
+  function settleCell(c){
+    if(c.done) return;
+    if(c.inner.querySelector('iframe')){
+      c.done = true;
+      c.cell.classList.remove('xwait');
+      c.cell.style.height = '';
+      fitCell(c.inner);
+      if(wro) wro.observe(c.inner);
       return;
     }
-    wallCells.forEach(c => { fitCell(c.inner); if(wro) wro.observe(c.inner); });
+    // いつまでも入らないものは表示できない投稿とみなして畳む
+    if(c.since && Date.now() - c.since > RENDER_TIMEOUT){
+      c.done = true;
+      c.cell.remove();
+    }
+  }
+
+  // 通知が来ない環境向けの見回り。落ち着いたら自然に止まる。
+  function startWallPoll(){
+    wallPollLeft = 30;                       // 0.5秒 × 30 = 15秒ぶん
+    if(wallPoll) return;
+    wallPoll = setInterval(() => {
+      if(!WALL || !WALL.classList.contains('on')){ stopWallPoll(); return; }
+      wallCells.forEach(settleCell);
+      fitWall();
+      const pending = wallCells.some(c => c.built && !c.done);
+      if((!pending && !wallQueue.length) || --wallPollLeft <= 0) stopWallPoll();
+    }, 500);
+  }
+  function stopWallPoll(){
+    if(wallPoll){ clearInterval(wallPoll); wallPoll = null; }
   }
 
   // ページ番号を押したら、そのページを描いて一覧の先頭へ戻す
@@ -577,6 +667,10 @@ JS = """
       if(WALL){
         WALL.classList.remove('on');
         if(wro) wallCells.forEach(c => wro.unobserve(c.inner));
+        if(wallDrain){ clearInterval(wallDrain); wallDrain = null; }
+        if(wallSweepTimer){ clearTimeout(wallSweepTimer); wallSweepTimer = null; }
+        stopWallPoll();
+        wallQueue = [];
         wallCells = [];
         wallToken++;                 // 描画中なら結果を捨てる
         WALL.innerHTML = '';         // iframeを残さない
