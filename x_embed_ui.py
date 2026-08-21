@@ -41,8 +41,11 @@ will-change:transform,opacity}
 
 .xslot{flex:0 0 auto;width:calc(var(--xw) * var(--xs));height:var(--xh);
 position:relative;overflow:hidden;border-radius:8px;background:var(--surface)}
+/* scale を先に書くこと。translate を先にすると、ずらし量が画面上のpxとして
+   効いてしまい、縮小しているスマホでは 1/縮小率 倍も動いてしまう。
+   scale のあとに置けば、ずらし量は縮小前の座標のまま扱われる。 */
 .xslot > .xinner{width:var(--xw);transform-origin:top left;
-transform:translateY(calc(var(--yoff, 0px) * -1)) scale(var(--xs));
+transform:scale(var(--xs)) translateY(calc(var(--yoff, 0px) * -1));
 transition:transform .18s ease}
 .xslot .twitter-tweet{margin:0 !important}
 /* 切り詰めた下端をぼかし、続きがあることを示す */
