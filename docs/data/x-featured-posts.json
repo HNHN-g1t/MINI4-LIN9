@@ -8,7 +8,9 @@
     "#コジデレ",
     "#ReFEEDコンデレ",
     "#ReFEED",
-    "#コジマコンデレ２"
+    "#コジマコンデレ２",
+    "#evilwire",
+    "@mini4wd_mediaPR"
   ],
   "displaySettings": {
     "maxPosts": 2,
@@ -623,6 +625,106 @@
       "active": true,
       "addedAt": "2026-08-21",
       "memo": "まんが・エンタメ No.02"
+    },
+    {
+      "id": "x-064",
+      "url": "https://x.com/mini4_kurosuke/1556488835802238976",
+      "hashtags": [
+        "#evilwire"
+      ],
+      "active": true,
+      "addedAt": "2026-08-21",
+      "memo": "#evilwire No.01 ／ 蛍光カミナリ ネオファルコン"
+    },
+    {
+      "id": "x-065",
+      "url": "https://x.com/KK_illustrate/1643614511763537921",
+      "hashtags": [
+        "#evilwire"
+      ],
+      "active": true,
+      "addedAt": "2026-08-21",
+      "memo": "#evilwire No.02 ／ Baron Viento Shaker"
+    },
+    {
+      "id": "x-066",
+      "url": "https://x.com/to_shinobu0315/1468560231311765507",
+      "hashtags": [
+        "#evilwire"
+      ],
+      "active": true,
+      "addedAt": "2026-08-21",
+      "memo": "#evilwire No.03 ／ ALTADE コラボ"
+    },
+    {
+      "id": "x-067",
+      "url": "https://x.com/erupt_takechan/1814425689459978628",
+      "hashtags": [
+        "#evilwire"
+      ],
+      "active": true,
+      "addedAt": "2026-08-21",
+      "memo": "#evilwire No.04 ／ ニューMAシン エアMAックス95"
+    },
+    {
+      "id": "x-068",
+      "url": "https://x.com/KK_illustrate/1708790407189217505",
+      "hashtags": [
+        "#evilwire"
+      ],
+      "active": true,
+      "addedAt": "2026-08-21",
+      "memo": "#evilwire No.05 ／ K4 Tasche Wide"
+    },
+    {
+      "id": "x-069",
+      "url": "https://x.com/83Evo/1476198649818644483",
+      "hashtags": [
+        "#evilwire"
+      ],
+      "active": true,
+      "addedAt": "2026-08-21",
+      "memo": "#evilwire No.06 ／ 旧バンキッシュ迷彩風"
+    },
+    {
+      "id": "x-070",
+      "url": "https://x.com/mini4wd_mediaPR/2090635005727002753",
+      "hashtags": [],
+      "active": true,
+      "addedAt": "2026-08-21",
+      "memo": "@mini4wd_mediaPR No.01 ／ スピンアックス"
+    },
+    {
+      "id": "x-071",
+      "url": "https://x.com/mini4wd_mediaPR/2090272617194229865",
+      "hashtags": [],
+      "active": true,
+      "addedAt": "2026-08-21",
+      "memo": "@mini4wd_mediaPR No.02 ／ ソニックセイバー"
+    },
+    {
+      "id": "x-072",
+      "url": "https://x.com/mini4wd_mediaPR/2089910227516661992",
+      "hashtags": [],
+      "active": true,
+      "addedAt": "2026-08-21",
+      "memo": "@mini4wd_mediaPR No.03 ／ マグナムセイバー"
+    },
+    {
+      "id": "x-073",
+      "url": "https://x.com/mini4wd_mediaPR/2088807959241330895",
+      "hashtags": [],
+      "active": true,
+      "addedAt": "2026-08-21",
+      "memo": "@mini4wd_mediaPR No.04 ／ シェン・ホワァン誕生日"
+    },
+    {
+      "id": "x-074",
+      "url": "https://x.com/mini4wd_mediaPR/2088551267639361732",
+      "hashtags": [],
+      "active": true,
+      "addedAt": "2026-08-21",
+      "memo": "@mini4wd_mediaPR No.05 ／ アニメ 第21〜22話 プレミア公開"
     }
   ]
 }
