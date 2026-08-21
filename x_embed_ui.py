@@ -61,8 +61,7 @@ cursor:pointer;border-radius:8px;-webkit-tap-highlight-color:transparent}
 
 @media(max-width:900px){
   /* 3件を画面内に収めたいので、この区画だけ左右の余白を8px詰める */
-  #xFeatured{max-width:none;margin-left:-8px;margin-right:-8px;--xh:116px;--xline:2px}
-  .xslot::after{height:20px}
+  #xFeatured{max-width:none;margin-left:-8px;margin-right:-8px;--xline:2px}
 }
 @media(prefers-reduced-motion:reduce){
   .xpair.anim{transition:opacity .15s ease}
@@ -99,7 +98,7 @@ JS = """
   const RENDER_TIMEOUT = 8000;
   const NATURAL = 250;          // Xの埋め込みが受け付ける最小幅
   const COUNT_PC = 4;           // PCで帯に並べる件数
-  const COUNT_SP = 3;           // スマホで帯に並べる件数
+  const COUNT_SP = 2;           // スマホで帯に並べる件数
   const WALL_GAP = 12;
   const DEFAULTS = {random:true, avoidRecentCount:8,
                     autoRotate:false, hideThread:true, dnt:true, lang:'ja'};
@@ -207,9 +206,8 @@ JS = """
     if(!bandFixed) bandNatural = Math.round(Math.min(550, Math.max(NATURAL, col)));
     scale = Math.min(1, col / bandNatural);
     HOST.style.setProperty('--xw', bandNatural + 'px');
-    // PCは写真グリッドの高さそのものを窓にする。スマホはCSSの値（116px）を使う。
-    if(!isMobile()) HOST.style.setProperty('--xh', Math.round(photoH() * scale) + 'px');
-    else HOST.style.removeProperty('--xh');
+    // 窓の高さは写真グリッドの高さそのもの。PC・スマホとも同じ考え方にする。
+    HOST.style.setProperty('--xh', Math.round(photoH() * scale) + 'px');
     HOST.style.setProperty('--xs', scale.toFixed(4));
     HOST.style.setProperty('--xgap', gap + 'px');
   }
@@ -229,7 +227,7 @@ JS = """
   const MEDIA_RATIO = 9 / 16;     // 写真2枚・4枚のグリッドは全体で16:9
   // 写真の下端から投稿の下端までの高さ（日付＋アクション＋返信リンク）。
   // ここを増やすと窓が上へ、減らすと下へ動く。合わなければこの数値だけ直せばよい。
-  const BELOW_PHOTO = 128;
+  const BELOW_PHOTO = 116;
 
   const photoH = () => (bandNatural - CONTENT_PAD * 2) * MEDIA_RATIO;
 
