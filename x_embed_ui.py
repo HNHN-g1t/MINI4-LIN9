@@ -21,7 +21,7 @@ WALL_GENRE = "xm"
 CSS = """
 /* ---- TOPの帯：縮小サムネを並べ、押すと X Machines へ送る ---- */
 /* --xw = Xに描画させる素の幅 / --xs = 縮小率 / --xh = 切り詰めた表示高さ */
-#xFeatured{--xw:250px;--xs:1;--xgap:6px;--xh:232px;
+#xFeatured{--xw:250px;--xs:1;--xgap:6px;--xh:136px;--xline:4px;--xtrim:#c9ced6;
 max-width:1120px;margin:0 auto 8px;padding:0;position:relative}
 #xFeatured[hidden]{display:none}
 #xFeatured.loading{min-height:90px;border:1px solid var(--line);border-radius:10px;
@@ -39,8 +39,12 @@ will-change:transform,opacity}
 /* 次の組は、いまの組に重ねたまま描き切る（iframeを動かさない） */
 .xpair.staging{position:absolute;left:0;right:0;top:0;opacity:0;pointer-events:none}
 
-.xslot{flex:0 0 auto;width:calc(var(--xw) * var(--xs));height:var(--xh);
-position:relative;overflow:hidden;border-radius:8px;background:var(--surface)}
+/* 上下はグレーの直線で切る。--xh は線の内側（＝見せたい高さ）。 */
+.xslot{flex:0 0 auto;width:calc(var(--xw) * var(--xs));
+height:calc(var(--xh) + var(--xline) * 2);
+border-top:var(--xline) solid var(--xtrim);
+border-bottom:var(--xline) solid var(--xtrim);
+position:relative;overflow:hidden;background:var(--surface)}
 /* scale を先に書くこと。translate を先にすると、ずらし量が画面上のpxとして
    効いてしまい、縮小しているスマホでは 1/縮小率 倍も動いてしまう。
    scale のあとに置けば、ずらし量は縮小前の座標のまま扱われる。 */
@@ -48,16 +52,7 @@ position:relative;overflow:hidden;border-radius:8px;background:var(--surface)}
 transform:scale(var(--xs)) translateY(calc(var(--yoff, 0px) * -1));
 transition:transform .18s ease}
 .xslot .twitter-tweet{margin:0 !important}
-/* 切り詰めた下端をぼかし、続きがあることを示す */
-.xslot::after{content:"";position:absolute;left:0;right:0;bottom:0;height:26px;
-background:linear-gradient(to bottom,transparent,var(--bg));pointer-events:none;z-index:1;
-opacity:1;transition:opacity .18s}
-/* 下に揃えている＝下に続きが無いので、ぼかしを消して写真を素で見せる */
-.xslot.atBottom::after{opacity:0}
-.xslot::before{content:"";position:absolute;left:0;right:0;top:0;height:18px;
-background:linear-gradient(to top,transparent,var(--bg));pointer-events:none;z-index:1;
-opacity:0;transition:opacity .18s}
-.xslot.shifted::before{opacity:1}
+
 /* iframe内のリンクを踏ませず、タップは丸ごとタブ移動に使う */
 .xhit{position:absolute;inset:0;z-index:2;padding:0;border:0;background:transparent;
 cursor:pointer;border-radius:8px;-webkit-tap-highlight-color:transparent}
@@ -66,7 +61,7 @@ cursor:pointer;border-radius:8px;-webkit-tap-highlight-color:transparent}
 
 @media(max-width:900px){
   /* 3件を画面内に収めたいので、この区画だけ左右の余白を8px詰める */
-  #xFeatured{max-width:none;margin-left:-8px;margin-right:-8px;--xh:116px}
+  #xFeatured{max-width:none;margin-left:-8px;margin-right:-8px;--xh:116px;--xline:2px}
   .xslot::after{height:20px}
 }
 @media(prefers-reduced-motion:reduce){
@@ -212,6 +207,9 @@ JS = """
     if(!bandFixed) bandNatural = Math.round(Math.min(550, Math.max(NATURAL, col)));
     scale = Math.min(1, col / bandNatural);
     HOST.style.setProperty('--xw', bandNatural + 'px');
+    // PCは写真グリッドの高さそのものを窓にする。スマホはCSSの値（116px）を使う。
+    if(!isMobile()) HOST.style.setProperty('--xh', Math.round(photoH() * scale) + 'px');
+    else HOST.style.removeProperty('--xh');
     HOST.style.setProperty('--xs', scale.toFixed(4));
     HOST.style.setProperty('--xgap', gap + 'px');
   }
@@ -226,10 +224,14 @@ JS = """
   // 大きくするほど窓が上へ動き、写真が下寄り＝中央に寄る。
   // PCは窓が広いぶん下端が目立つので多めに切る。スマホは下端に揃えたままが
   // 見やすいので、従来どおりの控えめな値にしている。
-  // PCは日付の行までを見せ、その下のいいね・返信の行は窓の外に出す。
-  // スマホは窓が浅く、切ると写真まで欠けるので下端に揃えたままにする。
-  const footerH = () => isMobile() ? 44 : 136;
-  const MEDIA_RATIO = 9 / 16;     // 写真4枚のグリッドは全体でほぼ16:9
+  // 埋め込みの左右の余白。写真グリッドの幅はこれを引いたぶん。
+  const CONTENT_PAD = 12;
+  const MEDIA_RATIO = 9 / 16;     // 写真2枚・4枚のグリッドは全体で16:9
+  // 写真の下端から投稿の下端までの高さ（日付＋アクション＋返信リンク）。
+  // ここを増やすと窓が上へ、減らすと下へ動く。合わなければこの数値だけ直せばよい。
+  const BELOW_PHOTO = 128;
+
+  const photoH = () => (bandNatural - CONTENT_PAD * 2) * MEDIA_RATIO;
 
   function centerOne(slot){
     const inner = slot.querySelector('.xinner');
@@ -240,16 +242,12 @@ JS = """
     const over = h - win;
     if(!h || over <= 4){                          // 収まっているなら動かさない
       inner.style.setProperty('--yoff', '0px');
-      slot.classList.remove('shifted');
-      slot.classList.add('atBottom');             // 続きが無いのでぼかしも消す
       return;
     }
-    const media = bandNatural * MEDIA_RATIO;      // 写真ブロックのおおよその高さ
-    const target = (h - footerH() - media / 2) - win / 2;  // 写真の中心を窓の中心へ
-    const off = Math.round(Math.max(0, Math.min(target, over)));  // 下端を越えない
+    // 窓の下端を写真の下端に合わせる（日付から下は窓の外に出る）
+    const target = h - BELOW_PHOTO - win;
+    const off = Math.round(Math.max(0, Math.min(target, over)));
     inner.style.setProperty('--yoff', off + 'px');
-    slot.classList.toggle('shifted', off > 0);
-    slot.classList.toggle('atBottom', off >= over - 1);
   }
 
   // 写真が読み込まれると iframe の高さが伸びる。決め打ちのタイミングで
