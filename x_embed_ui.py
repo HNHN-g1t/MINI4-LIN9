@@ -212,7 +212,11 @@ JS = """
   // 投稿の下端に揃えつつ、写真ブロックの中心が窓の中央へ来るように寄せる。
   // iframeの中は読めないので、写真4枚（2×2で全体16:9）と、その下に日付・
   // アクション行がある前提で位置を出す。行き過ぎないよう下端で止める。
-  const FOOTER_H = 44;            // 日付・アクション行のおおよその高さ（縮小前）
+  // 投稿の下端（日付・アクション行）をどれだけ窓の外に出すか。
+  // 大きくするほど窓が上へ動き、写真が下寄り＝中央に寄る。
+  // PCは窓が広いぶん下端が目立つので多めに切る。スマホは下端に揃えたままが
+  // 見やすいので、従来どおりの控えめな値にしている。
+  const footerH = () => isMobile() ? 44 : 96;
   const MEDIA_RATIO = 9 / 16;     // 写真4枚のグリッドは全体でほぼ16:9
 
   function centerOne(slot){
@@ -229,20 +233,38 @@ JS = """
       return;
     }
     const media = NATURAL * MEDIA_RATIO;          // 写真ブロックのおおよその高さ
-    const target = (h - FOOTER_H - media / 2) - win / 2;   // 写真の中心を窓の中心へ
+    const target = (h - footerH() - media / 2) - win / 2;  // 写真の中心を窓の中心へ
     const off = Math.round(Math.max(0, Math.min(target, over)));  // 下端を越えない
     inner.style.setProperty('--yoff', off + 'px');
     slot.classList.toggle('shifted', off > 0);
     slot.classList.toggle('atBottom', off >= over - 1);
   }
 
+  // 写真が読み込まれると iframe の高さが伸びる。決め打ちのタイミングで
+  // 測ると伸びる前の値を掴んでしまうので、高さの変化そのものを見張る。
+  const bro = ('ResizeObserver' in window)
+    ? new ResizeObserver(es => {
+        for(const e of es){
+          const slot = e.target.closest ? e.target.closest('.xslot') : null;
+          if(slot) centerOne(slot);
+        }
+      })
+    : null;
+
   function centerAll(root){
     const slots = [...(root || HOST).querySelectorAll('.xslot')];
     const run = () => slots.forEach(centerOne);
     run();
-    // iframeの高さは後から確定することがあるので、少し置いて測り直す
+    if(bro){
+      slots.forEach(sl => {
+        const f = sl.querySelector('iframe');
+        if(f && !f.dataset.watched){ f.dataset.watched = '1'; bro.observe(f); }
+      });
+    }
+    // 監視が使えない環境向けの保険
     setTimeout(run, 400);
     setTimeout(run, 1200);
+    setTimeout(run, 3000);
   }
   window.recenterXBand = () => centerAll(null);
 
