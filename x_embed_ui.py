@@ -21,8 +21,8 @@ WALL_GENRE = "xm"
 CSS = """
 /* ---- TOPの帯：縮小サムネを並べ、押すと X Machines へ送る ---- */
 /* --xw = Xに描画させる素の幅 / --xs = 縮小率 / --xh = 切り詰めた表示高さ */
-#xFeatured{--xw:250px;--xs:1;--xgap:6px;--xh:150px;
-max-width:980px;margin:0 auto 8px;padding:0;position:relative}
+#xFeatured{--xw:250px;--xs:1;--xgap:6px;--xh:225px;
+max-width:1120px;margin:0 auto 8px;padding:0;position:relative}
 #xFeatured[hidden]{display:none}
 #xFeatured.loading{min-height:90px;border:1px solid var(--line);border-radius:10px;
 background:var(--surface)}
@@ -41,11 +41,17 @@ will-change:transform,opacity}
 
 .xslot{flex:0 0 auto;width:calc(var(--xw) * var(--xs));height:var(--xh);
 position:relative;overflow:hidden;border-radius:8px;background:var(--surface)}
-.xslot > .xinner{width:var(--xw);transform:scale(var(--xs));transform-origin:top left}
+.xslot > .xinner{width:var(--xw);transform-origin:top left;
+transform:translateY(calc(var(--yoff, 0px) * -1)) scale(var(--xs));
+transition:transform .18s ease}
 .xslot .twitter-tweet{margin:0 !important}
 /* 切り詰めた下端をぼかし、続きがあることを示す */
 .xslot::after{content:"";position:absolute;left:0;right:0;bottom:0;height:26px;
 background:linear-gradient(to bottom,transparent,var(--bg));pointer-events:none;z-index:1}
+.xslot::before{content:"";position:absolute;left:0;right:0;top:0;height:18px;
+background:linear-gradient(to top,transparent,var(--bg));pointer-events:none;z-index:1;
+opacity:0;transition:opacity .18s}
+.xslot.shifted::before{opacity:1}
 /* iframe内のリンクを踏ませず、タップは丸ごとタブ移動に使う */
 .xhit{position:absolute;inset:0;z-index:2;padding:0;border:0;background:transparent;
 cursor:pointer;border-radius:8px;-webkit-tap-highlight-color:transparent}
@@ -88,7 +94,8 @@ JS = """
   const RECENT_KEY = 'm4rinku:x-recent-post-ids';
   const RENDER_TIMEOUT = 8000;
   const NATURAL = 250;          // Xの埋め込みが受け付ける最小幅
-  const COUNT = 3;              // TOPの帯に並べる件数（スマホ・PCとも）
+  const COUNT_PC = 4;           // PCで帯に並べる件数
+  const COUNT_SP = 3;           // スマホで帯に並べる件数
   const WALL_COLS = 2;          // X Machines の列数
   const WALL_GAP = 12;
   const DEFAULTS = {random:true, avoidRecentCount:8,
@@ -99,6 +106,7 @@ JS = """
   let wallCells = [], wallNatural = NATURAL, wallScale = 1, pendingLead = null;
 
   const isMobile = () => window.matchMedia('(max-width:900px)').matches;
+  const count = () => isMobile() ? COUNT_SP : COUNT_PC;
   const actives = () => allPosts.filter(p => p && p.active === true && tweetIdOf(p.url));
 
   const giveUp = (why) => {
@@ -183,12 +191,43 @@ JS = """
   // 3件を横に並べるのに、どれだけ縮めるかを決める
   function measure(){
     const gap = isMobile() ? 6 : 8;
-    const avail = (stage ? stage.clientWidth : HOST.clientWidth) - gap * (COUNT - 1);
-    scale = Math.min(1, Math.max(1, avail) / COUNT / NATURAL);
+    const n = count();
+    const avail = (stage ? stage.clientWidth : HOST.clientWidth) - gap * (n - 1);
+    scale = Math.min(1, Math.max(1, avail) / n / NATURAL);
     HOST.style.setProperty('--xw', NATURAL + 'px');
     HOST.style.setProperty('--xs', scale.toFixed(4));
     HOST.style.setProperty('--xgap', gap + 'px');
   }
+
+  // 切り詰めた窓の中で、投稿の縦位置を中央に寄せる。
+  // 写真は本文の下に来るため、上端に揃えたままだと画像が切れやすい。
+  // 実際に描かれた高さを測り、はみ出しぶんの半分だけ上へずらす。
+  function centerOne(slot){
+    const inner = slot.querySelector('.xinner');
+    const frame = inner && inner.querySelector('iframe');
+    if(!inner || !frame) return;
+    const shown = frame.offsetHeight * scale;      // 縮小後の実際の高さ
+    const win = slot.clientHeight;
+    const over = shown - win;
+    if(over <= 4){                                  // 収まっているなら動かさない
+      inner.style.setProperty('--yoff', '0px');
+      slot.classList.remove('shifted');
+      return;
+    }
+    const off = Math.round((over / 2) / scale);     // 縮小前の座標系に戻す
+    inner.style.setProperty('--yoff', off + 'px');
+    slot.classList.add('shifted');
+  }
+
+  function centerAll(root){
+    const slots = [...(root || HOST).querySelectorAll('.xslot')];
+    const run = () => slots.forEach(centerOne);
+    run();
+    // iframeの高さは後から確定することがあるので、少し置いて測り直す
+    setTimeout(run, 400);
+    setTimeout(run, 1200);
+  }
+  window.recenterXBand = () => centerAll(null);
 
   // 空の枠を作って仕込む。iframeは生成した場所から最後まで動かさない。
   function stagePair(list){
@@ -230,6 +269,7 @@ JS = """
       if(!inner.querySelector('iframe')) inner.parentElement.remove();
     });
     if(!pair.querySelector('iframe')){ pair.remove(); return null; }
+    centerAll(pair);
     return pair;
   }
 
@@ -268,7 +308,7 @@ JS = """
     let rt = null;
     window.addEventListener('resize', () => {
       clearTimeout(rt);
-      rt = setTimeout(() => { measure(); measureWall(); fitWall(); }, 180);
+      rt = setTimeout(() => { measure(); centerAll(null); measureWall(); fitWall(); }, 180);
     });
   }
 
@@ -390,7 +430,7 @@ JS = """
     stage.innerHTML = '<div class="xph">読み込み中…</div>';
     measure();
 
-    const first = pickMany(COUNT);
+    const first = pickMany(count());
     if(!first.length) return giveUp(null);   // 候補なしは異常ではないので静かに隠す
 
     let pair;
