@@ -107,6 +107,9 @@ JS = """
                     autoRotate:false, hideThread:true, dnt:true, lang:'ja'};
 
   let cfg = DEFAULTS, allPosts = [], scale = 1;
+  // Xに描かせる素の幅。並べたとき左右が余らないよう、最初の計測で決めて固定する
+  // （途中で変えると描き直しになり、iframeが全部読み込み直しになるため）。
+  let bandNatural = 250, bandFixed = false;
   let stage = null, current = null, wallDone = false;
   let wallCells = [], wallNatural = NATURAL, wallScale = 1, pendingLead = null;
   let bandIds = [];             // いまTOPの帯に出ている並び（X Machines の先頭に使う）
@@ -191,7 +194,7 @@ JS = """
       conversation: cfg.hideThread === false ? 'all' : 'none',  // 親スレッドを出さない
       dnt: cfg.dnt !== false,
       lang: cfg.lang || 'ja',
-      width: NATURAL
+      width: bandNatural
     };
   }
 
@@ -200,8 +203,12 @@ JS = """
     const gap = isMobile() ? 6 : 8;
     const n = count();
     const avail = (stage ? stage.clientWidth : HOST.clientWidth) - gap * (n - 1);
-    scale = Math.min(1, Math.max(1, avail) / n / NATURAL);
-    HOST.style.setProperty('--xw', NATURAL + 'px');
+    const col = Math.max(1, avail) / n;                  // 1枠に使える幅
+    // 素の幅を枠幅に合わせておけば、縮小率1のまま左右が余らない。
+    // 枠が細いスマホでは最小幅(250)を割れないので、そこは縮小で合わせる。
+    if(!bandFixed) bandNatural = Math.round(Math.min(550, Math.max(NATURAL, col)));
+    scale = Math.min(1, col / bandNatural);
+    HOST.style.setProperty('--xw', bandNatural + 'px');
     HOST.style.setProperty('--xs', scale.toFixed(4));
     HOST.style.setProperty('--xgap', gap + 'px');
   }
@@ -216,7 +223,9 @@ JS = """
   // 大きくするほど窓が上へ動き、写真が下寄り＝中央に寄る。
   // PCは窓が広いぶん下端が目立つので多めに切る。スマホは下端に揃えたままが
   // 見やすいので、従来どおりの控えめな値にしている。
-  const footerH = () => isMobile() ? 44 : 96;
+  // PCは日付の行までを見せ、その下のいいね・返信の行は窓の外に出す。
+  // スマホは窓が浅く、切ると写真まで欠けるので下端に揃えたままにする。
+  const footerH = () => isMobile() ? 44 : 136;
   const MEDIA_RATIO = 9 / 16;     // 写真4枚のグリッドは全体でほぼ16:9
 
   function centerOne(slot){
@@ -232,7 +241,7 @@ JS = """
       slot.classList.add('atBottom');             // 続きが無いのでぼかしも消す
       return;
     }
-    const media = NATURAL * MEDIA_RATIO;          // 写真ブロックのおおよその高さ
+    const media = bandNatural * MEDIA_RATIO;      // 写真ブロックのおおよその高さ
     const target = (h - footerH() - media / 2) - win / 2;  // 写真の中心を窓の中心へ
     const off = Math.round(Math.max(0, Math.min(target, over)));  // 下端を越えない
     inner.style.setProperty('--yoff', off + 'px');
@@ -261,10 +270,19 @@ JS = """
         if(f && !f.dataset.watched){ f.dataset.watched = '1'; bro.observe(f); }
       });
     }
-    // 監視が使えない環境向けの保険
-    setTimeout(run, 400);
-    setTimeout(run, 1200);
-    setTimeout(run, 3000);
+    // 写真の読み込みで高さが伸びるまで、しばらく測り続ける。
+    // ResizeObserver が効かない環境でも取りこぼさないための保険で、
+    // 高さが落ち着いたら止める。
+    let last = -1, still = 0, n = 0;
+    const tick = () => {
+      run();
+      const h = (HOST.querySelector('iframe') || {}).offsetHeight || 0;
+      still = (h === last && h > 0) ? still + 1 : 0;
+      last = h;
+      if(still >= 3 || ++n > 30) return;      // 落ち着いたか、15秒で打ち切り
+      setTimeout(tick, 500);
+    };
+    setTimeout(tick, 300);
   }
   window.recenterXBand = () => centerAll(null);
 
@@ -295,6 +313,7 @@ JS = """
     // いま帯に出す並びを控えておく。X Machines を開いたとき、
     // この順のまま先頭の1段に置くため。
     bandIds = list.map(p => p && p.id).filter(Boolean);
+    bandFixed = true;             // 以降は素の幅を変えない（描き直しになるため）
     const twttr = await loadWidgets();
     const {pair, inners} = stagePair(list);
     const opts = tweetOpts();
