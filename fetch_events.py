@@ -264,8 +264,10 @@ def main() -> int:
 
         key, label = ec.pref_of(r["pref_raw"] or detail.get("place", ""))
         shop = venue_of(detail, r["title"]) if detail else r["title"]
+        # イベント名は一覧から取れている。会場名（shop）は「場所」欄から
+        # 別に決めているので、両方を持たせて表示側で使い分ける。
         ev = {"date": r["date"], "pref": key, "label": label,
-              "shop": shop, "url": r["url"]}
+              "shop": shop, "name": r["title"], "url": r["url"]}
         if key == "unknown":
             unknown.append({**ev, "title": r["title"],
                             "pref_raw": r["pref_raw"], "place": detail.get("place", "")})

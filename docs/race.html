@@ -68,9 +68,8 @@ border-left:4px solid var(--brand);padding-left:8px}
 
 /* 一覧 */
 .list{display:grid;gap:8px}
-.row{display:grid;grid-template-columns:96px 78px 1fr;gap:10px;align-items:center;
-background:var(--surface);border:1px solid var(--line);border-radius:10px;
-padding:10px 12px;text-decoration:none;color:inherit}
+.row{background:var(--surface);border:1px solid var(--line);border-radius:10px;
+padding:10px 12px}
 .row:hover{border-color:var(--brand)}
 .d{font-variant-numeric:tabular-nums;font-weight:700;font-size:14px}
 .d .wd{font-size:11px;color:var(--ink3);margin-left:4px;font-weight:500}
@@ -83,10 +82,48 @@ overflow:hidden;text-overflow:ellipsis}
 -webkit-box-orient:vertical;overflow:hidden}
 .empty{padding:28px 10px;text-align:center;color:var(--ink3);font-size:13px}
 
+/* 画面には出さず、読み上げと検索エンジンにだけ伝える文字 */
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* 地域・県のワンタップ絞り込み */
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 8px}
+.chip{font:inherit;font-size:13px;font-weight:700;padding:6px 12px;cursor:pointer;
+border:1px solid var(--line);border-radius:999px;background:var(--surface);
+color:var(--ink2);white-space:nowrap}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff}
+.chip .n{font-size:11px;font-weight:600;opacity:.7;margin-left:5px}
+/* 県のチップは地域を選んだときだけ出す。地域より一段小さくする。 */
+.chips.pref{margin:-2px 0 10px}
+.chips.pref .chip{font-size:12px;font-weight:600;padding:5px 10px}
+.chips.pref[hidden]{display:none}
+
+/* お気に入りの店だけに絞るボタン */
+.favbtn{font:inherit;font-size:13px;font-weight:700;padding:7px 12px;cursor:pointer;
+border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink2)}
+.favbtn:hover{border-color:#e0a300;color:#e0a300}
+.favbtn[aria-pressed="true"]{background:#e0a300;border-color:#e0a300;color:#fff}
+.favbtn:disabled{opacity:.4;cursor:default}
+
+/* 1行 = リンク本体 ＋ ☆ボタン */
+.row{position:relative;padding-right:44px}
+.row .main{display:grid;grid-template-columns:96px 78px 1fr;gap:10px;align-items:center;
+text-decoration:none;color:inherit}
+.fav{position:absolute;top:50%;right:8px;transform:translateY(-50%);
+width:32px;height:32px;padding:0;line-height:1;cursor:pointer;font-size:17px;
+border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink3)}
+.fav:hover{border-color:#e0a300;color:#e0a300}
+.fav.on{color:#e0a300;border-color:#e0a300;background:rgba(224,163,0,.10)}
+/* イベント名は会場名の下に。長くても切り詰めず2行で省略する。 */
+.nm{font-size:12px;color:var(--ink3);display:-webkit-box;-webkit-line-clamp:2;
+-webkit-box-orient:vertical;overflow:hidden}
+
 @media(max-width:600px){
-  .row{grid-template-columns:74px 1fr;row-gap:4px;padding:9px 10px}
+  .row{padding:9px 10px;padding-right:42px}
+  .row .main{grid-template-columns:74px 1fr;row-gap:4px}
   .pf{grid-row:1;grid-column:2;justify-self:start}
-  .sp{grid-column:1 / -1}
+  .sp,.nm{grid-column:1 / -1}
 }
 
 footer{margin-top:32px;padding-top:14px;border-top:1px solid var(--line);
@@ -102,17 +139,20 @@ footer p{margin:4px 0}
   <a class="back" href="index.html">← パーツカタログへ戻る</a>
 </header>
 
-<h1>レースカレンダー</h1>
+<h1>🏁 レース情報<span class="sr">｜全国のミニ四駆 大会・イベント開催カレンダー</span></h1>
+
+<div class="chips" id="regions" role="group" aria-label="地域で絞り込む"></div>
+<div class="chips pref" id="prefs" role="group" aria-label="都道府県で絞り込む" hidden></div>
 
 <div class="bar">
-  <select id="pref" aria-label="都道府県で絞り込む"><option value="">すべての都道府県</option></select>
+  <button type="button" id="favOnly" class="favbtn" aria-pressed="false">★ お気に入りの店</button>
   <select id="range" aria-label="期間で絞り込む">
     <option value="0">これからの開催すべて</option>
     <option value="1">1ヶ月以内</option>
     <option value="3">3ヶ月以内</option>
     <option value="6">6ヶ月以内</option>
   </select>
-  <input id="q" type="search" placeholder="会場名で探す" aria-label="会場名で探す">
+  <input id="q" type="search" placeholder="会場名・イベント名で探す" aria-label="会場名・イベント名で探す">
   <span class="count" id="count"></span>
 </div>
 
@@ -428,53 +468,143 @@ const PREF_LABELS = {
   saga:'佐賀', nagasaki:'長崎', kumamoto:'熊本', oita:'大分', miyazaki:'宮崎',
   kagoshima:'鹿児島', okinawa:'沖縄'
 };
+
+// 地域区分。タミヤ公式のイベント一覧と同じ並びにしてある。
+const REGIONS = [
+  ['北海道',   ['hokkaido']],
+  ['東北',     ['aomori','iwate','miyagi','akita','yamagata','fukushima']],
+  ['関東',     ['ibaraki','tochigi','gunma','saitama','chiba','tokyo','kanagawa']],
+  ['中部',     ['niigata','toyama','ishikawa','fukui','yamanashi','nagano','gifu','shizuoka','aichi']],
+  ['近畿',     ['mie','shiga','kyoto','osaka','hyogo','nara','wakayama']],
+  ['中国',     ['tottori','shimane','okayama','hiroshima','yamaguchi']],
+  ['四国',     ['tokushima','kagawa','ehime','kochi']],
+  ['九州・沖縄',['fukuoka','saga','nagasaki','kumamoto','oita','miyazaki','kagoshima','okinawa']]
+];
+const REGION_OF = (() => {
+  const m = {};
+  for(const [name, keys] of REGIONS) for(const k of keys) m[k] = name;
+  return m;
+})();
 const WD = ['日','月','火','水','木','金','土'];
 
-const $pref = document.getElementById('pref');
+const $regions = document.getElementById('regions');
+const $prefs = document.getElementById('prefs');
+const $favOnly = document.getElementById('favOnly');
 const $range = document.getElementById('range');
 const $q = document.getElementById('q');
 const $list = document.getElementById('list');
 const $count = document.getElementById('count');
+
+let region = '';    // '' = 全国
+let pref = '';      // '' = その地域すべて
+let favOnly = false;
 
 // 今日の0時。過ぎた開催は出さない。
 const today = (() => { const d = new Date(); d.setHours(0,0,0,0); return d; })();
 const asDate = s => { const [y,m,d] = String(s).split('-').map(Number);
   return new Date(y, (m||1)-1, d||1); };
 
-// 都道府県の選択肢は、実際に開催があるものだけ出す
-(() => {
-  const keys = [...new Set(EVENTS.map(e => e.pref))]
-    .filter(k => PREF_LABELS[k])
-    .sort((a,b) => Object.keys(PREF_LABELS).indexOf(a) - Object.keys(PREF_LABELS).indexOf(b));
-  for(const k of keys){
-    const o = document.createElement('option');
-    o.value = k; o.textContent = PREF_LABELS[k];
-    $pref.appendChild(o);
+// これから開催されるものだけを土台にする（チップの件数もこれで数える）
+const UPCOMING = EVENTS.filter(e => asDate(e.date) >= today);
+
+// ---- お気に入りの店（このブラウザにだけ保存。ログイン不要） ----
+const FAV_KEY = 'mini4rinku:favshops';
+let favs = new Set();
+try{ favs = new Set(JSON.parse(localStorage.getItem(FAV_KEY) || '[]')); }catch(e){}
+function saveFavs(){
+  try{ localStorage.setItem(FAV_KEY, JSON.stringify([...favs])); }catch(e){}
+}
+// 店の見分けは会場名で行う。同じ店の別開催もまとめてお気に入りになる。
+const shopKey = e => (e.shop || '').trim();
+
+function syncFavButton(){
+  const n = UPCOMING.filter(e => favs.has(shopKey(e))).length;
+  $favOnly.textContent = favs.size ? `★ お気に入りの店（${n}件）` : '★ お気に入りの店';
+  $favOnly.disabled = !favs.size;
+  if(!favs.size && favOnly){ favOnly = false; }
+  $favOnly.setAttribute('aria-pressed', favOnly ? 'true' : 'false');
+}
+
+// ---- 地域チップ（開催があるものだけ出す） ----
+function buildRegions(){
+  const count = {};
+  for(const e of UPCOMING){
+    const r = REGION_OF[e.pref];
+    if(r) count[r] = (count[r] || 0) + 1;
   }
-})();
+  const mk = (label, value, n) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'chip'; b.dataset.v = value;
+    b.setAttribute('aria-pressed', 'false');
+    b.innerHTML = '<span></span><span class="n"></span>';
+    b.firstChild.textContent = label;
+    b.lastChild.textContent = n;
+    return b;
+  };
+  $regions.appendChild(mk('全国', '', UPCOMING.length));
+  for(const [name] of REGIONS){
+    if(count[name]) $regions.appendChild(mk(name, name, count[name]));
+  }
+}
+
+// ---- 県チップ（選んだ地域の中で、開催があるものだけ） ----
+function buildPrefs(){
+  $prefs.innerHTML = '';
+  if(!region){ $prefs.hidden = true; return; }
+  const keys = (REGIONS.find(r => r[0] === region) || [null, []])[1];
+  const count = {};
+  for(const e of UPCOMING) if(keys.includes(e.pref)) count[e.pref] = (count[e.pref] || 0) + 1;
+  const live = keys.filter(k => count[k]);
+  // 県が1つしかない地域（北海道）では、絞り込みにならないので出さない
+  if(live.length < 2){ $prefs.hidden = true; return; }
+  const mk = (label, value, n) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'chip'; b.dataset.v = value;
+    b.setAttribute('aria-pressed', value === pref ? 'true' : 'false');
+    b.innerHTML = '<span></span><span class="n"></span>';
+    b.firstChild.textContent = label;
+    b.lastChild.textContent = n;
+    return b;
+  };
+  $prefs.appendChild(mk(region + 'すべて', '', live.reduce((a, k) => a + count[k], 0)));
+  for(const k of live) $prefs.appendChild(mk(PREF_LABELS[k], k, count[k]));
+  $prefs.hidden = false;
+}
+
+function syncChips(){
+  for(const b of $regions.querySelectorAll('.chip'))
+    b.setAttribute('aria-pressed', b.dataset.v === region ? 'true' : 'false');
+  for(const b of $prefs.querySelectorAll('.chip'))
+    b.setAttribute('aria-pressed', b.dataset.v === pref ? 'true' : 'false');
+}
 
 function render(){
-  const pf = $pref.value;
   const months = parseInt($range.value, 10) || 0;
   const q = $q.value.trim();
   let limit = null;
   if(months){ limit = new Date(today); limit.setMonth(limit.getMonth() + months); }
+  const inRegion = region
+    ? (REGIONS.find(r => r[0] === region) || [null, []])[1] : null;
 
-  const rows = EVENTS
+  const rows = UPCOMING
     .filter(e => {
-      const d = asDate(e.date);
-      if(d < today) return false;                     // 済んだ開催は出さない
-      if(limit && d > limit) return false;
-      if(pf && e.pref !== pf) return false;
-      if(q && !(e.shop || '').includes(q)) return false;
+      if(limit && asDate(e.date) > limit) return false;
+      if(inRegion && !inRegion.includes(e.pref)) return false;
+      if(pref && e.pref !== pref) return false;
+      if(favOnly && !favs.has(shopKey(e))) return false;
+      if(q && !((e.shop || '') + ' ' + (e.name || '')).includes(q)) return false;
       return true;
     })
-    .sort((a,b) => a.date.localeCompare(b.date) || (a.label||'').localeCompare(b.label||''));
+    .sort((a, b) => a.date.localeCompare(b.date) || (a.label || '').localeCompare(b.label || ''));
 
   $count.textContent = rows.length ? rows.length + '件' : '';
   $list.innerHTML = '';
   if(!rows.length){
-    $list.innerHTML = '<div class="empty">条件に合う開催情報がありません。</div>';
+    const msg = favOnly
+      ? 'お気に入りの店に、これからの開催予定がありません。'
+      : '条件に合う開催情報がありません。';
+    $list.innerHTML = '<div class="empty"></div>';
+    $list.firstChild.textContent = msg;
     return;
   }
 
@@ -489,24 +619,71 @@ function render(){
       h.textContent = d.getFullYear() + '年 ' + (d.getMonth() + 1) + '月';
       $list.appendChild(h);
     }
-    const a = document.createElement('a');
-    a.className = 'row';
-    a.href = e.url; a.target = '_blank'; a.rel = 'noopener';
     const wd = d.getDay();
-    a.innerHTML =
-      '<span class="d ' + (wd === 0 ? 'sun' : wd === 6 ? 'sat' : '') + '">' +
-        (d.getMonth() + 1) + '/' + d.getDate() +
-        '<span class="wd">(' + WD[wd] + ')</span></span>' +
-      '<span class="pf"></span><span class="sp"></span>';
+    const row = document.createElement('div');
+    row.className = 'row';
+    row.innerHTML =
+      '<a class="main" target="_blank" rel="noopener">' +
+        '<span class="d ' + (wd === 0 ? 'sun' : wd === 6 ? 'sat' : '') + '">' +
+          (d.getMonth() + 1) + '/' + d.getDate() +
+          '<span class="wd">(' + WD[wd] + ')</span></span>' +
+        '<span class="pf"></span><span class="sp"></span><span class="nm"></span>' +
+      '</a>' +
+      '<button class="fav" type="button"></button>';
+    const a = row.querySelector('.main');
+    a.href = e.url;
     a.querySelector('.pf').textContent = e.label || '?';
     a.querySelector('.sp').textContent = e.shop || '';
-    $list.appendChild(a);
+    // イベント名は会場名の後ろに添える。会場名と同じなら重ねない。
+    const nm = (e.name || '').trim();
+    a.querySelector('.nm').textContent = (nm && nm !== (e.shop || '').trim()) ? nm : '';
+
+    const shop = shopKey(e);
+    const btn = row.querySelector('.fav');
+    const on = favs.has(shop);
+    btn.textContent = on ? '★' : '☆';
+    btn.classList.toggle('on', on);
+    btn.title = on ? 'お気に入りから外す' : 'このショップをお気に入りに追加';
+    btn.setAttribute('aria-label', btn.title + '：' + (shop || '会場名なし'));
+    btn.disabled = !shop;
+    btn.addEventListener('click', () => {
+      if(favs.has(shop)) favs.delete(shop); else favs.add(shop);
+      saveFavs();
+      syncFavButton();
+      render();          // 同じ店の行がまとめて変わるので描き直す
+    });
+    $list.appendChild(row);
   }
 }
 
-$pref.addEventListener('change', render);
+$regions.addEventListener('click', e => {
+  const b = e.target.closest('.chip');
+  if(!b) return;
+  region = b.dataset.v;
+  pref = '';
+  buildPrefs();
+  syncChips();
+  render();
+});
+$prefs.addEventListener('click', e => {
+  const b = e.target.closest('.chip');
+  if(!b) return;
+  pref = b.dataset.v;
+  syncChips();
+  render();
+});
+$favOnly.addEventListener('click', () => {
+  favOnly = !favOnly;
+  $favOnly.setAttribute('aria-pressed', favOnly ? 'true' : 'false');
+  render();
+});
 $range.addEventListener('change', render);
 $q.addEventListener('input', render);
+
+buildRegions();
+buildPrefs();
+syncChips();
+syncFavButton();
 render();
 </script>
 </body>

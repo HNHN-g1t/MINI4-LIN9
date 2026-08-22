@@ -756,7 +756,7 @@ def build(items: list[dict], outdir: str) -> str:
         f'<div class="tab on" data-genre="">すべて<span class="n">{len(items)}</span></div>'
         '<div class="tab fav" data-genre="fav">★ お気に入り<span class="n" id="favN">0</span></div>'
         # レースカレンダーは別ページ。タブと同じ見た目のリンクで並べる。
-        '<a class="tab link" href="race.html">レース開催情報</a>'
+        '<a class="tab link" href="race.html">🏁レース情報</a>'
     )
 
     # 下段チップ（細分類）。同じ分類名が複数ジャンルに出るので1つにまとめ、

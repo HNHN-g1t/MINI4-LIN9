@@ -116,7 +116,7 @@ def diff(old: list[dict], new: list[dict]) -> tuple[list, list, list]:
         if k not in om:
             continue
         a, b = om[k], nm[k]
-        fields = [f for f in ("date", "pref", "label", "shop")
+        fields = [f for f in ("date", "pref", "label", "shop", "name")
                   if (a.get(f) or "") != (b.get(f) or "")]
         if fields:
             changed.append((a, b, fields))
@@ -127,7 +127,7 @@ def diff(old: list[dict], new: list[dict]) -> tuple[list, list, list]:
 
 
 FIELD_NAMES = {"date": "日付", "pref": "都道府県キー",
-               "label": "県名", "shop": "会場名"}
+               "label": "県名", "shop": "会場名", "name": "イベント名"}
 
 
 def show(added, changed, removed, unknown) -> None:
@@ -170,10 +170,10 @@ def render_events(events: list[dict]) -> str:
     lines = []
     for e in events:
         lines.append(
-            "  { date:%s, pref:%s, label:%s, shop:%s, url:%s }," % (
+            "  { date:%s, pref:%s, label:%s, shop:%s, name:%s, url:%s }," % (
                 js_str(e.get("date", "")), js_str(e.get("pref", "")),
                 js_str(e.get("label", "")), js_str(e.get("shop", "")),
-                js_str(e.get("url", ""))))
+                js_str(e.get("name", "")), js_str(e.get("url", ""))))
     return "[\n" + "\n".join(lines) + "\n]"
 
 
