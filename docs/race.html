@@ -77,9 +77,8 @@ padding:10px 12px}
 .pf{font-size:12px;text-align:center;padding:3px 6px;border-radius:999px;
 background:rgba(26,95,208,.10);color:var(--brand);white-space:nowrap;
 overflow:hidden;text-overflow:ellipsis}
-/* 会場名は原文のまま持ち、表示のときだけ2行で省略する */
-.sp{font-size:13px;color:var(--ink2);display:-webkit-box;-webkit-line-clamp:2;
--webkit-box-orient:vertical;overflow:hidden}
+/* 会場名は原文のまま持ち、表示のときだけ省略する（省略の指定は .txt 側） */
+.sp{font-size:13px;color:var(--ink2)}
 .empty{padding:28px 10px;text-align:center;color:var(--ink3);font-size:13px}
 
 /* 画面には出さず、読み上げと検索エンジンにだけ伝える文字 */
@@ -115,15 +114,23 @@ width:32px;height:32px;padding:0;line-height:1;cursor:pointer;font-size:17px;
 border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink3)}
 .fav:hover{border-color:#e0a300;color:#e0a300}
 .fav.on{color:#e0a300;border-color:#e0a300;background:rgba(224,163,0,.10)}
-/* イベント名は会場名の下に。長くても切り詰めず2行で省略する。 */
-.nm{font-size:12px;color:var(--ink3);display:-webkit-box;-webkit-line-clamp:2;
--webkit-box-orient:vertical;overflow:hidden}
+/* 会場名と大会名は横に並べ、それぞれ入りきらない分だけ省略する */
+.txt{display:flex;gap:8px;align-items:baseline;min-width:0}
+.sp{flex:0 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nm{flex:1 1 0;min-width:0;font-size:12px;color:var(--ink3);
+white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nm:empty{display:none}
+.nm::before{content:"／";margin-right:6px;color:var(--line)}
+
+/* お気に入りの絞り込みは最上段。登録が無いうちは行ごと出さない。 */
+.favrow{margin:0 0 10px}
+.favrow[hidden]{display:none}
 
 @media(max-width:600px){
   .row{padding:9px 10px;padding-right:42px}
   .row .main{grid-template-columns:74px 1fr;row-gap:4px}
   .pf{grid-row:1;grid-column:2;justify-self:start}
-  .sp,.nm{grid-column:1 / -1}
+  .txt{grid-column:1 / -1}
 }
 
 footer{margin-top:32px;padding-top:14px;border-top:1px solid var(--line);
@@ -141,11 +148,14 @@ footer p{margin:4px 0}
 
 <h1>🏁 レース情報<span class="sr">｜全国のミニ四駆 大会・イベント開催カレンダー</span></h1>
 
+<div class="favrow" id="favRow" hidden>
+  <button type="button" id="favOnly" class="favbtn" aria-pressed="false">★ お気に入りの店</button>
+</div>
+
 <div class="chips" id="regions" role="group" aria-label="地域で絞り込む"></div>
 <div class="chips pref" id="prefs" role="group" aria-label="都道府県で絞り込む" hidden></div>
 
 <div class="bar">
-  <button type="button" id="favOnly" class="favbtn" aria-pressed="false">★ お気に入りの店</button>
   <select id="range" aria-label="期間で絞り込む">
     <option value="0">これからの開催すべて</option>
     <option value="1">1ヶ月以内</option>
@@ -491,6 +501,28 @@ const REGION_OF = (() => {
 })();
 const WD = ['日','月','火','水','木','金','土'];
 
+// 大会名は「〜 at 会場名」の形が多い。会場名は隣に出しているので落とす。
+// 全角の＠は前後に空白を置かない書き方が多いので単独でも受け、
+// 半角の at / @ は語の一部を誤って切らないよう前後の空白を必須にする。
+const AT_TAIL = /(?:(?:\s|　)(?:at|AT|At|@)(?:\s|　)+|　?＠(?:\s|　)*)[^\n]*$/;
+const NAME_MAX = 30;          // 大会名の最大文字数。これを超えたら … で切る
+
+// 切れ目が語の途中や記号の直後にならないよう、末尾の区切り文字を落としてから … を足す
+function cut(text, max){
+  if(text.length <= max) return text;
+  return text.slice(0, max).replace(/[\s　、。,.・/／\-–—~〜（(【[「『]+$/, '') + '…';
+}
+
+function eventTitle(e){
+  let t = (e.name || '').trim();
+  if(!t) return '';
+  const short = t.replace(AT_TAIL, '').trim();
+  if(short.length >= 4) t = short;      // 落とした結果が短すぎるときは元に戻す
+  if(!t || t === (e.shop || '').trim()) return '';
+  return cut(t, NAME_MAX);
+}
+
+const $favRow = document.getElementById('favRow');
 const $regions = document.getElementById('regions');
 const $prefs = document.getElementById('prefs');
 const $favOnly = document.getElementById('favOnly');
@@ -522,10 +554,16 @@ function saveFavs(){
 const shopKey = e => (e.shop || '').trim();
 
 function syncFavButton(){
+  // 登録が無いうちは行ごと出さない（押せないボタンを置いておかない）
+  if(!favs.size){
+    favOnly = false;
+    $favRow.hidden = true;
+    $favOnly.setAttribute('aria-pressed', 'false');
+    return;
+  }
   const n = UPCOMING.filter(e => favs.has(shopKey(e))).length;
-  $favOnly.textContent = favs.size ? `★ お気に入りの店（${n}件）` : '★ お気に入りの店';
-  $favOnly.disabled = !favs.size;
-  if(!favs.size && favOnly){ favOnly = false; }
+  $favOnly.textContent = `★ お気に入りの店（${n}件）`;
+  $favRow.hidden = false;
   $favOnly.setAttribute('aria-pressed', favOnly ? 'true' : 'false');
 }
 
@@ -596,6 +634,7 @@ function render(){
       if(inRegion && !inRegion.includes(e.pref)) return false;
       if(pref && e.pref !== pref) return false;
       if(favOnly && !favs.has(shopKey(e))) return false;
+      // 検索は切り詰める前の全文で見る
       if(q && !((e.shop || '') + ' ' + (e.name || '')).includes(q)) return false;
       return true;
     })
@@ -631,16 +670,19 @@ function render(){
         '<span class="d ' + (wd === 0 ? 'sun' : wd === 6 ? 'sat' : '') + '">' +
           (d.getMonth() + 1) + '/' + d.getDate() +
           '<span class="wd">(' + WD[wd] + ')</span></span>' +
-        '<span class="pf"></span><span class="sp"></span><span class="nm"></span>' +
+        '<span class="pf"></span>' +
+        '<span class="txt"><span class="sp"></span><span class="nm"></span></span>' +
       '</a>' +
       '<button class="fav" type="button"></button>';
     const a = row.querySelector('.main');
     a.href = e.url;
     a.querySelector('.pf').textContent = e.label || '?';
     a.querySelector('.sp').textContent = e.shop || '';
-    // イベント名は会場名の後ろに添える。会場名と同じなら重ねない。
-    const nm = (e.name || '').trim();
-    a.querySelector('.nm').textContent = (nm && nm !== (e.shop || '').trim()) ? nm : '';
+    // 大会名は会場名の横に。全文は title 属性に残すので、長押し等で読める。
+    const nm = eventTitle(e);
+    const $nm = a.querySelector('.nm');
+    $nm.textContent = nm;
+    if(nm) $nm.title = (e.name || '').trim();
 
     const shop = shopKey(e);
     const btn = row.querySelector('.fav');
