@@ -180,12 +180,13 @@ if(cmap){
   };
 
   pins.forEach(p => p.addEventListener('click', () => {
-    const card=document.getElementById(p.dataset.target);
-    if(!card) return;
     if(activePin) activePin.classList.remove('on');
     p.classList.add('on'); activePin=p;
-    // 対象が別ページにいることがあるので、まずそのページへ切り替える
-    if(window.revealCard) revealCard(card);
+    // 対象が別ページにいることがあるので、まずそのページへ切り替える。
+    // カードは表示中のページぶんしか作られていないため、切り替えたあとに取り直す。
+    if(window.revealCard && !revealCard(p.dataset.item)) return;
+    const card=document.getElementById(p.dataset.target);
+    if(!card) return;
     closeSheet();
     setTimeout(() => {
       card.scrollIntoView({behavior:'smooth', block:'center'});
@@ -302,7 +303,8 @@ if(cmap){
 def _pin(r: dict) -> str:
     code = PC.code_of(r["name"]) or r["item_code"]
     return (f'<button class="pin" style="background:{r["swatch"]}" '
-            f'data-target="item-{r["item_code"]}" data-effect="{r["effect"]}" '
+            f'data-target="item-{r["item_code"]}" data-item="{r["item_code"]}" '
+            f'data-effect="{r["effect"]}" '
             f'data-series="{r["series"]}" data-cname="{html.escape(r["official_category"])}" '
             f'data-hue="{html.escape(r["hue_band"])}" '
             f'data-code="{html.escape(code)}" data-color="{html.escape(r["color_name"])}" '

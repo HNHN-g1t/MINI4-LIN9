@@ -98,6 +98,78 @@ def ec_links(item: dict) -> list[tuple[str, str, str]]:
     ]
 
 
+# 商品画像はすべてこのCDNから来る。JSONに何度も書くと無駄なので、
+# 共通部分だけ切り出してブラウザ側で足し直す。
+IMG_BASE = "https://d7z22c0gz59ng.cloudfront.net/"
+# 公式ページのURLはほぼこの形。例外（3件）のときだけそのまま持たせる。
+TAMIYA_URL = "https://www.tamiya.com/japan/products/{code}/index.html"
+
+
+def catalog_payload(items: list[dict]) -> str:
+    """商品データを、ブラウザ側でカードを組み立てるための小さなJSONにする。
+
+    1469件ぶんのカードをHTMLに書き出すと4MB近くになり、スマホでは
+    HTMLの解析とDOMの構築だけで待たされる。表示に使うのは1ページ24件
+    だけなので、データだけ渡して必要なぶんをブラウザ側で作る。
+
+    削れるものは削ってある:
+      - 何度も出てくる細分類・ジャンルは一覧表にして番号で参照する
+      - 画像URLの共通部分と、規則どおりの公式ページURLは持たせない
+      - ECサイトの検索URL（1件あたり5本）は計測IDから組み立てられるので持たせない
+    """
+    cats: list[str] = []
+    genres: list[list[str]] = []
+    ci: dict[str, int] = {}
+    gi: dict[str, int] = {}
+    rows = []
+    for it in items:
+        cat = it["_cat"]
+        if cat not in ci:
+            ci[cat] = len(cats)
+            cats.append(cat)
+        gkey = it["genre_key"]
+        if gkey not in gi:
+            gi[gkey] = len(genres)
+            genres.append([gkey, it["genre"]])
+        img = it.get("image", "")
+        # 4件だけ "/cms/img/..." という先頭スラッシュだけの相対パスで入っている。
+        # そのまま出すとサイト直下を指してしまい画像が出ない（従来はこれで壊れていた）。
+        # 他の商品と同じ形なので、CDNのものとして補う。
+        if img.startswith("/"):
+            img = IMG_BASE + img.lstrip("/")
+        if img.startswith(IMG_BASE):
+            img = img[len(IMG_BASE):]
+        url = it.get("url", "")
+        if url == TAMIYA_URL.format(code=it["item_code"]):
+            url = ""
+        rows.append([it["item_code"], it.get("gp_no", ""), it["name"],
+                     ci[cat], gi[gkey], it["price"], img, url])
+
+    data = {"b": IMG_BASE, "c": cats, "g": genres, "i": rows,
+            "ec": {"a": AMAZON_TAG, "m": MERCARI_AFID, "r": RAKUTEN_AFID}}
+    body = json.dumps(data, ensure_ascii=False, separators=(",", ":"))
+    # <script> の中に置くので、閉じタグに化ける可能性のある < だけ潰しておく
+    return body.replace("<", "\\u003c")
+
+
+def noscript_list(items: list[dict]) -> str:
+    """JavaScriptが動かない環境向けの、素朴な品番一覧。
+
+    scriptが有効なブラウザでは中身が要素として組み立てられないため、
+    DOMの重さには影響しない。検索エンジンや読み上げ環境で、
+    ページが空にならないようにするための保険。
+    """
+    rows = "".join(
+        '<li><a href="{url}">ITEM {code} {name}</a></li>'.format(
+            url=html.escape(it.get("url") or TAMIYA_URL.format(code=it["item_code"])),
+            code=it["item_code"], name=html.escape(it["name"]))
+        for it in items
+    )
+    return ('<noscript><div class="nojs"><p>この一覧の絞り込み・検索には '
+            'JavaScript が必要です。以下は全品番の一覧です。</p><ul>'
+            + rows + "</ul></div></noscript>")
+
+
 CSS = """
 :root{--bg:#f5f6f8;--surface:#fff;--ink:#1a2233;--ink2:#5a6478;--ink3:#8b93a5;
 --brand:#1256c4;--brand-soft:#e8f0fd;--line:#e3e6ec;--good:#0e7a4b;--accent:#d81f2a;
@@ -175,6 +247,11 @@ font-weight:700;cursor:pointer}
 .pager .gap{color:var(--ink3);font-size:12px;padding:0 2px}
 footer{max-width:1120px;margin:0 auto;padding:16px;font-size:11px;color:var(--ink3);border-top:1px solid var(--line)}
 @media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
+/* JavaScriptが無い環境向けの品番一覧 */
+.nojs{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;margin:8px 0}
+.nojs p{color:var(--ink2);font-size:12.5px;margin-bottom:10px}
+.nojs ul{list-style:none;display:grid;gap:2px}
+.nojs a{color:var(--brand);font-size:12.5px}
 """ + colormap_ui.CSS + x_embed_ui.CSS
 
 JS = """
@@ -183,18 +260,88 @@ const q = document.getElementById('q');
 const tabs = [...document.querySelectorAll('.tab:not(.link)')];
 const chips = [...document.querySelectorAll('.chip')];
 const chipRow = document.querySelector('.chips');
-const cards = [...document.querySelectorAll('.it')];
+const grid = document.querySelector('.grid');
 const countLine = document.getElementById('countLine');
 const empty = document.getElementById('empty');
 const favN = document.getElementById('favN');
 let genre = '';   // '' = すべて
 let cat = '';     // '' = 全カテゴリ
 
+// ---- 商品データ ----
+// カードのHTMLはページに焼かれていない。ここでデータを開き、
+// 表示するページぶん（24件）だけをそのつど組み立てる。
+const XD = JSON.parse(document.getElementById('xdata').textContent);
+const ITEMS = XD.i.map(r => {
+  const cat_ = XD.c[r[3]], g = XD.g[r[4]], img = r[6];
+  return {
+    code: r[0], gp: r[1], name: r[2], cat: cat_, gkey: g[0], genre: g[1], price: r[5],
+    img: !img ? '' : (img.slice(0, 4) === 'http' ? img : XD.b + img),
+    url: r[7] || ('https://www.tamiya.com/japan/products/' + r[0] + '/index.html'),
+    // 検索用。品番・GP番号・商品名・細分類・ジャンルをまとめて小文字にしたもの
+    hay: (r[0] + ' ' + r[1] + ' ' + r[2] + ' ' + cat_ + ' ' + g[1]).toLowerCase()
+  };
+});
+
+// ---- カードの組み立て ----
+const ESCMAP = {'&':'&amp;','\\u003c':'&lt;','>':'&gt;','"':'&quot;',"'":'&#x27;'};
+function esc(s){ return String(s).replace(/[&\\u003c>"']/g, c => ESCMAP[c]); }
+function yen(n){ return String(n).replace(/\\B(?=(\\d{3})+(?!\\d))/g, ','); }
+
+// Python の urllib.parse.quote と同じ結果にする。
+// encodeURIComponent は !'()* を素通しし / を潰すので、そこだけ合わせる。
+function pq(s, keepSlash){
+  const o = encodeURIComponent(s).replace(/[!'()*]/g,
+    c => '%' + c.charCodeAt(0).toString(16).toUpperCase());
+  return keepSlash ? o.replace(/%2F/g, '/') : o;
+}
+
+// ECサイトの検索URL。工具と塗料は品番で引いてもほぼヒットしないため商品名で引く。
+function ecRow(it){
+  const byName = (it.gkey === 'tool' || it.gkey === 'paint');
+  const q1 = pq(byName ? 'タミヤ ' + it.name : 'ミニ四駆 ' + it.code, true);
+  const mq = pq(byName ? 'タミヤ ' + it.name : it.code + ' タミヤ', true);
+  // 楽天は検索語をパスに埋め、その全体をもう一度エンコードして中継URLに渡す
+  const rt = pq('https://search.rakuten.co.jp/search/mall/' + q1 + '/', false);
+  const links = [
+    ['amazon',   'https://www.amazon.co.jp/s?k=' + q1 + '&tag=' + XD.ec.a],
+    ['メルカリ', 'https://jp.mercari.com/search?keyword=' + mq + '&afid=' + XD.ec.m],
+    ['Yahoo!',   'https://shopping.yahoo.co.jp/search?p=' + q1],
+    ['ヤフオク',  'https://auctions.yahoo.co.jp/search/search?p=' + q1],
+    ['楽天',     'https://hb.afl.rakuten.co.jp/hgc/' + XD.ec.r + '/?pc=' + rt + '&m=' + rt]
+  ];
+  return links.map(l => '<a class="ec" href="' + esc(l[1]) +
+    '" target="_blank" rel="sponsored noopener">' + esc(l[0]) + '</a>').join('');
+}
+
+function cardHTML(it){
+  const on = favs.has(it.code);
+  const short = it.name.length > 13 ? it.name.slice(0, 13) + '…' : it.name;
+  const gp = it.gp ? '　／ ' + esc(it.gp) : '';
+  return '<div class="it" id="item-' + esc(it.code) + '" data-code="' + esc(it.code) + '">' +
+    '<a class="ph" href="' + esc(it.url) + '" target="_blank" rel="noopener">' +
+    '<img src="' + esc(it.img) + '" alt="' + esc(it.name) + '" loading="lazy"></a>' +
+    '<div class="bd">' +
+      '<div class="row1">' +
+        '<button class="btn-fav' + (on ? ' on' : '') + '" type="button" title="' +
+          (on ? 'お気に入りから外す' : 'お気に入りに追加') + '">' + (on ? '★' : '☆') + '</button>' +
+        '<div class="nm">' + esc(short) + '</div>' +
+        '<button class="btn-detail" type="button">詳細</button>' +
+      '</div>' +
+      '<div class="detail">' +
+        '<div class="code">ITEM ' + esc(it.code) + gp + '</div>' +
+        '<div class="cat-tag">' + esc(it.cat) + '</div>' +
+        '<div class="nmfull">' + esc(it.name) + '</div>' +
+        '<div class="pr">¥' + yen(it.price) + ' <small>メーカー希望（税込）</small></div>' +
+      '</div>' +
+      '<div class="ecrow">' + ecRow(it) + '</div>' +
+    '</div></div>';
+}
+
 // ---- ページ送り ----
 const PER_PAGE = 24;          // 1ページの表示件数
 const PAGE_WINDOW = 7;        // 数字ボタンを並べる最大数
 let page = 1;
-let matched = [];             // 絞り込み後のカード（ページ分割前）
+let matched = [];             // 絞り込み後の商品（ページ分割前）
 const pagerTop = document.getElementById('pagerTop');
 const pagerBottom = document.getElementById('pagerBottom');
 
@@ -206,16 +353,8 @@ try{ favs = new Set(JSON.parse(localStorage.getItem(FAV_KEY) || '[]')); }catch(e
 function saveFavs(){
   try{ localStorage.setItem(FAV_KEY, JSON.stringify([...favs])); }catch(e){}
 }
-function paintFavs(){
-  for(const c of cards){
-    const on = favs.has(c.dataset.code);
-    const b = c.querySelector('.btn-fav');
-    b.textContent = on ? '★' : '☆';
-    b.classList.toggle('on', on);
-    b.title = on ? 'お気に入りから外す' : 'お気に入りに追加';
-  }
-  favN.textContent = favs.size;
-}
+// 表示中のカードは組み立て時に★の状態が入るので、ここは件数だけ見る
+function paintFavs(){ favN.textContent = favs.size; }
 
 function syncChips(){
   // ジャンル未選択（すべて）・お気に入りのときは細分類を出さない。
@@ -244,13 +383,13 @@ function apply(resetPage){
   if(wall) return;
 
   const terms = q.value.trim().toLowerCase().split(/\\s+/).filter(Boolean);
-  matched = cards.filter(c => {
+  matched = ITEMS.filter(it => {
     const okGenre = !genre ? true
-                  : genre === 'fav' ? favs.has(c.dataset.code)
-                  : c.dataset.genre === genre;
+                  : genre === 'fav' ? favs.has(it.code)
+                  : it.gkey === genre;
     return okGenre
-        && (!cat || c.dataset.cat === cat)
-        && terms.every(t => c.dataset.hay.includes(t));
+        && (!cat || it.cat === cat)
+        && terms.every(t => it.hay.includes(t));
   });
   if(resetPage !== false) page = 1;
   renderPage();
@@ -259,9 +398,9 @@ function apply(resetPage){
 
 function pageCount(){ return Math.max(1, Math.ceil(matched.length / PER_PAGE)); }
 
-// 指定カードが何ページ目にいるか。絞り込みに含まれなければ 0。
-function pageOf(card){
-  const i = matched.indexOf(card);
+// 指定品番が何ページ目にいるか。絞り込みに含まれなければ 0。
+function pageOfCode(code){
+  const i = matched.findIndex(it => it.code === code);
   return i < 0 ? 0 : Math.floor(i / PER_PAGE) + 1;
 }
 
@@ -269,8 +408,7 @@ function renderPage(){
   const total = pageCount();
   page = Math.min(Math.max(1, page), total);
   const from = (page - 1) * PER_PAGE, to = from + PER_PAGE;
-  const visible = new Set(matched.slice(from, to));
-  for(const c of cards) c.style.display = visible.has(c) ? '' : 'none';
+  grid.innerHTML = matched.slice(from, to).map(cardHTML).join('');
 
   const n = matched.length;
   countLine.textContent = n === 0
@@ -310,25 +448,28 @@ function onPagerClick(e){
   if(!b || b.disabled) return;
   page = parseInt(b.dataset.p, 10);
   renderPage();
-  const top = document.querySelector('.grid').getBoundingClientRect().top + window.scrollY;
+  const top = grid.getBoundingClientRect().top + window.scrollY;
   window.scrollTo({top: top - 80, behavior: 'smooth'});
 }
 pagerTop.addEventListener('click', onPagerClick);
 pagerBottom.addEventListener('click', onPagerClick);
 
-// 指定カードを必ず表示できる状態にしてから、そのページへ移動する。
+// 指定品番を必ず表示できる状態にしてから、そのページへ移動する。
 // 検索語や絞り込みで一覧から外れていると今までジャンプできなかったため、
 // 邪魔になっている条件を解除してから探し直す。
-window.revealCard = function(card){
-  if(!matched.includes(card)){
+// 表示中のページにしかカードが無いので、呼んだ側はこのあとに要素を取り直すこと。
+window.revealCard = function(code){
+  if(!matched.some(it => it.code === code)){
+    const it = ITEMS.find(x => x.code === code);
+    if(!it) return false;
     if(q.value){ q.value = ''; }        // 検索語を外す
     cat = '';                            // 中カテゴリの絞り込みを外す
-    genre = card.dataset.genre || '';    // カードのあるジャンルへ移動
+    genre = it.gkey;                     // その品番のあるジャンルへ移動
     tabs.forEach(t => t.classList.toggle('on', t.dataset.genre === genre));
     syncChips();
     apply();
   }
-  const p = pageOf(card);
+  const p = pageOfCode(code);
   if(p && p !== page){ page = p; renderPage(); }
   return p > 0;
 };
@@ -356,21 +497,30 @@ chips.forEach(ch => ch.addEventListener('click', () => {
   apply();
 }));
 
-// 「詳細」で品番・正式名称・価格を開閉する
-document.querySelectorAll('.btn-detail').forEach(b => b.addEventListener('click', () => {
-  const card = b.closest('.it');
-  const open = card.classList.toggle('open');
-  b.textContent = open ? '閉じる' : '詳細';
-}));
-
-// ☆でお気に入りを登録・解除する
-document.querySelectorAll('.btn-fav').forEach(b => b.addEventListener('click', () => {
-  const code = b.closest('.it').dataset.code;
-  if(favs.has(code)) favs.delete(code); else favs.add(code);
-  saveFavs();
-  paintFavs();
-  if(genre === 'fav') apply();   // お気に入り表示中は即座に反映する
-}));
+// カードは組み立て直されるので、個別にではなく一覧側で受ける
+grid.addEventListener('click', e => {
+  // 「詳細」で品番・正式名称・価格を開閉する
+  const d = e.target.closest('.btn-detail');
+  if(d){
+    const open = d.closest('.it').classList.toggle('open');
+    d.textContent = open ? '閉じる' : '詳細';
+    return;
+  }
+  // ☆でお気に入りを登録・解除する
+  const f = e.target.closest('.btn-fav');
+  if(f){
+    const code = f.closest('.it').dataset.code;
+    const on = !favs.has(code);
+    if(on) favs.add(code); else favs.delete(code);
+    saveFavs();
+    // 押した1つだけ塗り替える（組み立て直すと写真を読み込み直すため）
+    f.textContent = on ? '★' : '☆';
+    f.classList.toggle('on', on);
+    f.title = on ? 'お気に入りから外す' : 'お気に入りに追加';
+    paintFavs();
+    if(genre === 'fav') apply();   // お気に入り表示中は即座に反映する
+  }
+});
 
 paintFavs();
 syncChips();
@@ -499,34 +649,9 @@ def build(items: list[dict], outdir: str) -> str:
         for c, gs in cat_genres.items()
     ) + '<span class="chip on" data-cat="" data-genres="">すべて</span>' 
 
-    cards = []
-    for it in items:
-        code, name, cat = it["item_code"], it["name"], it["_cat"]
-        hay = html.escape(f"{code} {it.get('gp_no','')} {name} {cat} {it['genre']}".lower())
-        gp = f"　／ {html.escape(it['gp_no'])}" if it.get("gp_no") else ""
-        short = name[:13] + ("…" if len(name) > 13 else "")
-        ecrow = "".join(
-            f'<a class="ec" href="{u}" target="_blank" rel="{rel}">{html.escape(lb)}</a>'
-            for lb, u, rel in ec_links(it)
-        )
-        cards.append(f'''      <div class="it" id="item-{code}" data-code="{code}" data-genre="{it["genre_key"]}" data-cat="{html.escape(cat)}" data-hay="{hay}">
-        <a class="ph" href="{html.escape(it["url"])}" target="_blank" rel="noopener">
-          <img src="{html.escape(it["image"])}" alt="{html.escape(name)}" loading="lazy"></a>
-        <div class="bd">
-          <div class="row1">
-            <button class="btn-fav" type="button" title="お気に入りに追加">☆</button>
-            <div class="nm">{html.escape(short)}</div>
-            <button class="btn-detail" type="button">詳細</button>
-          </div>
-          <div class="detail">
-            <div class="code">ITEM {code}{gp}</div>
-            <div class="cat-tag">{html.escape(cat)}</div>
-            <div class="nmfull">{html.escape(name)}</div>
-            <div class="pr">¥{it["price"]:,} <small>メーカー希望（税込）</small></div>
-          </div>
-          <div class="ecrow">{ecrow}</div>
-        </div>
-      </div>''')
+    # カードのHTMLはここでは作らない。データだけ渡してブラウザ側で組み立てる。
+    payload = catalog_payload(items)
+    nojs = noscript_list(items)
 
     paint_rows = paint_colors.build([i for i in items if i.get("genre_key") == "paint"])
     cmap_html = colormap_ui.section(paint_rows) if paint_rows else ""
@@ -562,9 +687,8 @@ def build(items: list[dict], outdir: str) -> str:
 {cmap_html}
   <div class="count-line" id="countLine"></div>
   <nav class="pager" id="pagerTop" aria-label="ページ送り（上）"></nav>
-  <div class="grid">
-{chr(10).join(cards)}
-  </div>
+  <div class="grid"></div>
+{nojs}
   <nav class="pager" id="pagerBottom" aria-label="ページ送り（下）"></nav>
   <div class="empty" id="empty">該当する商品が見つかりません</div>
   <div class="cmap-tip" id="cmapTip" role="status"></div>
@@ -579,6 +703,7 @@ def build(items: list[dict], outdir: str) -> str:
   Amazonアソシエイトとして適格販売により収入を得ています。<br>
   最終更新 {datetime.now(JST).strftime("%Y-%m-%d %H:%M JST")}
 </footer>
+<script id="xdata" type="application/json">{payload}</script>
 <script>{JS}</script>
 <!-- ValueCommerce LinkSwitch: ページ内のYahoo!ショッピング・ヤフオクへのリンクを
      自動でアフィリエイトリンクに差し替える。リンクのURLは書き換えない。 -->
