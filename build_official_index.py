@@ -32,6 +32,13 @@ RAKUTEN_AFID = "56ae2925.07c6f012.56ae2926.4d88b0cd"   # 楽天アフィリエ�
 VALUECOMMERCE_SID = "3778941"    # ValueCommerce サイトID
 VALUECOMMERCE_PID = "892682983"  # ValueCommerce LinkSwitch の vc_pid
 
+# ---- サイトの住所と紹介文（検索結果・SNS・サイトマップで使い回す） ----
+SITE_URL = "https://mini4lin9.fun"
+SITE_NAME = "ミニ四リン駆"
+# 検索結果に出る説明文。長すぎると途中で切られるので120文字前後までに収める。
+SITE_DESC = ("タミヤ ミニ四駆のパーツ・キット・塗料・工具 {n}品番を、品番や名前から検索できるカタログ。"
+             "スプレーのカラーMAPやレース開催情報も掲載しています。")
+
 # 上段タブの並び（tamiya_catalog.json の genre_key に対応）。「すべて」は末尾に付く。
 GENRE_ORDER = [
     ("parts", "GUパーツ"),
@@ -103,6 +110,45 @@ def ec_links(item: dict) -> list[tuple[str, str, str]]:
 IMG_BASE = "https://d7z22c0gz59ng.cloudfront.net/"
 # 公式ページのURLはほぼこの形。例外（3件）のときだけそのまま持たせる。
 TAMIYA_URL = "https://www.tamiya.com/japan/products/{code}/index.html"
+
+
+def site_jsonld(desc: str) -> str:
+    """検索エンジンに「何のサイトか」を機械可読で伝える（JSON-LD）。
+
+    SearchAction は「このURLで検索できます」という申告なので、
+    実際に ?s=... で検索できる状態にしてから出すこと（JS側で対応済み）。
+    """
+    data = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "WebSite",
+                "@id": f"{SITE_URL}/#website",
+                "url": f"{SITE_URL}/",
+                "name": SITE_NAME,
+                "description": desc,
+                "inLanguage": "ja",
+                "potentialAction": {
+                    "@type": "SearchAction",
+                    "target": {
+                        "@type": "EntryPoint",
+                        "urlTemplate": f"{SITE_URL}/?s={{search_term_string}}",
+                    },
+                    "query-input": "required name=search_term_string",
+                },
+            },
+            {
+                "@type": "CollectionPage",
+                "@id": f"{SITE_URL}/#webpage",
+                "url": f"{SITE_URL}/",
+                "name": "タミヤ ミニ四駆・クラフトツール 品番カタログ",
+                "description": desc,
+                "inLanguage": "ja",
+                "isPartOf": {"@id": f"{SITE_URL}/#website"},
+            },
+        ],
+    }
+    return json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace("<", "\\u003c")
 
 
 def catalog_payload(items: list[dict]) -> str:
@@ -247,6 +293,9 @@ font-weight:700;cursor:pointer}
 .pager .gap{color:var(--ink3);font-size:12px;padding:0 2px}
 footer{max-width:1120px;margin:0 auto;padding:16px;font-size:11px;color:var(--ink3);border-top:1px solid var(--line)}
 @media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
+/* 画面には出さず、読み上げと検索エンジンにだけ伝える見出し */
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+clip:rect(0,0,0,0);white-space:nowrap;border:0}
 /* JavaScriptが無い環境向けの品番一覧 */
 .nojs{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;margin:8px 0}
 .nojs p{color:var(--ink2);font-size:12.5px;margin-bottom:10px}
@@ -423,7 +472,11 @@ function renderPage(){
 
   buildPager(pagerTop, total);
   buildPager(pagerBottom, total);
-  try{ history.replaceState(null, '', page > 1 ? '#p=' + page : location.pathname); }catch(e){}
+  // ?s=... を消さずにページ番号だけ付け替える（共有されたURLを壊さないため）
+  try{
+    const base = location.pathname + location.search;
+    history.replaceState(null, '', page > 1 ? base + '#p=' + page : base);
+  }catch(e){}
 }
 
 // 数字は PAGE_WINDOW 個までにして、間は … で省略する
@@ -522,6 +575,14 @@ grid.addEventListener('click', e => {
   }
 });
 
+// ?s=... 付きで開かれたら、その語で検索した状態にする。
+// 検索結果をそのまま人に渡せるほか、構造化データの SearchAction の裏付けにもなる。
+// apply() より前に入れること（apply の中で URL を書き換えるため）。
+try{
+  const _s = new URLSearchParams(location.search).get('s');
+  if(_s) q.value = _s;
+}catch(e){}
+
 paintFavs();
 syncChips();
 apply();
@@ -570,8 +631,59 @@ MANIFEST = {
 }
 
 
+def race_lastmod(outdir: str) -> str:
+    """レースカレンダーの更新日を、ページ内の「最終確認日」から読む。
+
+    ファイルの更新時刻は、CIがチェックアウトした時刻になってしまい
+    実態とずれるため使わない。読めなければ今日の日付にしておく。
+    """
+    path = os.path.join(outdir, "race.html")
+    try:
+        with open(path, encoding="utf-8") as f:
+            m = re.search(r"最終確認日:\s*(\d{4}-\d{2}-\d{2})", f.read())
+        if m:
+            return m.group(1)
+    except OSError:
+        pass
+    return datetime.now(JST).strftime("%Y-%m-%d")
+
+
+def write_seo(outdir: str) -> None:
+    """robots.txt と sitemap.xml を書き出す。
+
+    検索エンジンに「見に来てよい」「ここにページがある」と伝えるための標識。
+    載せるのは実在するページだけにする（404を並べると信用を落とす）。
+    """
+    with open(os.path.join(outdir, "robots.txt"), "w", encoding="utf-8") as f:
+        f.write("User-agent: *\n"
+                "Allow: /\n"
+                "\n"
+                f"Sitemap: {SITE_URL}/sitemap.xml\n")
+
+    today = datetime.now(JST).strftime("%Y-%m-%d")
+    pages = [
+        # (URL, 最終更新日, 更新のめやす, 優先度)
+        (f"{SITE_URL}/", today, "weekly", "1.0"),
+        (f"{SITE_URL}/race.html", race_lastmod(outdir), "weekly", "0.8"),
+    ]
+    body = "".join(
+        f"  <url>\n"
+        f"    <loc>{loc}</loc>\n"
+        f"    <lastmod>{mod}</lastmod>\n"
+        f"    <changefreq>{freq}</changefreq>\n"
+        f"    <priority>{pri}</priority>\n"
+        f"  </url>\n"
+        for loc, mod, freq, pri in pages
+    )
+    with open(os.path.join(outdir, "sitemap.xml"), "w", encoding="utf-8") as f:
+        f.write('<?xml version="1.0" encoding="UTF-8"?>\n'
+                '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+                + body +
+                "</urlset>\n")
+
+
 def write_extras(outdir: str) -> None:
-    """404ページとマニフェストを書き出す。
+    """404ページ・マニフェスト・検索エンジン向けの標識を書き出す。
 
     404ページは、古いURL（/partspost/ など）をホーム画面アイコンや
     ブックマークが保持していてもトップへ着地させるための保険。
@@ -580,6 +692,7 @@ def write_extras(outdir: str) -> None:
         f.write(NOT_FOUND_HTML)
     with open(os.path.join(outdir, "manifest.webmanifest"), "w", encoding="utf-8") as f:
         json.dump(MANIFEST, f, ensure_ascii=False, indent=1)
+    write_seo(outdir)
 
 
 def copy_assets(outdir: str) -> None:
@@ -650,6 +763,9 @@ def build(items: list[dict], outdir: str) -> str:
     ) + '<span class="chip on" data-cat="" data-genres="">すべて</span>' 
 
     # カードのHTMLはここでは作らない。データだけ渡してブラウザ側で組み立てる。
+    site_desc = SITE_DESC.format(n=len(items))
+    jsonld = site_jsonld(site_desc)
+    site_name, site_url = SITE_NAME, SITE_URL
     payload = catalog_payload(items)
     nojs = noscript_list(items)
 
@@ -669,12 +785,27 @@ def build(items: list[dict], outdir: str) -> str:
 <meta name="theme-color" content="#d81f2a">
 <meta name="apple-mobile-web-app-title" content="ミニ四リン駆">
 <title>ミニ四リン駆｜タミヤ ミニ四駆・クラフトツール カタログ（公式品番マスタ）</title>
+<meta name="description" content="{site_desc}">
+<!-- SNSに貼られたときの見え方（OGP / Twitterカード） -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{site_name}">
+<meta property="og:title" content="ミニ四リン駆｜タミヤ ミニ四駆・クラフトツール カタログ">
+<meta property="og:description" content="{site_desc}">
+<meta property="og:url" content="{site_url}/">
+<meta property="og:image" content="{site_url}/assets/icon-512.png">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ミニ四リン駆｜タミヤ ミニ四駆・クラフトツール カタログ">
+<meta name="twitter:description" content="{site_desc}">
+<meta name="twitter:image" content="{site_url}/assets/icon-512.png">
+<script type="application/ld+json">{jsonld}</script>
 <style>{CSS}</style>
 </head>
 <body>
 <header>
   <div class="hwrap">
-    <a class="logo" href="index.html">ミニ四<span>リン駆</span></a>
+    <h1 class="logo"><a href="index.html">ミニ四<span>リン駆</span></a><span
+      class="sr">｜タミヤ ミニ四駆・クラフトツール 品番カタログ</span></h1>
     <div class="searchbox"><input id="q" type="search"
       placeholder="品番・商品名で検索（例：15435 / ローラー / ニッパー / エンペラー）"></div>
   </div>
@@ -687,6 +818,7 @@ def build(items: list[dict], outdir: str) -> str:
 {cmap_html}
   <div class="count-line" id="countLine"></div>
   <nav class="pager" id="pagerTop" aria-label="ページ送り（上）"></nav>
+  <h2 class="sr">商品一覧</h2>
   <div class="grid"></div>
 {nojs}
   <nav class="pager" id="pagerBottom" aria-label="ページ送り（下）"></nav>
