@@ -35,6 +35,10 @@ VALUECOMMERCE_PID = "892682983"  # ValueCommerce LinkSwitch の vc_pid
 # ---- サイトの住所と紹介文（検索結果・SNS・サイトマップで使い回す） ----
 SITE_URL = "https://mini4lin9.fun"
 SITE_NAME = "ミニ四リン駆"
+# Google Search Console の所有権確認ファイル。
+# Search Console が「このファイルが置いてあること」を見にくる。
+# 消すと所有権が外れて、検索での見え方が確認できなくなる。
+GSC_VERIFY_FILE = "google924c214c12e811d4.html"
 # 検索結果に出る説明文。長すぎると途中で切られるので120文字前後までに収める。
 SITE_DESC = ("タミヤ ミニ四駆のパーツ・キット・塗料・工具 {n}品番を、品番や名前から検索できるカタログ。"
              "スプレーのカラーMAPやレース開催情報も掲載しています。")
@@ -654,6 +658,10 @@ def write_seo(outdir: str) -> None:
     検索エンジンに「見に来てよい」「ここにページがある」と伝えるための標識。
     載せるのは実在するページだけにする（404を並べると信用を落とす）。
     """
+    # Search Console の所有権確認ファイル。中身は決められた1行だけ。
+    with open(os.path.join(outdir, GSC_VERIFY_FILE), "w", encoding="utf-8") as f:
+        f.write(f"google-site-verification: {GSC_VERIFY_FILE}")
+
     with open(os.path.join(outdir, "robots.txt"), "w", encoding="utf-8") as f:
         f.write("User-agent: *\n"
                 "Allow: /\n"
