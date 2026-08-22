@@ -469,16 +469,20 @@ const PREF_LABELS = {
   kagoshima:'鹿児島', okinawa:'沖縄'
 };
 
-// 地域区分。タミヤ公式のイベント一覧と同じ並びにしてある。
+// 地域区分。タミヤ公式のイベント一覧の「地域で絞り込む」と同じ区分・同じ並び。
+// 一般的な8地方区分とは違い、甲信越/北陸と東海に分かれ、中国と四国が1つ、
+// 九州と沖縄が別になっている。三重は東海に入れている。
 const REGIONS = [
-  ['北海道',   ['hokkaido']],
-  ['東北',     ['aomori','iwate','miyagi','akita','yamagata','fukushima']],
-  ['関東',     ['ibaraki','tochigi','gunma','saitama','chiba','tokyo','kanagawa']],
-  ['中部',     ['niigata','toyama','ishikawa','fukui','yamanashi','nagano','gifu','shizuoka','aichi']],
-  ['近畿',     ['mie','shiga','kyoto','osaka','hyogo','nara','wakayama']],
-  ['中国',     ['tottori','shimane','okayama','hiroshima','yamaguchi']],
-  ['四国',     ['tokushima','kagawa','ehime','kochi']],
-  ['九州・沖縄',['fukuoka','saga','nagasaki','kumamoto','oita','miyazaki','kagoshima','okinawa']]
+  ['北海道',      ['hokkaido']],
+  ['東北',        ['aomori','iwate','miyagi','akita','yamagata','fukushima']],
+  ['関東',        ['ibaraki','tochigi','gunma','saitama','chiba','tokyo','kanagawa']],
+  ['甲信越/北陸', ['yamanashi','nagano','niigata','toyama','ishikawa','fukui']],
+  ['東海',        ['gifu','shizuoka','aichi','mie']],
+  ['近畿',        ['shiga','kyoto','osaka','hyogo','nara','wakayama']],
+  ['中国/四国',   ['tottori','shimane','okayama','hiroshima','yamaguchi',
+                   'tokushima','kagawa','ehime','kochi']],
+  ['九州',        ['fukuoka','saga','nagasaki','kumamoto','oita','miyazaki','kagoshima']],
+  ['沖縄',        ['okinawa']]
 ];
 const REGION_OF = (() => {
   const m = {};
