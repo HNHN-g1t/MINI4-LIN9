@@ -609,7 +609,7 @@ NOT_FOUND_HTML = """<!DOCTYPE html>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ミニ四リン駆</title>
-<link rel="icon" href="/assets/favicon.ico" sizes="any">
+<link rel="icon" href="/assets/favicon.ico?v=2" sizes="any">
 <meta http-equiv="refresh" content="0; url=/">
 <script>location.replace('/' + location.hash);</script>
 <style>body{font-family:"Hiragino Sans","Noto Sans JP",Meiryo,sans-serif;
@@ -793,9 +793,9 @@ def build(items: list[dict], outdir: str) -> str:
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" href="assets/favicon.ico" sizes="any">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
-<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="icon" href="assets/favicon.ico?v=2" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png?v=2">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=2">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="canonical" href="https://mini4lin9.fun/">
 <meta name="theme-color" content="#d81f2a">
