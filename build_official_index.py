@@ -229,8 +229,15 @@ body{background:var(--bg);color:var(--ink);font-size:14px;line-height:1.6}
 a{color:inherit;text-decoration:none}
 header{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}
 .hwrap{max-width:1120px;margin:0 auto;display:flex;align-items:center;gap:16px;padding:12px 16px;flex-wrap:wrap}
-.logo{font-weight:800;font-size:20px;color:var(--accent);white-space:nowrap}
-.logo span{color:var(--brand)}
+/* タイトルは画像。文字の情報は img の alt と .sr の一文が持っているので、
+   検索エンジンにも読み上げにも「ミニ四リン駆」として伝わる。
+   width/height を属性で持たせてあるため、読み込み前でも場所が確保され
+   レイアウトがガタつかない。 */
+.logo{line-height:0}
+/* display:block にしておくと、画像下に隙間ができない。
+   font-size は 0 にしないこと（.sr の説明文が読み上げられなくなるため）。 */
+.logo img{width:248px;height:auto;max-width:56vw;display:block}
+@media(max-width:600px){.logo img{width:200px}}
 .searchbox{flex:1;min-width:240px;display:flex;gap:8px}
 .searchbox input{flex:1;border:1.5px solid var(--line);border-radius:8px;padding:8px 12px;font-size:13px;outline:none}
 .searchbox input:focus{border-color:var(--brand)}
@@ -820,7 +827,9 @@ def build(items: list[dict], outdir: str) -> str:
 <body>
 <header>
   <div class="hwrap">
-    <h1 class="logo"><a href="index.html">ミニ四<span>リン駆</span></a><span
+    <h1 class="logo"><a href="index.html"><img src="assets/logo-title.png?v=1"
+      width="496" height="100" alt="ミニ四リン駆" fetchpriority="high"
+      decoding="async"></a><span
       class="sr">｜タミヤ ミニ四駆・クラフトツール 品番カタログ</span></h1>
     <div class="searchbox"><input id="q" type="search"
       placeholder="品番・商品名で検索（例：15435 / ローラー / ニッパー / エンペラー）"></div>
