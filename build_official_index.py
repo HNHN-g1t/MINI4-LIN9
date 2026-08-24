@@ -244,6 +244,14 @@ background:var(--surface);border-radius:4px 4px 0 0;user-select:none;white-space
 .tab.link{text-decoration:none;display:inline-block}
 .tab .n{font-size:11px;font-weight:600;color:var(--ink3);margin-left:6px}
 .tab.on .n{color:#cfe0fa}
+/* スマホは1段ぶん詰めて4段に収める。字とすき間を一回り小さくし、
+   最終段の「レース情報」だけを横いっぱいに置く。PCの見た目は変えない。 */
+@media(max-width:600px){
+  .tabs{gap:3px;padding:0 10px}
+  .tab{padding:6px 20px;font-size:11.5px}
+  .tab .n{font-size:10px;margin-left:4px}
+  .tab.link{flex:1 0 100%;text-align:center}
+}
 main{max-width:1120px;margin:0 auto;padding:12px 16px 40px}
 /* X Machines タブ表示中は商品一覧まわりを出さない */
 body.wall .chips,body.wall .cmap,body.wall .cmap-fab,body.wall .count-line,
