@@ -48,18 +48,19 @@ font-family:system-ui,-apple-system,"Segoe UI","Hiragino Kaku Gothic ProN","Noto
 line-height:1.6;-webkit-text-size-adjust:100%}
 .wrap{max-width:1120px;margin:0 auto;padding:14px 12px 40px}
 
-header{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:6px 0 14px}
-@media(max-width:600px){header{margin:10px 0 16px}}
-/* ロゴは画像。文字情報は alt が持っているので読み上げ・検索とも問題ない。
-   画像は透過させていない。ダークテーマの暗い背景に透過ロゴを置くと、
-   文字の縁のアンチエイリアスが浮いて輪郭がぼやけて見えるため、
-   ロゴの裏だけ白い帯を敷いて、その上に白背景のまま置く。
-   元画像の背景は純白なので、帯との継ぎ目は出ない。 */
-.logo{display:inline-block;line-height:0;text-decoration:none;
-background:#fff;border-radius:8px;padding:7px 11px}
+/* 画面の上端は、端から端まで白い帯にする。
+   ロゴ画像は透過させていない（暗い背景に置くと文字の縁のアンチエイリアスが
+   浮いて輪郭が甘く見えるため）ので、ダークテーマでもこの帯だけは白で固定する。
+   帯の中の色も、テーマ変数ではなく明るい側の固定値を使う。 */
+.topbar{background:#fff;border-bottom:1px solid #e2e6eb}
+header{max-width:1120px;margin:0 auto;padding:10px 12px;
+display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+@media(max-width:600px){header{padding:12px}}
+/* ロゴは画像。文字情報は alt が持っているので読み上げ・検索とも問題ない */
+.logo{display:block;line-height:0;text-decoration:none}
 .logo img{width:190px;height:auto;max-width:52vw;display:block}
 @media(max-width:600px){.logo img{width:160px}}
-.back{margin-left:auto;font-size:13px;color:var(--brand);text-decoration:none}
+.back{margin-left:auto;font-size:13px;color:#1a5fd0;text-decoration:none}
 .back:hover{text-decoration:underline}
 h1{font-size:17px;margin:0 0 10px}
 
@@ -156,13 +157,15 @@ footer p{margin:4px 0}
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="topbar">
+  <header>
+    <a class="logo" href="index.html"><img src="assets/logo-title.png?v=3"
+       width="462" height="86" alt="ミニ四リン駆" fetchpriority="high" decoding="async"></a>
+    <a class="back" href="index.html">← パーツカタログへ戻る</a>
+  </header>
+</div>
 
-<header>
-  <a class="logo" href="index.html"><img src="assets/logo-title.png?v=3"
-     width="462" height="86" alt="ミニ四リン駆" fetchpriority="high" decoding="async"></a>
-  <a class="back" href="index.html">← パーツカタログへ戻る</a>
-</header>
+<div class="wrap">
 
 <h1>🏁 レース情報<span class="sr">｜全国のミニ四駆 大会・イベント開催カレンダー</span></h1>
 
