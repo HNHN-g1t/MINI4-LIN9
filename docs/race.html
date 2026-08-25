@@ -49,8 +49,11 @@ line-height:1.6;-webkit-text-size-adjust:100%}
 .wrap{max-width:1120px;margin:0 auto;padding:14px 12px 40px}
 
 header{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:6px 0 14px}
-.logo{font-size:22px;font-weight:800;letter-spacing:.02em;text-decoration:none}
-.logo .a{color:var(--red)} .logo .b{color:var(--brand)}
+/* ロゴは画像。文字情報は alt が持っているので読み上げ・検索とも問題ない */
+.logo{line-height:0;text-decoration:none}
+.logo img{width:190px;height:auto;max-width:52vw;display:block}
+/* スマホはロゴの上下に余白を足す（TOPページと揃える） */
+@media(max-width:600px){.logo img{width:160px}.logo{padding:8px 0}}
 .back{margin-left:auto;font-size:13px;color:var(--brand);text-decoration:none}
 .back:hover{text-decoration:underline}
 h1{font-size:17px;margin:0 0 10px}
@@ -151,7 +154,8 @@ footer p{margin:4px 0}
 <div class="wrap">
 
 <header>
-  <a class="logo" href="index.html"><span class="a">ミニ四</span><span class="b">リン駆</span></a>
+  <a class="logo" href="index.html"><img src="assets/logo-title.png?v=2"
+     width="462" height="86" alt="ミニ四リン駆" fetchpriority="high" decoding="async"></a>
   <a class="back" href="index.html">← パーツカタログへ戻る</a>
 </header>
 
