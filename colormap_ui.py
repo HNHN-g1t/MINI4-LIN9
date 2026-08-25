@@ -38,9 +38,9 @@ box-shadow:0 2px 6px rgba(18,86,196,.35)}
 .cmap-head:hover .cmap-toggle{background:#0e46a0}
 .cmap-chev{width:20px;height:20px;transition:transform .2s;stroke-width:3.4}
 .cmap-head[aria-expanded="true"] .cmap-chev{transform:rotate(180deg)}
-/* カテゴリ内の代表色を3つ見せて、中身があることを示す */
+/* カテゴリ内の代表色を5つ見せて、中身があることを示す */
 .cmap-swatches{display:flex;gap:3px;flex:none}
-.cmap-swatches i{width:16px;height:16px;border-radius:3px;border:1px solid rgba(0,0,0,.22);
+.cmap-swatches i{width:13px;height:13px;border-radius:3px;border:1px solid rgba(0,0,0,.22);
 display:block;transition:background .2s}
 .cmap-title{font-weight:800;font-size:13px;letter-spacing:.06em}
 .cmap-sub{font-size:11px;color:var(--ink3);flex:1}
@@ -59,21 +59,35 @@ padding:5px 14px;font-size:11.5px;font-weight:700;cursor:pointer;font-family:inh
 .cmap-note{display:none;font-size:10.5px;color:var(--ink3);margin:2px 0 10px}
 .cmap-note.show{display:block}
 
-/* 横スクロール。標準のバーはスマホで表示されないため、自前の太いバーを置く */
+/* 横スクロール。標準のバーはスマホで表示されないため隠しておく */
 .cmap-scroll{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;
 scrollbar-width:none}
 .cmap-scroll::-webkit-scrollbar{display:none}
 .cmap-inner{min-width:660px}
-.cmap-bar{height:26px;background:#eceff3;border-radius:13px;margin:2px 0 8px;
-position:relative;touch-action:none;cursor:grab;display:none}
-.cmap-bar.on{display:block}
-.cmap-bar:active{cursor:grabbing}
-.cmap-bar-thumb{position:absolute;top:3px;bottom:3px;left:0;min-width:56px;
-background:#b6bcc6;border-radius:10px;transition:background .15s}
-.cmap-bar:hover .cmap-bar-thumb{background:#98a0ac}
-.cmap-bar-thumb::after{content:"";position:absolute;top:50%;left:50%;width:18px;height:2px;
-transform:translate(-50%,-50%);background:rgba(255,255,255,.9);border-radius:2px;
-box-shadow:0 -5px 0 rgba(255,255,255,.9),0 5px 0 rgba(255,255,255,.9)}
+
+/* オンスクリーンジョイスティック。指を離さずに地図を動かせるようにする。
+   .cmap が position:fixed なので、その右下に貼り付く。 */
+.cmap-stick{position:absolute;right:10px;bottom:10px;z-index:3;width:92px;height:92px;
+border-radius:50%;touch-action:none;display:none;cursor:grab;opacity:.74;
+background:radial-gradient(circle at 50% 42%,rgba(255,255,255,.96),rgba(235,239,245,.96));
+border:1px solid var(--line);box-shadow:0 3px 12px rgba(20,40,80,.2);
+transition:opacity .15s}
+.cmap-stick.on{display:block}
+.cmap-stick:hover,.cmap-stick.active{opacity:1}
+.cmap-stick.active{cursor:grabbing}
+.cmap-stick:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+/* 動かせる向きを小さな三角で示す */
+.cmap-stick .ar{position:absolute;font-size:8px;color:var(--ink3);line-height:1}
+.cmap-stick .ar.l{left:6px;top:50%;transform:translateY(-50%)}
+.cmap-stick .ar.r{right:6px;top:50%;transform:translateY(-50%)}
+.cmap-stick .ar.u{top:6px;left:50%;transform:translateX(-50%)}
+.cmap-stick .ar.d{bottom:6px;left:50%;transform:translateX(-50%)}
+/* 真ん中の玉。指で押さえて動かす部分 */
+.cmap-knob{position:absolute;left:50%;top:50%;width:42px;height:42px;margin:-21px 0 0 -21px;
+border-radius:50%;background:var(--brand);border:3px solid #fff;pointer-events:none;
+box-shadow:0 2px 8px rgba(18,86,196,.45)}
+.cmap-knob::after{content:"";position:absolute;inset:12px;border-radius:50%;
+background:rgba(255,255,255,.5)}
 
 /* 2Dマップ（縦＝色相 / 横＝明るさ）。色相は細い縦帯で示す */
 .grid2d{display:grid;grid-template-columns:14px repeat(4,max-content);gap:4px;align-items:stretch}
@@ -101,7 +115,7 @@ background:rgba(255,255,255,.88);color:#1a2233;letter-spacing:-.03em}
 .pin[data-effect="FLUORESCENT"]::before,.pin[data-effect="CLEAR"]::before{
 content:attr(data-mark);position:absolute;top:0;right:2px;font-size:8px;font-weight:800;
 color:#fff;text-shadow:0 0 2px rgba(0,0,0,.85)}
-.cmap-legend{font-size:10.5px;color:var(--ink3);margin-top:10px}
+.cmap-legend{font-size:10.5px;color:var(--ink3);margin-top:10px;padding-right:104px}
 .cmap-tip{position:fixed;z-index:60;background:#1a2233;color:#fff;font-size:11px;font-weight:600;
 padding:4px 8px;border-radius:5px;pointer-events:none;opacity:0;transition:opacity .12s;white-space:nowrap}
 .cmap-tip.show{opacity:1}
@@ -110,13 +124,20 @@ padding:4px 8px;border-radius:5px;pointer-events:none;opacity:0;transition:opaci
 100%{box-shadow:0 0 0 0 rgba(0,0,0,0);border-color:var(--line)}}
 @media(max-width:900px){.frow-label{width:100%}}
 
-/* ---- スマホ用：円グラフボタン＋ボトムシート ---- */
-.cmap-fab{position:fixed;right:14px;bottom:16px;z-index:70;width:58px;height:58px;border-radius:50%;
-border:3px solid #fff;padding:0;cursor:pointer;display:none;
-box-shadow:0 4px 14px rgba(20,40,80,.32)}
+/* ---- カラーマップを開くパレットボタン＋ボトムシート ---- */
+/* 5色の輪を外に見せ、真ん中の白い円に「カラーマップ」と書く。
+   色だけだと何のボタンか分からないため、文字を必ず載せる。 */
+.cmap-fab{position:fixed;right:14px;bottom:16px;z-index:70;width:74px;height:74px;
+border-radius:50%;border:3px solid #fff;padding:0;cursor:pointer;display:none;
+background:#e3e6ec;box-shadow:0 4px 14px rgba(20,40,80,.32)}
 .cmap-fab.on{display:block}
+/* シートを開いている間は引っ込める（ジョイスティックと重なるため） */
+.cmap-fab.away{display:none}
 .cmap-fab:focus-visible{outline:3px solid var(--brand);outline-offset:3px}
-.cmap-fab .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.cmap-fab .cap{position:absolute;inset:12px;border-radius:50%;background:var(--surface);
+display:flex;flex-direction:column;align-items:center;justify-content:center;
+font-size:10px;font-weight:800;line-height:1.18;letter-spacing:-.04em;color:var(--ink);
+box-shadow:inset 0 0 0 1px rgba(0,0,0,.07)}
 
 .cmap-backdrop{position:fixed;inset:0;background:rgba(16,22,34,.42);z-index:79;
 opacity:0;pointer-events:none;transition:opacity .2s}
@@ -162,10 +183,25 @@ if(cmap){
     note.classList.toggle('show', cur==='ポリカ');
     // 代表色は「赤系・青緑系・黄橙系」から1つずつ拾う。カテゴリを変えると色も変わる。
     const shownPins=pins.filter(p => !p.classList.contains('hide'));
-    const FAMILY=[['レッド','ピンク'],['ブルー','スカイ','グリーン'],['イエロー','オレンジ']];
+    const FAMILY=[['レッド'],['オレンジ','イエロー'],['グリーン'],
+                  ['スカイ','ブルー'],['パープル','ピンク']];
+    // 系統ごとに「いちばん鮮やかな色」を代表に選ぶ。
+    // 真ん中の色を機械的に取ると、くすんだ色ばかり並んでしまうため。
+    const vivid = c => {
+      const m=/(\\d+)\\D+(\\d+)\\D+(\\d+)/.exec(c||'');
+      if(!m) return -1;
+      const hi=Math.max(+m[1],+m[2],+m[3]), lo=Math.min(+m[1],+m[2],+m[3]);
+      return (hi-lo) - Math.abs((hi+lo)/2-140)*0.55;   // 彩度が高く明暗が極端でないもの
+    };
     const reps=FAMILY.map(fam => {
       const cand=shownPins.filter(p => fam.includes(p.dataset.hue));
-      return cand.length ? cand[Math.floor(cand.length/2)].style.backgroundColor : null;
+      if(!cand.length) return null;
+      let best=cand[0], bs=vivid(best.style.backgroundColor);
+      for(const p of cand){
+        const v=vivid(p.style.backgroundColor);
+        if(v>bs){ best=p; bs=v; }
+      }
+      return best.style.backgroundColor;
     });
     const fallback=shownPins.length ? shownPins[Math.floor(shownPins.length/2)].style.backgroundColor : '#e3e6ec';
     const cols=reps.map(c => c || fallback);
@@ -176,7 +212,7 @@ if(cmap){
     const fabEl=document.querySelector('.cmap-fab');
     if(fabEl) fabEl.classList.toggle('on', genre==='paint');
     // 塗装タブに切り替わった直後は幅が確定していないので、描画後に測り直す
-    if(window.syncCmapBar) setTimeout(window.syncCmapBar, 0);
+    if(window.syncCmapStick) setTimeout(window.syncCmapStick, 0);
   };
 
   pins.forEach(p => p.addEventListener('click', () => {
@@ -226,7 +262,8 @@ if(cmap){
       backdrop.classList.add('shown');
       cmapHead.setAttribute('aria-expanded','true');
       fab.setAttribute('aria-expanded','true');
-      if(window.syncCmapBar) syncCmapBar();
+      fab.classList.add('away');
+      if(window.syncCmapStick) syncCmapStick();
     }, 16);
   }
   function closeSheet(){
@@ -235,6 +272,7 @@ if(cmap){
     backdrop.classList.remove('shown');
     cmapHead.setAttribute('aria-expanded','false');
     fab.setAttribute('aria-expanded','false');
+    fab.classList.remove('away');
     setTimeout(() => {
       cmap.classList.remove('mounted');
       backdrop.hidden=true;
@@ -247,53 +285,86 @@ if(cmap){
   document.addEventListener('keydown', e => { if(e.key==='Escape') closeSheet(); });
   cmapHead.addEventListener('click', closeSheet);   // 見出しは閉じるボタン
 
-  // 円グラフを120度ずつ3色で描く。カテゴリ切替に追従する。
+  // 円グラフを等分して描く（いまは5色）。カテゴリ切替に追従する。
   window.paintFab = function(cols){
-    const [a,b,c]=cols;
-    fab.style.background='conic-gradient('+a+' 0deg 120deg,'+b+' 120deg 240deg,'+c+' 240deg 360deg)';
+    const seg=360/cols.length;
+    const stops=cols.map((c,i) => c+' '+(i*seg)+'deg '+((i+1)*seg)+'deg').join(',');
+    fab.style.background='conic-gradient('+stops+')';
   };
 
-  // 自前の横スクロールバー（標準バーはスマホで出ないため）
+  // ---- オンスクリーンジョイスティック ----
+  // 玉を中心からずらしている間だけ、その向きへ動き続ける。
+  // 横（.cmap-scroll）と縦（.cmap-body）の両方をこれ1つで動かせる。
   const sc=cmap.querySelector('.cmap-scroll');
-  const bar=cmap.querySelector('.cmap-bar');
-  const thumb=cmap.querySelector('.cmap-bar-thumb');
-  function syncBar(){
-    const max=sc.scrollWidth-sc.clientWidth;
-    if(max<=1){ bar.classList.remove('on'); return; }
-    bar.classList.add('on');
-    const ratio=sc.clientWidth/sc.scrollWidth;
-    const w=Math.max(56, bar.clientWidth*ratio);
-    thumb.style.width=w+'px';
-    thumb.style.left=(sc.scrollLeft/max)*(bar.clientWidth-w)+'px';
-    bar.setAttribute('aria-valuenow', Math.round(sc.scrollLeft/max*100));
-  }
-  window.syncCmapBar = syncBar;
-  sc.addEventListener('scroll', syncBar, {passive:true});
-  // 端末によっては scroll が間引かれるため、指・ホイール操作でも直接更新する
-  sc.addEventListener('touchmove', syncBar, {passive:true});
-  sc.addEventListener('wheel', syncBar, {passive:true});
-  window.addEventListener('resize', syncBar);
+  const cbody=cmap.querySelector('.cmap-body');
+  const stick=cmap.querySelector('.cmap-stick');
+  const knob=cmap.querySelector('.cmap-knob');
+  const R=32;        // 玉を動かせる半径(px)
+  const DEAD=0.14;   // この範囲は反応させない（指のぶれ対策）
+  const SPEED=12;    // 1フレームあたりの最大移動量(px)
+  let vx=0, vy=0, raf=0;
 
-  let dragging=false;
-  function moveTo(clientX){
-    const r=bar.getBoundingClientRect();
-    const w=thumb.offsetWidth;
-    const x=Math.max(0, Math.min(r.width-w, clientX-r.left-w/2));
-    sc.scrollLeft=(x/(r.width-w))*(sc.scrollWidth-sc.clientWidth);
+  function syncStick(){
+    const canX=sc.scrollWidth-sc.clientWidth>1;
+    const canY=cbody.scrollHeight-cbody.clientHeight>1;
+    stick.classList.toggle('on', canX||canY);
   }
-  bar.addEventListener('pointerdown', e => {
-    dragging=true; bar.setPointerCapture(e.pointerId); moveTo(e.clientX); e.preventDefault();
+  window.syncCmapStick=syncStick;
+
+  // 中心付近はゆっくり、外へ倒すほど速くする（細かい位置合わせをしやすくするため）
+  function curve(v){
+    const a=Math.abs(v);
+    if(a<DEAD) return 0;
+    const t=(a-DEAD)/(1-DEAD);
+    return (v<0 ? -1 : 1)*t*t*SPEED;
+  }
+  function step(){
+    if(vx||vy){
+      if(vx) sc.scrollLeft+=vx;
+      if(vy) cbody.scrollTop+=vy;
+      raf=requestAnimationFrame(step);
+    }else{ raf=0; }
+  }
+  function drive(dx,dy){
+    vx=curve(dx/R); vy=curve(dy/R);
+    if((vx||vy) && !raf) raf=requestAnimationFrame(step);
+  }
+  function moveKnob(e){
+    const r=stick.getBoundingClientRect();
+    let dx=e.clientX-(r.left+r.width/2);
+    let dy=e.clientY-(r.top+r.height/2);
+    const d=Math.sqrt(dx*dx+dy*dy);
+    if(d>R){ dx=dx/d*R; dy=dy/d*R; }
+    knob.style.transform='translate('+dx+'px,'+dy+'px)';
+    drive(dx,dy);
+  }
+  function release(){
+    vx=0; vy=0; knob.style.transform='';
+    // 予約したフレームも取り消す。残したままだと次に握ったとき動き出さない。
+    if(raf){ cancelAnimationFrame(raf); raf=0; }
+    stick.classList.remove('active');
+  }
+  stick.addEventListener('pointerdown', e => {
+    stick.setPointerCapture(e.pointerId);
+    stick.classList.add('active');
+    moveKnob(e); e.preventDefault();
   });
-  bar.addEventListener('pointermove', e => { if(dragging) moveTo(e.clientX); });
-  bar.addEventListener('pointerup', () => { dragging=false; });
-  bar.addEventListener('pointercancel', () => { dragging=false; });
-  bar.addEventListener('keydown', e => {
-    const step=sc.clientWidth*0.4;
-    if(e.key==='ArrowLeft'){ sc.scrollLeft-=step; e.preventDefault(); }
-    if(e.key==='ArrowRight'){ sc.scrollLeft+=step; e.preventDefault(); }
+  stick.addEventListener('pointermove', e => {
+    if(stick.classList.contains('active')) moveKnob(e);
   });
-  cmapHead.addEventListener('click', () => setTimeout(syncBar, 0));
-  syncBar();
+  stick.addEventListener('pointerup', release);
+  stick.addEventListener('pointercancel', release);
+  // キーボードでも同じことができるようにする
+  stick.addEventListener('keydown', e => {
+    const sx=sc.clientWidth*0.4;
+    if(e.key==='ArrowLeft'){ sc.scrollLeft-=sx; e.preventDefault(); }
+    if(e.key==='ArrowRight'){ sc.scrollLeft+=sx; e.preventDefault(); }
+    if(e.key==='ArrowUp'){ cbody.scrollTop-=90; e.preventDefault(); }
+    if(e.key==='ArrowDown'){ cbody.scrollTop+=90; e.preventDefault(); }
+  });
+  window.addEventListener('resize', syncStick);
+  cmapHead.addEventListener('click', () => setTimeout(syncStick, 0));
+  syncStick();
 
   paintPins();
 }
@@ -351,7 +422,7 @@ def section(rows: list[dict]) -> str:
         <svg class="cmap-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor"
              stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
       </span>
-      <span class="cmap-swatches" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="cmap-swatches" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
       <span class="cmap-title">SPRAY COLOR MAP</span>
       <span class="cmap-sub">色から探す（{len(rows)}色）</span>
     </button>
@@ -359,18 +430,23 @@ def section(rows: list[dict]) -> str:
       <div class="frow"><span class="frow-label">シリーズ</span>{sbtn}</div>
       <div class="frow"><span class="frow-label">色特性</span>{ebtn}</div>
       <p class="cmap-note">PSはポリカボディ専用の塗装スプレーです。</p>
-      <div class="cmap-bar" role="scrollbar" aria-label="カラーマップを横に動かす"
-           aria-controls="cmapBody" aria-orientation="horizontal" tabindex="0">
-        <div class="cmap-bar-thumb"></div>
-      </div>
       <div class="cmap-scroll"><div class="cmap-inner">
 {_map_grid(rows)}
       </div></div>
       <div class="cmap-legend">縦軸＝色相／横軸＝明るさ。ピンを押すと該当商品へ移動します。
       記号 M=メタリック P=パール F=蛍光 C=クリヤー</div>
     </div>
+    <div class="cmap-stick" tabindex="0" role="group"
+         aria-label="カラーマップを動かす（中央の玉を動かす／矢印キーでも動かせます）">
+      <span class="ar u" aria-hidden="true">▲</span>
+      <span class="ar d" aria-hidden="true">▼</span>
+      <span class="ar l" aria-hidden="true">◀</span>
+      <span class="ar r" aria-hidden="true">▶</span>
+      <span class="cmap-knob" aria-hidden="true"></span>
+    </div>
   </section>
   <div class="cmap-backdrop" hidden></div>
-  <button class="cmap-fab" type="button" aria-expanded="false" aria-controls="cmapBody">
-    <span class="sr">スプレーカラーMAPを開く</span>
+  <button class="cmap-fab" type="button" aria-expanded="false" aria-controls="cmapBody"
+          aria-label="スプレーカラーMAPを開く">
+    <span class="cap" aria-hidden="true"><b>カラー</b><b>マップ</b></span>
   </button>"""
