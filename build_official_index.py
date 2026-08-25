@@ -828,7 +828,7 @@ def build(items: list[dict], outdir: str) -> str:
 <body>
 <header>
   <div class="hwrap">
-    <h1 class="logo"><a href="index.html"><img src="assets/logo-title.png?v=2"
+    <h1 class="logo"><a href="index.html"><img src="assets/logo-title.png?v=3"
       width="462" height="86" alt="ミニ四リン駆" fetchpriority="high"
       decoding="async"></a><span
       class="sr">｜タミヤ ミニ四駆・クラフトツール 品番カタログ</span></h1>
