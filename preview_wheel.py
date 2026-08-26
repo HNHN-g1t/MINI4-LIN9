@@ -104,6 +104,7 @@ const OUTER = %s, INNER = %s, CENTER = %s;
 const CX=280, CY=280;
 const R_OUT=222, R_MID=148, R_IN=84;
 const PHOTO_R=15;      // 散らす写真の半径
+const EMPTY_SHARE=1/3; // 1台も無いゾーンの幅（通常の何倍か）
 const LABEL_R=246;     // 外側の輪のラベルは、輪の外に出して読みやすくする
 const svg=document.getElementById('wheel');
 const NS='http://www.w3.org/2000/svg';
@@ -148,11 +149,20 @@ function build(){
   const defs=document.createElementNS(NS,'defs');
   svg.appendChild(defs);
 
-  const groups=[];
-  const step=360/OUTER.length;
-  OUTER.forEach((key,i)=>groups.push({key,a1:i*step,a2:(i+1)*step,r1:R_MID,r2:R_OUT}));
-  const istep=360/INNER.length;
-  INNER.forEach((key,i)=>groups.push({key,a1:i*istep+18,a2:(i+1)*istep+18,r1:R_IN,r2:R_MID-6}));
+  // 1台も無いゾーンは幅を 1/3 にして、その色を探している人の邪魔をしない。
+  // 完全に消さないのは、あとから手で色を付けたときに枠が戻るようにするため。
+  function layout(keys,r1,r2,offset){
+    const wsum=keys.reduce((s,k)=>s+((byZone[k]||[]).length?1:EMPTY_SHARE),0);
+    let a=offset;
+    return keys.map(key=>{
+      const wgt=((byZone[key]||[]).length?1:EMPTY_SHARE)/wsum*360;
+      const g={key,a1:a,a2:a+wgt,r1,r2};
+      a+=wgt;
+      return g;
+    });
+  }
+  const groups=[...layout(OUTER,R_MID,R_OUT,0),
+                ...layout(INNER,R_IN,R_MID-6,18)];
 
   for(const g of groups){
     const z=zmap[g.key], list=byZone[g.key]||[];

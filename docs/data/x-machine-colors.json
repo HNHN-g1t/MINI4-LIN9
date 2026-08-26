@@ -75,7 +75,7 @@
     "blue": 0.251,
     "silver": 0.243,
     "white": 0.074,
-    "yellow": 0.033
+    "yellow": 0.031
    },
    "files": [
     "DoQxoNzVsAA-NSi.jpg",
@@ -122,7 +122,7 @@
     "silver": 0.308,
     "black": 0.275,
     "blue": 0.13,
-    "yellow": 0.098,
+    "yellow": 0.102,
     "white": 0.09
    },
    "files": [
@@ -141,11 +141,11 @@
    "color": "yellow",
    "source": "auto",
    "auto": "yellow",
-   "ratio": 0.333,
+   "ratio": 0.344,
    "kept": 0.376,
    "share": {
-    "yellow": 0.333,
-    "orange": 0.194,
+    "yellow": 0.344,
+    "orange": 0.188,
     "black": 0.173,
     "red": 0.076,
     "blue": 0.056
@@ -173,7 +173,7 @@
     "silver": 0.245,
     "black": 0.238,
     "white": 0.111,
-    "yellow": 0.044
+    "yellow": 0.061
    },
    "files": [
     "CqBMFpTUsAESkqu.jpg",
@@ -191,10 +191,10 @@
    "color": "yellow",
    "source": "auto",
    "auto": "yellow",
-   "ratio": 0.274,
+   "ratio": 0.294,
    "kept": 0.397,
    "share": {
-    "yellow": 0.274,
+    "yellow": 0.294,
     "green": 0.194,
     "black": 0.15,
     "blue": 0.143,
@@ -218,9 +218,9 @@
    "share": {
     "blue": 0.41,
     "black": 0.189,
-    "orange": 0.127,
-    "yellow": 0.125,
-    "gold": 0.065
+    "yellow": 0.171,
+    "orange": 0.126,
+    "red": 0.05
    },
    "files": [
     "HOO16jSbgAAXZqB.jpg",
@@ -243,7 +243,7 @@
    "share": {
     "black": 0.641,
     "silver": 0.198,
-    "yellow": 0.049,
+    "yellow": 0.05,
     "blue": 0.045,
     "white": 0.038
    },
@@ -268,7 +268,7 @@
    "share": {
     "silver": 0.211,
     "pink": 0.186,
-    "yellow": 0.18,
+    "yellow": 0.176,
     "black": 0.126,
     "white": 0.089
    },
@@ -294,8 +294,8 @@
     "red": 0.521,
     "black": 0.161,
     "silver": 0.084,
-    "blue": 0.05,
-    "yellow": 0.048
+    "yellow": 0.062,
+    "blue": 0.05
    },
    "files": [
     "HOMdY7ga4AAgsUb.jpg",
@@ -318,8 +318,8 @@
     "blue": 0.38,
     "black": 0.253,
     "silver": 0.12,
-    "white": 0.092,
-    "yellow": 0.071
+    "yellow": 0.093,
+    "white": 0.092
    },
    "files": [
     "HNqtW5wasAAr4hy.jpg",
@@ -341,7 +341,7 @@
    "kept": 0.363,
    "share": {
     "blue": 0.321,
-    "yellow": 0.308,
+    "yellow": 0.299,
     "black": 0.16,
     "silver": 0.086,
     "green": 0.078
@@ -393,8 +393,8 @@
     "silver": 0.386,
     "black": 0.245,
     "white": 0.205,
-    "yellow": 0.096,
-    "gold": 0.025
+    "yellow": 0.095,
+    "gold": 0.026
    },
    "files": [
     "HPDdnMga8AANNH6.jpg",
@@ -469,7 +469,7 @@
     "blue": 0.188,
     "black": 0.155,
     "red": 0.115,
-    "orange": 0.089
+    "orange": 0.087
    },
    "files": [
     "Elefx8cVcAA8Nsu.jpg",
@@ -492,9 +492,9 @@
    "share": {
     "red": 0.25,
     "white": 0.14,
-    "yellow": 0.114,
     "pink": 0.11,
-    "orange": 0.104
+    "orange": 0.097,
+    "yellow": 0.092
    },
    "files": [
     "ElVj3JJVcAE6-Kc.jpg",
@@ -515,10 +515,10 @@
    "kept": 0.593,
    "share": {
     "silver": 0.376,
+    "yellow": 0.139,
     "white": 0.131,
-    "yellow": 0.114,
     "black": 0.102,
-    "orange": 0.095
+    "orange": 0.093
    },
    "files": [
     "ElEwo6tVgAAw0HH.jpg",
@@ -536,12 +536,12 @@
    "color": "orange",
    "source": "auto",
    "auto": "orange",
-   "ratio": 0.274,
+   "ratio": 0.272,
    "kept": 0.305,
    "share": {
-    "orange": 0.274,
+    "orange": 0.272,
     "red": 0.241,
-    "yellow": 0.129,
+    "yellow": 0.14,
     "silver": 0.095,
     "pink": 0.084
    },
@@ -567,8 +567,8 @@
     "blue": 0.329,
     "silver": 0.148,
     "red": 0.147,
-    "white": 0.085,
-    "gold": 0.081
+    "yellow": 0.133,
+    "white": 0.085
    },
    "files": [
     "ElJvCxOVMAExWCR.jpg",
@@ -591,8 +591,8 @@
     "blue": 0.443,
     "black": 0.152,
     "silver": 0.138,
-    "yellow": 0.08,
-    "white": 0.074
+    "white": 0.074,
+    "yellow": 0.074
    },
    "files": [
     "GySZz0ta4AAJdXq.jpg",
@@ -616,7 +616,7 @@
     "blue": 0.583,
     "black": 0.176,
     "silver": 0.105,
-    "yellow": 0.091,
+    "yellow": 0.087,
     "white": 0.015
    },
    "files": [
@@ -641,7 +641,7 @@
     "blue": 0.363,
     "silver": 0.261,
     "white": 0.177,
-    "yellow": 0.041,
+    "yellow": 0.046,
     "black": 0.039
    },
    "files": [
@@ -659,13 +659,13 @@
    "color": "yellow",
    "source": "auto",
    "auto": "yellow",
-   "ratio": 0.507,
+   "ratio": 0.583,
    "kept": 0.313,
    "share": {
-    "yellow": 0.507,
-    "gold": 0.147,
+    "yellow": 0.583,
     "black": 0.099,
     "green": 0.089,
+    "gold": 0.072,
     "silver": 0.064
    },
    "files": [
@@ -681,17 +681,17 @@
   {
    "id": "x-026",
    "url": "https://x.com/southern_green/status/1146006980453994497",
-   "color": "multi",
+   "color": "yellow",
    "source": "auto",
-   "auto": "multi",
-   "ratio": 0.21,
+   "auto": "yellow",
+   "ratio": 0.271,
    "kept": 0.343,
    "share": {
     "black": 0.346,
-    "yellow": 0.21,
+    "yellow": 0.271,
     "white": 0.155,
     "silver": 0.155,
-    "gold": 0.124
+    "gold": 0.063
    },
    "files": [
     "D-dvQ92UwAA60SL.jpg",
@@ -709,10 +709,10 @@
    "color": "yellow",
    "source": "auto",
    "auto": "yellow",
-   "ratio": 0.285,
+   "ratio": 0.276,
    "kept": 0.335,
    "share": {
-    "yellow": 0.285,
+    "yellow": 0.276,
     "silver": 0.225,
     "black": 0.191,
     "white": 0.121,
@@ -734,14 +734,14 @@
    "color": "yellow",
    "source": "auto",
    "auto": "yellow",
-   "ratio": 0.24,
+   "ratio": 0.313,
    "kept": 0.464,
    "share": {
+    "yellow": 0.313,
     "black": 0.288,
-    "yellow": 0.24,
     "silver": 0.129,
-    "gold": 0.123,
-    "blue": 0.108
+    "blue": 0.108,
+    "white": 0.077
    },
    "files": [
     "D_tcJdFVUAExaaX.jpg",
@@ -759,14 +759,14 @@
    "color": "yellow",
    "source": "auto",
    "auto": "yellow",
-   "ratio": 0.35,
+   "ratio": 0.397,
    "kept": 0.473,
    "share": {
-    "yellow": 0.35,
+    "yellow": 0.397,
     "black": 0.164,
     "silver": 0.133,
-    "gold": 0.114,
-    "white": 0.075
+    "white": 0.075,
+    "gold": 0.068
    },
    "files": [
     "D_GUPUiVAAAssNW.jpg",
@@ -784,14 +784,14 @@
    "color": "yellow",
    "source": "auto",
    "auto": "yellow",
-   "ratio": 0.292,
+   "ratio": 0.336,
    "kept": 0.307,
    "share": {
-    "yellow": 0.292,
+    "yellow": 0.336,
     "black": 0.237,
     "blue": 0.225,
     "silver": 0.108,
-    "gold": 0.072
+    "green": 0.035
    },
    "files": [
     "G2BwYqGbcAAEDHa.jpg",
@@ -815,7 +815,7 @@
     "black": 0.399,
     "silver": 0.33,
     "white": 0.123,
-    "gold": 0.045,
+    "yellow": 0.06,
     "blue": 0.042
    },
    "files": [
@@ -836,9 +836,9 @@
    "share": {
     "white": 0.395,
     "silver": 0.289,
-    "orange": 0.146,
+    "orange": 0.138,
     "black": 0.099,
-    "yellow": 0.036
+    "yellow": 0.052
    },
    "files": [
     "G2AgnRSbkAI16OD.jpg"
@@ -858,8 +858,8 @@
    "share": {
     "white": 0.241,
     "blue": 0.216,
-    "yellow": 0.168,
-    "orange": 0.101,
+    "yellow": 0.176,
+    "orange": 0.093,
     "silver": 0.078
    },
    "files": [
@@ -883,7 +883,7 @@
     "red": 0.246,
     "black": 0.071,
     "pink": 0.068,
-    "purple": 0.042
+    "yellow": 0.051
    },
    "files": [
     "EtOFqg3UcAIRlYU.jpg",
@@ -907,7 +907,7 @@
     "blue": 0.198,
     "silver": 0.162,
     "green": 0.137,
-    "orange": 0.135,
+    "orange": 0.132,
     "white": 0.116
    },
    "files": [
@@ -954,7 +954,7 @@
    "share": {
     "silver": 0.302,
     "black": 0.284,
-    "yellow": 0.156,
+    "yellow": 0.148,
     "white": 0.139,
     "green": 0.06
    },
@@ -973,11 +973,11 @@
    "color": "orange",
    "source": "auto",
    "auto": "orange",
-   "ratio": 0.252,
+   "ratio": 0.248,
    "kept": 0.165,
    "share": {
-    "orange": 0.252,
-    "yellow": 0.212,
+    "orange": 0.248,
+    "yellow": 0.206,
     "white": 0.138,
     "blue": 0.125,
     "silver": 0.124
@@ -1000,10 +1000,10 @@
    "kept": 1.0,
    "share": {
     "silver": 0.753,
-    "gold": 0.079,
-    "yellow": 0.059,
+    "yellow": 0.138,
     "black": 0.046,
-    "red": 0.034
+    "red": 0.034,
+    "white": 0.021
    },
    "files": [
     "Eu6YYTeVEAIFjuf.jpg",
@@ -1017,17 +1017,17 @@
   {
    "id": "x-040",
    "url": "https://x.com/pokuchinyoshida/status/1365139958881685505",
-   "color": "yellow",
+   "color": "multi",
    "source": "auto",
-   "auto": "yellow",
-   "ratio": 0.225,
+   "auto": "multi",
+   "ratio": 0.182,
    "kept": 0.362,
    "share": {
-    "yellow": 0.225,
-    "orange": 0.215,
+    "yellow": 0.182,
+    "orange": 0.149,
     "blue": 0.135,
     "silver": 0.125,
-    "black": 0.111
+    "gold": 0.123
    },
    "files": [
     "EvHzjMGUcAMmxCU.jpg",
@@ -1045,13 +1045,13 @@
    "color": "yellow",
    "source": "auto",
    "auto": "yellow",
-   "ratio": 0.399,
+   "ratio": 0.44,
    "kept": 0.401,
    "share": {
-    "yellow": 0.399,
-    "orange": 0.256,
+    "yellow": 0.44,
+    "orange": 0.252,
     "black": 0.115,
-    "gold": 0.106,
+    "gold": 0.069,
     "red": 0.054
    },
    "files": [
@@ -1099,7 +1099,7 @@
    "kept": 0.364,
    "share": {
     "blue": 0.295,
-    "yellow": 0.224,
+    "yellow": 0.236,
     "black": 0.216,
     "silver": 0.111,
     "orange": 0.054
@@ -1125,7 +1125,7 @@
     "black": 0.692,
     "blue": 0.185,
     "silver": 0.072,
-    "yellow": 0.027,
+    "yellow": 0.029,
     "white": 0.01
    },
    "files": [
@@ -1240,17 +1240,17 @@
   {
    "id": "x-049",
    "url": "https://x.com/umasan_shikasan/status/1531603470658072578",
-   "color": "multi",
+   "color": "yellow",
    "source": "auto",
-   "auto": "multi",
-   "ratio": 0.204,
+   "auto": "yellow",
+   "ratio": 0.244,
    "kept": 0.318,
    "share": {
     "black": 0.361,
-    "yellow": 0.204,
+    "yellow": 0.244,
     "silver": 0.147,
-    "gold": 0.075,
-    "blue": 0.071
+    "blue": 0.071,
+    "white": 0.058
    },
    "files": [
     "FUFZK_5VEAATWSV.jpg",
@@ -1267,14 +1267,14 @@
    "color": "yellow",
    "source": "auto",
    "auto": "yellow",
-   "ratio": 0.46,
+   "ratio": 0.547,
    "kept": 0.47,
    "share": {
-    "yellow": 0.46,
+    "yellow": 0.547,
     "black": 0.151,
-    "gold": 0.123,
-    "orange": 0.093,
-    "silver": 0.091
+    "silver": 0.091,
+    "orange": 0.087,
+    "gold": 0.043
    },
    "files": [
     "GRO-ThMbcAAAQha.jpg"
@@ -1295,7 +1295,7 @@
     "blue": 0.322,
     "white": 0.242,
     "silver": 0.233,
-    "yellow": 0.093,
+    "yellow": 0.105,
     "black": 0.077
    },
    "files": [
@@ -1316,9 +1316,9 @@
    "kept": 0.311,
    "share": {
     "blue": 0.475,
-    "orange": 0.15,
-    "yellow": 0.142,
+    "orange": 0.143,
     "black": 0.137,
+    "yellow": 0.125,
     "silver": 0.042
    },
    "files": [
@@ -1331,17 +1331,17 @@
   {
    "id": "x-053",
    "url": "https://x.com/jawsashabo3298/status/1882818067388158420",
-   "color": "multi",
+   "color": "silver",
    "source": "auto",
-   "auto": "multi",
-   "ratio": 0.22,
+   "auto": "silver",
+   "ratio": 0.252,
    "kept": 0.498,
    "share": {
     "black": 0.269,
     "silver": 0.252,
-    "yellow": 0.22,
+    "yellow": 0.204,
     "white": 0.114,
-    "gold": 0.044
+    "gold": 0.06
    },
    "files": [
     "GiEdDVVa4AAIwE8.jpg",
@@ -1358,14 +1358,14 @@
    "color": "yellow",
    "source": "auto",
    "auto": "yellow",
-   "ratio": 0.547,
+   "ratio": 0.543,
    "kept": 0.155,
    "share": {
-    "yellow": 0.547,
+    "yellow": 0.543,
     "black": 0.18,
     "white": 0.134,
     "silver": 0.118,
-    "gold": 0.008
+    "gold": 0.011
    },
    "files": [
     "En_ftU0VcAE-W0v.jpg"
@@ -1384,10 +1384,10 @@
    "kept": 0.606,
    "share": {
     "blue": 0.41,
-    "yellow": 0.208,
+    "yellow": 0.29,
     "black": 0.101,
-    "gold": 0.1,
-    "green": 0.09
+    "green": 0.09,
+    "white": 0.049
    },
    "files": [
     "FAJTAPlVgAY5mpW.jpg",
@@ -1459,7 +1459,7 @@
     "black": 0.27,
     "white": 0.096,
     "blue": 0.018,
-    "yellow": 0.014
+    "yellow": 0.013
    },
    "files": [
     "HQAgVGNaIAAlH2R.jpg"
@@ -1502,8 +1502,8 @@
     "blue": 0.287,
     "black": 0.249,
     "silver": 0.099,
-    "yellow": 0.091,
-    "red": 0.089
+    "red": 0.089,
+    "yellow": 0.086
    },
    "files": [
     "HPsd0JAaQAAk34b.jpg"
@@ -1567,7 +1567,7 @@
     "blue": 0.342,
     "black": 0.18,
     "silver": 0.115,
-    "orange": 0.092,
+    "orange": 0.087,
     "red": 0.086
    },
    "files": [
@@ -1590,7 +1590,7 @@
     "black": 0.218,
     "silver": 0.205,
     "white": 0.103,
-    "yellow": 0.024
+    "yellow": 0.026
    },
    "files": [
     "FZnCU6EaAAE3sZZ.jpg",
@@ -1614,8 +1614,8 @@
     "blue": 0.226,
     "black": 0.224,
     "silver": 0.192,
-    "yellow": 0.142,
-    "orange": 0.078
+    "yellow": 0.136,
+    "orange": 0.075
    },
    "files": [
     "Fs9KrekXgAAXq3f.jpg",
@@ -1638,7 +1638,7 @@
    "share": {
     "white": 0.44,
     "silver": 0.258,
-    "yellow": 0.155,
+    "yellow": 0.14,
     "black": 0.103,
     "green": 0.034
    },
@@ -1708,11 +1708,11 @@
    "color": "yellow",
    "source": "auto",
    "auto": "yellow",
-   "ratio": 0.228,
+   "ratio": 0.243,
    "kept": 0.463,
    "share": {
     "black": 0.36,
-    "yellow": 0.228,
+    "yellow": 0.243,
     "silver": 0.165,
     "red": 0.064,
     "white": 0.054
@@ -1727,16 +1727,16 @@
   {
    "id": "x-070",
    "url": "https://x.com/mini4wd_mediaPR/status/2090635005727002753",
-   "color": "yellow",
+   "color": "gold",
    "source": "auto",
-   "auto": "yellow",
-   "ratio": 0.379,
+   "auto": "gold",
+   "ratio": 0.199,
    "kept": 0.648,
    "share": {
-    "yellow": 0.379,
+    "yellow": 0.363,
     "white": 0.202,
-    "gold": 0.176,
-    "orange": 0.072,
+    "gold": 0.199,
+    "orange": 0.065,
     "silver": 0.057
    },
    "files": [
@@ -1749,17 +1749,17 @@
   {
    "id": "x-071",
    "url": "https://x.com/mini4wd_mediaPR/status/2090272617194229865",
-   "color": "yellow",
+   "color": "gold",
    "source": "auto",
-   "auto": "yellow",
-   "ratio": 0.359,
+   "auto": "gold",
+   "ratio": 0.198,
    "kept": 0.587,
    "share": {
-    "yellow": 0.359,
+    "yellow": 0.297,
+    "gold": 0.198,
     "red": 0.188,
-    "gold": 0.127,
     "white": 0.123,
-    "orange": 0.079
+    "orange": 0.07
    },
    "files": [
     "HP_DguZbAAEo_Qv.jpg"
@@ -1771,16 +1771,16 @@
   {
    "id": "x-072",
    "url": "https://x.com/mini4wd_mediaPR/status/2089910227516661992",
-   "color": "yellow",
+   "color": "gold",
    "source": "auto",
-   "auto": "yellow",
-   "ratio": 0.323,
+   "auto": "gold",
+   "ratio": 0.16,
    "kept": 0.659,
    "share": {
-    "yellow": 0.323,
+    "yellow": 0.278,
     "blue": 0.216,
     "white": 0.175,
-    "gold": 0.11,
+    "gold": 0.16,
     "silver": 0.06
    },
    "files": [
@@ -1796,10 +1796,10 @@
    "color": "orange",
    "source": "auto",
    "auto": "orange",
-   "ratio": 0.242,
+   "ratio": 0.238,
    "kept": 0.512,
    "share": {
-    "orange": 0.242,
+    "orange": 0.238,
     "blue": 0.171,
     "red": 0.144,
     "white": 0.133,
@@ -1852,8 +1852,8 @@
     "black": 0.25,
     "red": 0.24,
     "silver": 0.198,
-    "yellow": 0.127,
-    "orange": 0.085
+    "yellow": 0.155,
+    "orange": 0.084
    },
    "files": [
     "HPU-esKa0AIipTj.jpg",
@@ -1923,7 +1923,7 @@
     "silver": 0.212,
     "blue": 0.063,
     "purple": 0.05,
-    "orange": 0.046
+    "orange": 0.044
    },
    "files": [
     "HQX-QrfakAAdv_V.jpg",
@@ -1944,9 +1944,9 @@
    "share": {
     "blue": 0.376,
     "black": 0.219,
-    "yellow": 0.141,
+    "yellow": 0.157,
     "silver": 0.135,
-    "orange": 0.041
+    "orange": 0.04
    },
    "files": [
     "HQP08s9aIAAkJyp.jpg"
@@ -1967,7 +1967,7 @@
     "green": 0.339,
     "black": 0.252,
     "silver": 0.244,
-    "yellow": 0.077,
+    "yellow": 0.071,
     "red": 0.027
    },
    "files": [
@@ -1983,10 +1983,10 @@
    "color": "yellow",
    "source": "auto",
    "auto": "yellow",
-   "ratio": 0.297,
+   "ratio": 0.301,
    "kept": 0.605,
    "share": {
-    "yellow": 0.297,
+    "yellow": 0.301,
     "silver": 0.18,
     "white": 0.123,
     "black": 0.093,
@@ -2011,9 +2011,9 @@
    "share": {
     "silver": 0.383,
     "black": 0.265,
-    "yellow": 0.225,
-    "gold": 0.057,
-    "white": 0.042
+    "yellow": 0.256,
+    "white": 0.042,
+    "gold": 0.025
    },
    "files": [
     "HQYJ7SrasAA3nrG.jpg",
@@ -2127,7 +2127,7 @@
     "blue": 0.287,
     "black": 0.206,
     "red": 0.149,
-    "yellow": 0.12,
+    "yellow": 0.134,
     "silver": 0.089
    },
    "files": [
@@ -2176,8 +2176,8 @@
    "share": {
     "blue": 0.317,
     "black": 0.21,
+    "yellow": 0.196,
     "silver": 0.155,
-    "yellow": 0.146,
     "white": 0.091
    },
    "files": [
@@ -2202,7 +2202,7 @@
     "black": 0.453,
     "silver": 0.231,
     "red": 0.128,
-    "yellow": 0.097,
+    "yellow": 0.113,
     "orange": 0.04
    },
    "files": [
@@ -2226,7 +2226,7 @@
    "share": {
     "black": 0.439,
     "silver": 0.191,
-    "orange": 0.11,
+    "orange": 0.104,
     "white": 0.102,
     "red": 0.081
    },
@@ -2271,13 +2271,13 @@
    "color": "multi",
    "source": "auto",
    "auto": "multi",
-   "ratio": 0.151,
+   "ratio": 0.196,
    "kept": 0.284,
    "share": {
     "black": 0.221,
-    "yellow": 0.151,
+    "yellow": 0.196,
     "silver": 0.145,
-    "orange": 0.14,
+    "orange": 0.138,
     "green": 0.132
    },
    "files": [
@@ -2318,17 +2318,17 @@
   {
    "id": "x-096",
    "url": "https://x.com/DuN83221462/status/1956864741202362477",
-   "color": "yellow",
+   "color": "blue",
    "source": "auto",
-   "auto": "yellow",
+   "auto": "blue",
    "ratio": 0.221,
    "kept": 0.383,
    "share": {
-    "yellow": 0.221,
     "blue": 0.221,
     "black": 0.212,
+    "yellow": 0.205,
     "silver": 0.175,
-    "gold": 0.057
+    "gold": 0.073
    },
    "files": [
     "GyguGieasAA2vbV.jpg",
@@ -2451,7 +2451,7 @@
    "share": {
     "red": 0.59,
     "black": 0.138,
-    "orange": 0.083,
+    "orange": 0.082,
     "silver": 0.069,
     "blue": 0.065
    },
@@ -2478,7 +2478,7 @@
     "red": 0.234,
     "silver": 0.195,
     "white": 0.066,
-    "orange": 0.051
+    "orange": 0.05
    },
    "files": [
     "G2unru8aUAIR5dH.jpg",
@@ -2526,8 +2526,8 @@
    "share": {
     "red": 0.558,
     "black": 0.217,
-    "yellow": 0.072,
-    "orange": 0.058,
+    "yellow": 0.079,
+    "orange": 0.057,
     "silver": 0.038
    },
    "files": [
@@ -2553,7 +2553,7 @@
     "white": 0.249,
     "black": 0.173,
     "blue": 0.116,
-    "yellow": 0.099
+    "yellow": 0.102
    },
    "files": [
     "G3JeVM3a8AE-Ith.jpg",
@@ -2571,13 +2571,13 @@
    "color": "yellow",
    "source": "auto",
    "auto": "yellow",
-   "ratio": 0.424,
+   "ratio": 0.504,
    "kept": 0.364,
    "share": {
-    "yellow": 0.424,
+    "yellow": 0.504,
     "black": 0.214,
-    "gold": 0.169,
-    "orange": 0.062,
+    "gold": 0.094,
+    "orange": 0.056,
     "red": 0.047
    },
    "files": [
@@ -2596,14 +2596,14 @@
    "color": "orange",
    "source": "auto",
    "auto": "orange",
-   "ratio": 0.228,
+   "ratio": 0.224,
    "kept": 0.522,
    "share": {
     "black": 0.282,
-    "orange": 0.228,
+    "orange": 0.224,
     "silver": 0.155,
-    "red": 0.125,
-    "yellow": 0.122
+    "yellow": 0.145,
+    "red": 0.125
    },
    "files": [
     "GSNw9_OaUAA1nKm.jpg",
@@ -2626,7 +2626,7 @@
    "share": {
     "black": 0.413,
     "blue": 0.193,
-    "yellow": 0.135,
+    "yellow": 0.175,
     "red": 0.098,
     "silver": 0.086
    },
@@ -2718,14 +2718,14 @@
   {
    "id": "x-112",
    "url": "https://x.com/ymd3a1977/status/1822445524764750192",
-   "color": "yellow",
+   "color": "multi",
    "source": "auto",
-   "auto": "yellow",
-   "ratio": 0.224,
+   "auto": "multi",
+   "ratio": 0.217,
    "kept": 0.345,
    "share": {
     "black": 0.356,
-    "yellow": 0.224,
+    "yellow": 0.217,
     "silver": 0.157,
     "green": 0.094,
     "blue": 0.083
@@ -2753,7 +2753,7 @@
     "silver": 0.197,
     "white": 0.158,
     "black": 0.155,
-    "yellow": 0.063
+    "yellow": 0.083
    },
    "files": [
     "GUifIIKa8AADxoX.jpg",
@@ -2800,10 +2800,10 @@
    "kept": 0.266,
    "share": {
     "blue": 0.37,
-    "yellow": 0.232,
+    "yellow": 0.275,
     "silver": 0.139,
     "white": 0.064,
-    "gold": 0.063
+    "black": 0.062
    },
    "files": [
     "GXptdE1acAEqRfQ.jpg",
@@ -2826,9 +2826,9 @@
    "share": {
     "silver": 0.271,
     "black": 0.223,
-    "yellow": 0.125,
-    "gold": 0.086,
-    "blue": 0.073
+    "yellow": 0.186,
+    "blue": 0.073,
+    "white": 0.068
    },
    "files": [
     "GX2dBcobAAAthnv.jpg",
@@ -2868,10 +2868,10 @@
    "color": "yellow",
    "source": "auto",
    "auto": "yellow",
-   "ratio": 0.274,
+   "ratio": 0.272,
    "kept": 0.339,
    "share": {
-    "yellow": 0.274,
+    "yellow": 0.272,
     "black": 0.253,
     "green": 0.231,
     "silver": 0.167,
@@ -2917,14 +2917,14 @@
    "color": "yellow",
    "source": "auto",
    "auto": "yellow",
-   "ratio": 0.224,
+   "ratio": 0.248,
    "kept": 0.329,
    "share": {
-    "yellow": 0.224,
+    "yellow": 0.248,
     "silver": 0.179,
     "black": 0.169,
     "blue": 0.15,
-    "orange": 0.092
+    "orange": 0.089
    },
    "files": [
     "GZQpabrakAEmN-M.jpg",
@@ -2948,7 +2948,7 @@
     "black": 0.418,
     "red": 0.151,
     "silver": 0.136,
-    "yellow": 0.093,
+    "yellow": 0.124,
     "blue": 0.063
    },
    "files": [
@@ -2998,8 +2998,8 @@
     "black": 0.361,
     "blue": 0.293,
     "silver": 0.165,
-    "gold": 0.062,
-    "yellow": 0.048
+    "yellow": 0.097,
+    "white": 0.033
    },
    "files": [
     "GZ1I9wibcAAA3p2.jpg",
@@ -3024,7 +3024,7 @@
     "silver": 0.23,
     "black": 0.223,
     "red": 0.107,
-    "blue": 0.064
+    "yellow": 0.067
    },
    "files": [
     "GZ7pmBKb0AUT_nq.jpg",
@@ -3042,10 +3042,10 @@
    "color": "yellow",
    "source": "auto",
    "auto": "yellow",
-   "ratio": 0.33,
+   "ratio": 0.345,
    "kept": 0.657,
    "share": {
-    "yellow": 0.33,
+    "yellow": 0.345,
     "blue": 0.245,
     "green": 0.124,
     "black": 0.109,
@@ -3147,7 +3147,7 @@
     "red": 0.225,
     "silver": 0.197,
     "black": 0.165,
-    "yellow": 0.118,
+    "yellow": 0.119,
     "white": 0.088
    },
    "files": [
@@ -3173,7 +3173,7 @@
     "silver": 0.27,
     "red": 0.079,
     "white": 0.074,
-    "yellow": 0.051
+    "gold": 0.035
    },
    "files": [
     "F1FVjLVacAEwY7v.jpg",
@@ -3198,7 +3198,7 @@
     "black": 0.209,
     "silver": 0.105,
     "white": 0.065,
-    "yellow": 0.022
+    "yellow": 0.023
    },
    "files": [
     "F31ci_masAAnLQZ.jpg",
@@ -3241,14 +3241,14 @@
    "color": "yellow",
    "source": "auto",
    "auto": "yellow",
-   "ratio": 0.336,
+   "ratio": 0.387,
    "kept": 0.295,
    "share": {
-    "yellow": 0.336,
+    "yellow": 0.387,
     "silver": 0.253,
     "white": 0.139,
     "black": 0.125,
-    "gold": 0.092
+    "gold": 0.043
    },
    "files": [
     "F3e8BYDagAAUtqP.jpg",
@@ -3290,13 +3290,13 @@
    "color": "multi",
    "source": "auto",
    "auto": "multi",
-   "ratio": 0.196,
+   "ratio": 0.176,
    "kept": 0.242,
    "share": {
     "black": 0.256,
     "silver": 0.196,
     "white": 0.188,
-    "yellow": 0.139,
+    "yellow": 0.176,
     "blue": 0.139
    },
    "files": [
@@ -3315,12 +3315,12 @@
    "color": "yellow",
    "source": "auto",
    "auto": "yellow",
-   "ratio": 0.222,
+   "ratio": 0.242,
    "kept": 0.386,
    "share": {
     "black": 0.268,
+    "yellow": 0.242,
     "silver": 0.222,
-    "yellow": 0.222,
     "white": 0.09,
     "blue": 0.083
    },
@@ -3340,14 +3340,14 @@
    "color": "yellow",
    "source": "auto",
    "auto": "yellow",
-   "ratio": 0.242,
+   "ratio": 0.28,
    "kept": 0.418,
    "share": {
-    "yellow": 0.242,
+    "yellow": 0.28,
     "silver": 0.184,
     "blue": 0.15,
-    "orange": 0.125,
-    "gold": 0.077
+    "orange": 0.12,
+    "black": 0.075
    },
    "files": [
     "F4ngv1La8AAS4ZY.jpg",
@@ -3396,7 +3396,7 @@
     "black": 0.236,
     "red": 0.172,
     "silver": 0.135,
-    "orange": 0.131,
+    "orange": 0.127,
     "blue": 0.114
    },
    "files": [
@@ -3418,9 +3418,9 @@
    "share": {
     "blue": 0.287,
     "black": 0.215,
-    "yellow": 0.21,
-    "silver": 0.096,
-    "red": 0.057
+    "yellow": 0.17,
+    "gold": 0.099,
+    "silver": 0.096
    },
    "files": [
     "F8373D5aUAAuIYY.jpg",
@@ -3438,14 +3438,14 @@
    "color": "yellow",
    "source": "auto",
    "auto": "yellow",
-   "ratio": 0.514,
+   "ratio": 0.533,
    "kept": 0.376,
    "share": {
-    "yellow": 0.514,
+    "yellow": 0.533,
     "black": 0.146,
     "red": 0.086,
     "silver": 0.066,
-    "orange": 0.056
+    "white": 0.055
    },
    "files": [
     "F9DQuGEb0AAq_VN.jpg",
@@ -3488,12 +3488,12 @@
    "color": "yellow",
    "source": "auto",
    "auto": "yellow",
-   "ratio": 0.378,
+   "ratio": 0.368,
    "kept": 0.396,
    "share": {
-    "yellow": 0.378,
+    "yellow": 0.368,
     "black": 0.176,
-    "orange": 0.14,
+    "orange": 0.132,
     "blue": 0.099,
     "silver": 0.075
    },
@@ -3518,9 +3518,9 @@
    "share": {
     "black": 0.391,
     "silver": 0.298,
-    "yellow": 0.138,
+    "yellow": 0.127,
     "white": 0.06,
-    "orange": 0.051
+    "gold": 0.051
    },
    "files": [
     "FX8zErHaUAARt3M.jpg",
@@ -3562,14 +3562,14 @@
    "color": "multi",
    "source": "auto",
    "auto": "multi",
-   "ratio": 0.168,
+   "ratio": 0.148,
    "kept": 0.491,
    "share": {
     "white": 0.168,
+    "yellow": 0.148,
     "black": 0.139,
-    "yellow": 0.135,
     "blue": 0.128,
-    "orange": 0.122
+    "orange": 0.114
    },
    "files": [
     "FX81y1OakAA__A8.jpg",
@@ -3593,7 +3593,7 @@
     "black": 0.424,
     "green": 0.29,
     "silver": 0.115,
-    "yellow": 0.08,
+    "yellow": 0.09,
     "blue": 0.056
    },
    "files": [
@@ -3641,10 +3641,10 @@
    "kept": 0.407,
    "share": {
     "black": 0.52,
+    "yellow": 0.214,
     "silver": 0.191,
-    "yellow": 0.18,
-    "gold": 0.039,
-    "blue": 0.027
+    "blue": 0.027,
+    "green": 0.018
    },
    "files": [
     "FZ66aQAaIAA5E2_.jpg",
@@ -3691,7 +3691,7 @@
    "share": {
     "silver": 0.278,
     "white": 0.234,
-    "yellow": 0.146,
+    "yellow": 0.158,
     "black": 0.125,
     "blue": 0.116
    },
@@ -3716,9 +3716,9 @@
    "share": {
     "black": 0.506,
     "silver": 0.319,
-    "yellow": 0.076,
+    "yellow": 0.07,
     "white": 0.045,
-    "orange": 0.037
+    "orange": 0.036
    },
    "files": [
     "FcVjxuoaUAABJHC.jpg",
@@ -3767,7 +3767,7 @@
     "blue": 0.575,
     "black": 0.148,
     "silver": 0.124,
-    "yellow": 0.087,
+    "yellow": 0.106,
     "orange": 0.021
    },
    "files": [
@@ -3839,7 +3839,7 @@
    "share": {
     "blue": 0.328,
     "black": 0.252,
-    "orange": 0.147,
+    "orange": 0.146,
     "red": 0.12,
     "white": 0.063
    },
@@ -3864,7 +3864,7 @@
    "share": {
     "black": 0.233,
     "silver": 0.184,
-    "yellow": 0.148,
+    "yellow": 0.138,
     "blue": 0.112,
     "green": 0.088
    },
@@ -3888,7 +3888,7 @@
    "kept": 0.41,
    "share": {
     "blue": 0.451,
-    "yellow": 0.164,
+    "yellow": 0.176,
     "black": 0.134,
     "silver": 0.109,
     "white": 0.063
@@ -3914,8 +3914,8 @@
    "share": {
     "silver": 0.237,
     "black": 0.161,
+    "yellow": 0.139,
     "white": 0.131,
-    "yellow": 0.124,
     "red": 0.089
    },
    "files": [
@@ -3941,7 +3941,7 @@
     "green": 0.207,
     "blue": 0.206,
     "silver": 0.135,
-    "yellow": 0.06
+    "yellow": 0.075
    },
    "files": [
     "FfvPY3QakAEfvQ9.jpg",

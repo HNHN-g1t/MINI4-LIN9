@@ -28,7 +28,7 @@ import urllib.error
 import urllib.request
 from collections import deque
 
-from PIL import Image
+from PIL import Image, ImageChops, ImageFilter
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 
@@ -52,6 +52,11 @@ CHROMA_BOOST = 1.15  # 有彩色をどれだけ優遇するか
 BLACK_DISCOUNT = 0.6  # 黒はどのマシンにも出るので割り引く（タイヤ・シャーシ・影）
 MULTI_BELOW = 0.22  # 一番多いゾーンがこの割合に届かなければ「カラフル」
 MIN_KEEP = 0.10     # 背景を削りすぎたら（残りがこの割合未満）削らずに数え直す
+METAL_WIN = 3       # てかりを見る窓の大きさ（画素）。奇数のみ。広いと輪郭を拾う
+METAL_HI = 190      # すぐ近くにこれ以上明るい点があること（＝白飛びしたてかり）
+METAL_RANGE = 55    # かつ、その窓の中で明るさがこれ以上動いていること
+GOLD_WINS = 0.15    # 金メッキはこれだけ映れば、面積1位でなくてもゴールド扱いにする
+#                     （金は面積では勝てないが、見た目の印象は強く残るため）
 # ----------------------------------------------------------------------
 
 # ゾーンの並び順（UIでもこの順に出す）。key, 表示名, 代表色
@@ -142,8 +147,13 @@ def image_path(url: str) -> str:
 
 # ==== 色の判定 =========================================================
 
-def zone_of(r: int, g: int, b: int) -> str:
-    """1画素をゾーンに振り分ける。"""
+def zone_of(r: int, g: int, b: int, metal: bool = False) -> str:
+    """1画素をゾーンに振り分ける。
+
+    metal は「そのすぐ周りで明るさが急に変わっているか」。
+    金属は表面がてかるので、狭い範囲に白飛びと影が同居する。
+    塗り分けただけの平らな黄色やオーカーにはこれが出ない。
+    """
     h, s, v = colorsys.rgb_to_hsv(r / 255.0, g / 255.0, b / 255.0)
     hd = h * 360.0
 
@@ -157,8 +167,11 @@ def zone_of(r: int, g: int, b: int) -> str:
             return "silver"
         return "black"
 
-    # 金は「黄〜橙で、明るすぎず彩度も中くらい」。純粋な黄より落ち着いた色。
-    if 36 <= hd < 56 and 0.26 <= s <= 0.78 and 0.32 <= v <= 0.86:
+    # 金は「黄〜オーカーの色みを持ち、かつ金属らしくてかっている」もの。
+    # 色だけでは平らな黄色と見分けが付かないので、てかりを条件に入れる。
+    # 彩度に上限を置くのが効く。金メッキは真鍮寄りでくすんでおり、
+    # 黄色い塗装ほど鮮やかにならない。ここで塗装の黄色と分かれる。
+    if metal and 25 <= hd < 62 and 0.18 <= s <= 0.60 and v >= 0.25:
         return "gold"
     if hd < 14 or hd >= 344:
         return "red"
@@ -263,6 +276,15 @@ def tally_image(path, tally):
         w, h = im.size
     px = im.tobytes()
 
+    # 「そのすぐ周りで明るさがどれだけ動くか」を1枚ぶんまとめて出す。
+    # 最大値フィルタと最小値フィルタの差＝狭い範囲での明暗の幅。
+    # 金属のてかりはここが大きく、平らな塗装は小さい。
+    gray = im.convert("L")
+    mx = gray.filter(ImageFilter.MaxFilter(METAL_WIN))
+    mn = gray.filter(ImageFilter.MinFilter(METAL_WIN))
+    hi = mx.tobytes()                                   # すぐ近くの一番明るい点
+    rng = ImageChops.difference(mx, mn).tobytes()       # 狭い範囲での明暗の幅
+
     keep = machine_mask(px, w, h)
     used = sum(keep) if keep else w * h
     # 削りすぎたときは、背景を削らずに数える（判定不能を避けるため）
@@ -276,10 +298,12 @@ def tally_image(path, tally):
         for x in range(w):
             if keep is not None and not keep[y * w + x]:
                 continue
-            i = (y * w + x) * 3
+            k = y * w + x
+            i = k * 3
             d = ((x - cx) ** 2 + (y - cy) ** 2) ** 0.5 / dmax
             wgt = 1.0 + CENTER_BOOST * (1.0 - d)
-            tally[zone_of(px[i], px[i + 1], px[i + 2])] += wgt
+            metal = hi[k] >= METAL_HI and rng[k] >= METAL_RANGE
+            tally[zone_of(px[i], px[i + 1], px[i + 2], metal)] += wgt
     return (used, w * h)
 
 
@@ -301,6 +325,10 @@ def pick(share: dict) -> tuple:
     """割合から代表色を決める。返り値は (ゾーン, その割合)。"""
     if not share:
         return ("multi", 0.0)
+    # 金メッキは面積では勝てない（パーツ単位で使われることが多い）が、
+    # 見た目の印象は強く残る。一定量映っていればゴールドとして扱う。
+    if share.get("gold", 0) >= GOLD_WINS:
+        return ("gold", share["gold"])
     # 黒はタイヤ・シャーシ・影としてどのマシンにも必ず出るので、
     # 「そのマシンらしさ」を表す度合いが低い。割り引いて比べる。
     scored = {}
