@@ -1,0 +1,3636 @@
+{
+ "zones": [
+  {
+   "key": "red",
+   "label": "レッド",
+   "swatch": "#e5342c"
+  },
+  {
+   "key": "orange",
+   "label": "オレンジ",
+   "swatch": "#f07a1a"
+  },
+  {
+   "key": "yellow",
+   "label": "イエロー",
+   "swatch": "#f5c518"
+  },
+  {
+   "key": "green",
+   "label": "グリーン",
+   "swatch": "#2fae5a"
+  },
+  {
+   "key": "blue",
+   "label": "ブルー",
+   "swatch": "#2277dd"
+  },
+  {
+   "key": "purple",
+   "label": "パープル",
+   "swatch": "#8b5cf6"
+  },
+  {
+   "key": "pink",
+   "label": "ピンク",
+   "swatch": "#ef5da8"
+  },
+  {
+   "key": "gold",
+   "label": "ゴールド",
+   "swatch": "#c9a227"
+  },
+  {
+   "key": "silver",
+   "label": "シルバー",
+   "swatch": "#aab2bd"
+  },
+  {
+   "key": "white",
+   "label": "ホワイト",
+   "swatch": "#f2f4f7"
+  },
+  {
+   "key": "black",
+   "label": "ブラック",
+   "swatch": "#2b2f36"
+  },
+  {
+   "key": "multi",
+   "label": "カラフル",
+   "swatch": "#7d5fff"
+  }
+ ],
+ "items": [
+  {
+   "id": "x-001",
+   "url": "https://x.com/yaaamadaaa_/status/1046017148424925189",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.251,
+   "kept": 0.442,
+   "share": {
+    "black": 0.376,
+    "blue": 0.251,
+    "silver": 0.243,
+    "white": 0.074,
+    "yellow": 0.033
+   },
+   "files": [
+    "DoQxoNzVsAA-NSi.jpg",
+    "DoQxowgVAAI9Kt6.jpg"
+   ],
+   "memo": "NEWマックスブレイカー"
+  },
+  {
+   "id": "x-002",
+   "url": "https://x.com/Taiyo209/status/1159866861774786560",
+   "color": "green",
+   "source": "manual",
+   "auto": "blue",
+   "ratio": 0.435,
+   "kept": 0.34,
+   "share": {
+    "blue": 0.435,
+    "green": 0.395,
+    "black": 0.073,
+    "white": 0.067,
+    "purple": 0.017
+   },
+   "files": [
+    "EBisv0AUYAAsxwh.jpg",
+    "EBisv0AUwAIvRAi.jpg",
+    "EBisv0DUYAAeF-4.jpg",
+    "EBisv0FUEAAT2lM.jpg"
+   ],
+   "memo": "レイザーナイトHXA(ヘキサ)-RS"
+  },
+  {
+   "id": "x-003",
+   "url": "https://x.com/Gotos57/status/907022804553318400",
+   "color": "silver",
+   "source": "auto",
+   "auto": "silver",
+   "ratio": 0.308,
+   "kept": 0.4,
+   "share": {
+    "silver": 0.308,
+    "black": 0.275,
+    "blue": 0.13,
+    "yellow": 0.098,
+    "white": 0.09
+   },
+   "files": [
+    "DJZka3gVoAAPQft.jpg",
+    "DJZka3fVAAAu8dF.jpg",
+    "DJZka3cVoAAp18H.jpg",
+    "DJZka3kVAAAUngM.jpg"
+   ],
+   "memo": "ゴトスさん"
+  },
+  {
+   "id": "x-004",
+   "url": "https://x.com/mini4wd/status/745758689798172673",
+   "color": "yellow",
+   "source": "auto",
+   "auto": "yellow",
+   "ratio": 0.333,
+   "kept": 0.376,
+   "share": {
+    "yellow": 0.333,
+    "orange": 0.194,
+    "black": 0.173,
+    "red": 0.076,
+    "blue": 0.056
+   },
+   "files": [
+    "Cll3kI2UsAA3z1x.jpg",
+    "Cll3kI1UsAAP5w7.jpg",
+    "Cll3kI0UgAA_84R.jpg",
+    "Cll3kI1VEAAwZ8r.jpg"
+   ],
+   "memo": "アンパンマン号"
+  },
+  {
+   "id": "x-005",
+   "url": "https://x.com/mini4wd/status/765695609395224576",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.272,
+   "kept": 0.406,
+   "share": {
+    "blue": 0.272,
+    "silver": 0.245,
+    "black": 0.238,
+    "white": 0.111,
+    "yellow": 0.044
+   },
+   "files": [
+    "CqBMFpTUsAESkqu.jpg",
+    "CqBMFpTVUAAQabv.jpg",
+    "CqBMFpdUEAAO6w_.jpg",
+    "CqBMFpVUEAAvgvs.jpg"
+   ],
+   "memo": "デジラーダ"
+  },
+  {
+   "id": "x-006",
+   "url": "https://x.com/moonTakaya/status/936955806913675266",
+   "color": "yellow",
+   "source": "auto",
+   "auto": "yellow",
+   "ratio": 0.274,
+   "kept": 0.397,
+   "share": {
+    "yellow": 0.274,
+    "green": 0.194,
+    "black": 0.15,
+    "blue": 0.143,
+    "red": 0.084
+   },
+   "files": [
+    "DQC8VPCUEAAqnD-.jpg"
+   ],
+   "memo": "バーニングゴッドサン 冬仕様"
+  },
+  {
+   "id": "x-007",
+   "url": "https://x.com/tsukasan774/status/2081707478287536491",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.41,
+   "kept": 0.405,
+   "share": {
+    "blue": 0.41,
+    "black": 0.189,
+    "orange": 0.127,
+    "yellow": 0.125,
+    "gold": 0.065
+   },
+   "files": [
+    "HOO16jSbgAAXZqB.jpg",
+    "HOO16jTbcAEQjJm.jpg",
+    "HOO16jLbYAAZyZ8.jpg",
+    "HOO16jIbkAEWGZ6.jpg"
+   ],
+   "memo": "#コンデレ No.01 ／ ガンブラスター 2nd ignition"
+  },
+  {
+   "id": "x-008",
+   "url": "https://x.com/13Phyrexian/status/2079325933002170706",
+   "color": "black",
+   "source": "auto",
+   "auto": "black",
+   "ratio": 0.641,
+   "kept": 0.408,
+   "share": {
+    "black": 0.641,
+    "silver": 0.198,
+    "yellow": 0.049,
+    "blue": 0.045,
+    "white": 0.038
+   },
+   "files": [
+    "HNs_4xkacAA8qb0.jpg",
+    "HNs_5SnbcAAboRn.jpg",
+    "HNs_54CaUAAav2n.jpg",
+    "HNs_6ZxaMAAyKTj.jpg"
+   ],
+   "memo": "#コンデレ No.02 ／ GENUINE"
+  },
+  {
+   "id": "x-009",
+   "url": "https://x.com/yamazakiYu16305/status/2079902660162154908",
+   "color": "multi",
+   "source": "auto",
+   "auto": "multi",
+   "ratio": 0.186,
+   "kept": 0.354,
+   "share": {
+    "silver": 0.211,
+    "pink": 0.186,
+    "yellow": 0.18,
+    "black": 0.126,
+    "white": 0.089
+   },
+   "files": [
+    "HN1MaOEa8AAhDeX.jpg",
+    "HN1MaODbgAAhHAU.jpg",
+    "HN1MaOGbAAARIsu.jpg",
+    "HN1MaT0bQAAbgAy.jpg"
+   ],
+   "memo": "#コンデレ No.03 ／ ジオグライダー SPORTS"
+  },
+  {
+   "id": "x-010",
+   "url": "https://x.com/03ziong/status/2081539799274680560",
+   "color": "red",
+   "source": "auto",
+   "auto": "red",
+   "ratio": 0.521,
+   "kept": 0.337,
+   "share": {
+    "red": 0.521,
+    "black": 0.161,
+    "silver": 0.084,
+    "blue": 0.05,
+    "yellow": 0.048
+   },
+   "files": [
+    "HOMdY7ga4AAgsUb.jpg",
+    "HOMdY7haQAAQM8u.jpg",
+    "HOMdY7iaUAA8xUi.jpg"
+   ],
+   "memo": "#コンデレ No.04 ／ ディノレーシング"
+  },
+  {
+   "id": "x-011",
+   "url": "https://x.com/zgmfx47a/status/2079164810215018978",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.38,
+   "kept": 0.289,
+   "share": {
+    "blue": 0.38,
+    "black": 0.253,
+    "silver": 0.12,
+    "white": 0.092,
+    "yellow": 0.071
+   },
+   "files": [
+    "HNqtW5wasAAr4hy.jpg",
+    "HNqtXSZaEAA2G8y.jpg",
+    "HNqtXm6aIAAhiaM.jpg",
+    "HNqtX8PbEAAZO_5.jpg"
+   ],
+   "memo": "#コンデレ No.05 ／ ゼノエアロ・スパイダー"
+  },
+  {
+   "id": "x-012",
+   "url": "https://x.com/motivilleneuve/status/2089237564947599713",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.321,
+   "kept": 0.363,
+   "share": {
+    "blue": 0.321,
+    "yellow": 0.308,
+    "black": 0.16,
+    "silver": 0.086,
+    "green": 0.078
+   },
+   "files": [
+    "HP52fYWaUAA6fN6.jpg",
+    "HP52fYhaEAITfGc.jpg",
+    "HP52fYea4AASm1f.jpg",
+    "HP52fYUawAAWECo.jpg"
+   ],
+   "memo": "#コンデレ No.06 ／ TaNaKa さん フリー部門"
+  },
+  {
+   "id": "x-013",
+   "url": "https://x.com/zork7i/status/2086784755341906258",
+   "color": "red",
+   "source": "auto",
+   "auto": "red",
+   "ratio": 0.313,
+   "kept": 0.467,
+   "share": {
+    "red": 0.313,
+    "silver": 0.22,
+    "black": 0.211,
+    "blue": 0.085,
+    "white": 0.058
+   },
+   "files": [
+    "HPW_pZ4aQAAELZs.jpg",
+    "HPW_p88awAAFEAS.jpg",
+    "HPW_qlWa4AAFEPe.jpg",
+    "HPW_rDRacAEwo0t.jpg"
+   ],
+   "memo": "#コンデレ No.07 ／ BLITZER-SONIC BLAZE SPECIAL"
+  },
+  {
+   "id": "x-014",
+   "url": "https://x.com/BassMs06r2/status/2085410302909448383",
+   "color": "silver",
+   "source": "auto",
+   "auto": "silver",
+   "ratio": 0.386,
+   "kept": 0.234,
+   "share": {
+    "silver": 0.386,
+    "black": 0.245,
+    "white": 0.205,
+    "yellow": 0.096,
+    "gold": 0.025
+   },
+   "files": [
+    "HPDdnMga8AANNH6.jpg",
+    "HPDdnMfb0AANd8A.jpg",
+    "HPDdnMiawAAm-P1.jpg",
+    "HPDdnMha0AAk5La.jpg"
+   ],
+   "memo": "#コンデレ No.08 ／ Silver Bullet-RB"
+  },
+  {
+   "id": "x-015",
+   "url": "https://x.com/KK_illustrate/status/2087818757490217209",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.327,
+   "kept": 0.318,
+   "share": {
+    "blue": 0.327,
+    "red": 0.27,
+    "black": 0.264,
+    "silver": 0.08,
+    "pink": 0.035
+   },
+   "files": [
+    "HPlsFvgaEAEtMou.jpg",
+    "HPlsFvmaQAAzbab.jpg",
+    "HPlsFvhbEAAG1Yy.jpg",
+    "HPlsFvgbUAA9PCH.jpg"
+   ],
+   "memo": "#コンデレ No.09 ／ GE.RM/"
+  },
+  {
+   "id": "x-016",
+   "url": "https://x.com/PandaFainted/status/2089101691459457416",
+   "color": "red",
+   "source": "auto",
+   "auto": "red",
+   "ratio": 0.379,
+   "kept": 0.341,
+   "share": {
+    "black": 0.381,
+    "red": 0.379,
+    "silver": 0.168,
+    "white": 0.042,
+    "blue": 0.011
+   },
+   "files": [
+    "HP366PHakAAbhnq.jpg",
+    "HP366PBaYAAXJVu.jpg",
+    "HP366PIbUAAcRjl.jpg",
+    "HP366PHbIAAl0At.jpg"
+   ],
+   "memo": "#コンデレ No.10 ／ ADVAN Razorback"
+  },
+  {
+   "id": "x-017",
+   "url": "https://x.com/hiroshi19860517/status/1321700708563914753",
+   "color": "silver",
+   "source": "auto",
+   "auto": "silver",
+   "ratio": 0.263,
+   "kept": 0.286,
+   "share": {
+    "silver": 0.263,
+    "blue": 0.188,
+    "black": 0.155,
+    "red": 0.115,
+    "orange": 0.089
+   },
+   "files": [
+    "Elefx8cVcAA8Nsu.jpg",
+    "Elefx8dUcAADPwg.jpg",
+    "Elefx9JVoAAPtqs.jpg",
+    "Elefx-JVgAAT_hB.jpg"
+   ],
+   "memo": "#コジマコンデレ No.01"
+  },
+  {
+   "id": "x-018",
+   "url": "https://x.com/____tmy____/status/1321071873904443392",
+   "color": "red",
+   "source": "auto",
+   "auto": "red",
+   "ratio": 0.25,
+   "kept": 0.551,
+   "share": {
+    "red": 0.25,
+    "white": 0.14,
+    "yellow": 0.114,
+    "pink": 0.11,
+    "orange": 0.104
+   },
+   "files": [
+    "ElVj3JJVcAE6-Kc.jpg",
+    "ElVj3JLU0AEEtE4.jpg",
+    "ElVj3JKVMAABEIO.jpg"
+   ],
+   "memo": "#コジマコンデレ No.02 ／ コジマのチラシでステッカー"
+  },
+  {
+   "id": "x-019",
+   "url": "https://x.com/grbz1qt8geVggqm/status/1319889696986517504",
+   "color": "silver",
+   "source": "auto",
+   "auto": "silver",
+   "ratio": 0.376,
+   "kept": 0.593,
+   "share": {
+    "silver": 0.376,
+    "white": 0.131,
+    "yellow": 0.114,
+    "black": 0.102,
+    "orange": 0.095
+   },
+   "files": [
+    "ElEwo6tVgAAw0HH.jpg",
+    "ElEwpo6U0AAh8-7.jpg",
+    "ElEwqf9VgAAKqLp.jpg",
+    "ElEwrTgVcAEu8Wm.jpg"
+   ],
+   "memo": "#コジマコンデレ No.03 ／ つぼ八杯コジマGP"
+  },
+  {
+   "id": "x-020",
+   "url": "https://x.com/maido_fukushima/status/1319656523597967361",
+   "color": "orange",
+   "source": "auto",
+   "auto": "orange",
+   "ratio": 0.274,
+   "kept": 0.305,
+   "share": {
+    "orange": 0.274,
+    "red": 0.241,
+    "yellow": 0.129,
+    "silver": 0.095,
+    "pink": 0.084
+   },
+   "files": [
+    "ElBck7FUcAIlM6N.jpg",
+    "ElBclkBUYAEh89e.jpg",
+    "ElBcmSQVkAAx4U9.jpg",
+    "ElBcm8BUUAAQ3q8.jpg"
+   ],
+   "memo": "#コジマコンデレ No.04 ／ HWパンプキンまいどくん号"
+  },
+  {
+   "id": "x-021",
+   "url": "https://x.com/hf011011/status/1320239742445707264",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.329,
+   "kept": 0.444,
+   "share": {
+    "blue": 0.329,
+    "silver": 0.148,
+    "red": 0.147,
+    "white": 0.085,
+    "gold": 0.081
+   },
+   "files": [
+    "ElJvCxOVMAExWCR.jpg",
+    "ElJvCxXU0AQuglI.jpg",
+    "ElJvCxWVcAA-Dfc.jpg"
+   ],
+   "memo": "#コジマコンデレ No.05 ／ アースグランナースープラ"
+  },
+  {
+   "id": "x-022",
+   "url": "https://x.com/papa23_noboru/status/1955857280794288187",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.443,
+   "kept": 0.37,
+   "share": {
+    "blue": 0.443,
+    "black": 0.152,
+    "silver": 0.138,
+    "yellow": 0.08,
+    "white": 0.074
+   },
+   "files": [
+    "GySZz0ta4AAJdXq.jpg",
+    "GySZz01a8AASt1L.jpg",
+    "GySZz0ta4AEtV_x.jpg",
+    "GySZz0wa4AcmGVC.jpg"
+   ],
+   "memo": "#コジデレ No.01 ／ タチコマ"
+  },
+  {
+   "id": "x-023",
+   "url": "https://x.com/corno2_mini4wd/status/1827351072094220661",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.583,
+   "kept": 0.515,
+   "share": {
+    "blue": 0.583,
+    "black": 0.176,
+    "silver": 0.105,
+    "yellow": 0.091,
+    "white": 0.015
+   },
+   "files": [
+    "GVwOGxFa8AMvJ-V.jpg",
+    "GVwOGyYXEAA5yJp.jpg",
+    "GVwOGx4a8AMiBiK.jpg",
+    "GVwOGzUa8AA3o-n.jpg"
+   ],
+   "memo": "#コジデレ No.02 ／ オープンの部"
+  },
+  {
+   "id": "x-024",
+   "url": "https://x.com/jawsashabo3298/status/1826209059466629171",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.363,
+   "kept": 0.331,
+   "share": {
+    "blue": 0.363,
+    "silver": 0.261,
+    "white": 0.177,
+    "yellow": 0.041,
+    "black": 0.039
+   },
+   "files": [
+    "GVf_a5MW4AATgXd.jpg",
+    "GVf_a17bsAAKOZo.jpg",
+    "GVf_a1_bQAAou8W.jpg"
+   ],
+   "memo": "#コジデレ No.03 ／ ガンブラスター"
+  },
+  {
+   "id": "x-025",
+   "url": "https://x.com/KK_illustrate/status/1957017214353285435",
+   "color": "yellow",
+   "source": "auto",
+   "auto": "yellow",
+   "ratio": 0.507,
+   "kept": 0.313,
+   "share": {
+    "yellow": 0.507,
+    "gold": 0.147,
+    "black": 0.099,
+    "green": 0.089,
+    "silver": 0.064
+   },
+   "files": [
+    "Gyi4xhVaoAAxB1L.jpg",
+    "Gyi4xhQbYAAVs9t.jpg",
+    "Gyi4xhNbEAARib2.jpg",
+    "Gyi4xhjbUAAYeRS.jpg"
+   ],
+   "memo": "#コジデレ No.04 ／ NT-FDK P192B"
+  },
+  {
+   "id": "x-026",
+   "url": "https://x.com/southern_green/status/1146006980453994497",
+   "color": "multi",
+   "source": "auto",
+   "auto": "multi",
+   "ratio": 0.21,
+   "kept": 0.343,
+   "share": {
+    "black": 0.346,
+    "yellow": 0.21,
+    "white": 0.155,
+    "silver": 0.155,
+    "gold": 0.124
+   },
+   "files": [
+    "D-dvQ92UwAA60SL.jpg",
+    "D-dvQ96U8AAaxbs.jpg",
+    "D-dvQ97VAAA5TZY.jpg",
+    "D-dvQ95U0AAlEcq.jpg"
+   ],
+   "memo": "#ReFEEDコンデレ No.01 ／ SG6 Gelbe Streif"
+  },
+  {
+   "id": "x-027",
+   "url": "https://x.com/CaCruelangel2nd/status/1153116527626842112",
+   "color": "yellow",
+   "source": "auto",
+   "auto": "yellow",
+   "ratio": 0.285,
+   "kept": 0.335,
+   "share": {
+    "yellow": 0.285,
+    "silver": 0.225,
+    "black": 0.191,
+    "white": 0.121,
+    "red": 0.079
+   },
+   "files": [
+    "EACxWauVUAADcla.jpg",
+    "EACxWwwUcAAa8xo.jpg",
+    "EACxXCvVAAAYAMg.jpg",
+    "EACxXV8UEAELpEh.jpg"
+   ],
+   "memo": "#ReFEEDコンデレ No.02 ／ JC福井"
+  },
+  {
+   "id": "x-028",
+   "url": "https://x.com/AtsutoPaPa211/status/1151615459151585280",
+   "color": "yellow",
+   "source": "auto",
+   "auto": "yellow",
+   "ratio": 0.24,
+   "kept": 0.464,
+   "share": {
+    "black": 0.288,
+    "yellow": 0.24,
+    "silver": 0.129,
+    "gold": 0.123,
+    "blue": 0.108
+   },
+   "files": [
+    "D_tcJdFVUAExaaX.jpg",
+    "D_tcJdBU8AAzDFM.jpg",
+    "D_tcJdCU0AAb_Hl.jpg",
+    "D_tcJdFUYAAYFFO.jpg"
+   ],
+   "memo": "#ReFEEDコンデレ No.03"
+  },
+  {
+   "id": "x-029",
+   "url": "https://x.com/kojikoji_m4wd/status/1148862415087398912",
+   "color": "yellow",
+   "source": "auto",
+   "auto": "yellow",
+   "ratio": 0.35,
+   "kept": 0.473,
+   "share": {
+    "yellow": 0.35,
+    "black": 0.164,
+    "silver": 0.133,
+    "gold": 0.114,
+    "white": 0.075
+   },
+   "files": [
+    "D_GUPUiVAAAssNW.jpg",
+    "D_GUQNQUIAArOns.jpg",
+    "D_GURAbVUAE0CR2.jpg",
+    "D_GURhxUcAAtV0I.jpg"
+   ],
+   "memo": "#ReFEEDコンデレ No.04 ／ ReFEED EMPEROR"
+  },
+  {
+   "id": "x-030",
+   "url": "https://x.com/BassMs06r2/status/1972700218559988111",
+   "color": "yellow",
+   "source": "auto",
+   "auto": "yellow",
+   "ratio": 0.292,
+   "kept": 0.307,
+   "share": {
+    "yellow": 0.292,
+    "black": 0.237,
+    "blue": 0.225,
+    "silver": 0.108,
+    "gold": 0.072
+   },
+   "files": [
+    "G2BwYqGbcAAEDHa.jpg",
+    "G2BwYqMa0AAeE5i.jpg",
+    "G2BwYqEboAAXv_a.jpg",
+    "G2BwYqMagAAHgQi.jpg"
+   ],
+   "memo": "#ReFEED No.01 ／ BLUE NIGHT-R"
+  },
+  {
+   "id": "x-031",
+   "url": "https://x.com/bodywork_mini4/status/2006180088539181065",
+   "color": "silver",
+   "source": "auto",
+   "auto": "silver",
+   "ratio": 0.33,
+   "kept": 0.498,
+   "share": {
+    "black": 0.399,
+    "silver": 0.33,
+    "white": 0.123,
+    "gold": 0.045,
+    "blue": 0.042
+   },
+   "files": [
+    "G9diJ3UaUAAipbj.jpg"
+   ],
+   "memo": "#ReFEED No.02 ／ ケースステッカー"
+  },
+  {
+   "id": "x-032",
+   "url": "https://x.com/gakudougama/status/1972612526878949692",
+   "color": "white",
+   "source": "auto",
+   "auto": "white",
+   "ratio": 0.395,
+   "kept": 0.519,
+   "share": {
+    "white": 0.395,
+    "silver": 0.289,
+    "orange": 0.146,
+    "black": 0.099,
+    "yellow": 0.036
+   },
+   "files": [
+    "G2AgnRSbkAI16OD.jpg"
+   ],
+   "memo": "#ReFEED No.03 ／ リフィコン参加賞"
+  },
+  {
+   "id": "x-033",
+   "url": "https://x.com/Ft7mjsG/status/2087670828674793516",
+   "color": "multi",
+   "source": "auto",
+   "auto": "multi",
+   "ratio": 0.216,
+   "kept": 0.689,
+   "share": {
+    "white": 0.241,
+    "blue": 0.216,
+    "yellow": 0.168,
+    "orange": 0.101,
+    "silver": 0.078
+   },
+   "files": [
+    "HPjli7BaIAAU0RT.jpg",
+    "HPjli7BbEAAbaHw.jpg"
+   ],
+   "memo": "#ReFEED No.04 ／ ドラテル GG"
+  },
+  {
+   "id": "x-034",
+   "url": "https://x.com/hiro29t/status/1356574920583512064",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.433,
+   "kept": 0.559,
+   "share": {
+    "blue": 0.433,
+    "red": 0.246,
+    "black": 0.071,
+    "pink": 0.068,
+    "purple": 0.042
+   },
+   "files": [
+    "EtOFqg3UcAIRlYU.jpg",
+    "EtOFqg4UYAM2AS4.jpg",
+    "EtOFqlKVcAEagTI.jpg",
+    "EtOFqs3UUAEyFFk.jpg"
+   ],
+   "memo": "#コジマコンデレ No.06 ／ City-Bred Blast"
+  },
+  {
+   "id": "x-035",
+   "url": "https://x.com/massuMALOVE/status/1360475168905199619",
+   "color": "multi",
+   "source": "auto",
+   "auto": "multi",
+   "ratio": 0.198,
+   "kept": 0.438,
+   "share": {
+    "blue": 0.198,
+    "silver": 0.162,
+    "green": 0.137,
+    "orange": 0.135,
+    "white": 0.116
+   },
+   "files": [
+    "EuFg6FtVgAYXuUp.jpg",
+    "EuFg60NUcAEF9Sk.jpg",
+    "EuFg7xJUUAMY-XS.jpg",
+    "EuFg8ncVcAAtmUr.jpg"
+   ],
+   "memo": "#コジマコンデレ No.07 ／ ヤリス 飯坂真尋version"
+  },
+  {
+   "id": "x-036",
+   "url": "https://x.com/ztn555913333/status/1359532438075047940",
+   "color": "red",
+   "source": "auto",
+   "auto": "red",
+   "ratio": 0.283,
+   "kept": 0.335,
+   "share": {
+    "white": 0.325,
+    "red": 0.283,
+    "silver": 0.193,
+    "blue": 0.097,
+    "black": 0.046
+   },
+   "files": [
+    "Et4HilQVkAIryCp.jpg",
+    "Et4Hi7zVgAMB0qw.jpg"
+   ],
+   "memo": "#コジマコンデレ No.08 ／ バーニングサン むぎせんべい"
+  },
+  {
+   "id": "x-037",
+   "url": "https://x.com/yusuke_padm/status/1366014125063557121",
+   "color": "silver",
+   "source": "auto",
+   "auto": "silver",
+   "ratio": 0.302,
+   "kept": 0.64,
+   "share": {
+    "silver": 0.302,
+    "black": 0.284,
+    "yellow": 0.156,
+    "white": 0.139,
+    "green": 0.06
+   },
+   "files": [
+    "EvUOmWdUcAEv8Bj.jpg",
+    "EvUOmWeUYAELivX.jpg",
+    "EvUOmWeUcAEYonu.jpg"
+   ],
+   "memo": "#コジマコンデレ No.09 ／ 浜松愛"
+  },
+  {
+   "id": "x-038",
+   "url": "https://x.com/cost3553/status/1359534162286268416",
+   "color": "orange",
+   "source": "auto",
+   "auto": "orange",
+   "ratio": 0.252,
+   "kept": 0.165,
+   "share": {
+    "orange": 0.252,
+    "yellow": 0.212,
+    "white": 0.138,
+    "blue": 0.125,
+    "silver": 0.124
+   },
+   "files": [
+    "Et4JHK0VgAATQjZ.jpg",
+    "Et4JHYKVIAYSf4H.jpg"
+   ],
+   "memo": "#コジマコンデレ No.10 ／ ままどおるミニ四駆"
+  },
+  {
+   "id": "x-039",
+   "url": "https://x.com/pointterminal1/status/1364195311527190529",
+   "color": "silver",
+   "source": "auto",
+   "auto": "silver",
+   "ratio": 0.753,
+   "kept": 1.0,
+   "share": {
+    "silver": 0.753,
+    "gold": 0.079,
+    "yellow": 0.059,
+    "black": 0.046,
+    "red": 0.034
+   },
+   "files": [
+    "Eu6YYTeVEAIFjuf.jpg",
+    "Eu6YZAoUcAcx0xD.jpg",
+    "Eu6YZoSVEAAMQJk.jpg"
+   ],
+   "memo": "#コジマコンデレ No.11 ／ 笹かマッハビュレット"
+  },
+  {
+   "id": "x-040",
+   "url": "https://x.com/pokuchinyoshida/status/1365139958881685505",
+   "color": "yellow",
+   "source": "auto",
+   "auto": "yellow",
+   "ratio": 0.225,
+   "kept": 0.362,
+   "share": {
+    "yellow": 0.225,
+    "orange": 0.215,
+    "blue": 0.135,
+    "silver": 0.125,
+    "black": 0.111
+   },
+   "files": [
+    "EvHzjMGUcAMmxCU.jpg",
+    "EvHzjMFVkAkI-mO.jpg",
+    "EvHzjMHUYAI1-EZ.jpg",
+    "EvHzjORUYAMj8bt.jpg"
+   ],
+   "memo": "#コジマコンデレ No.12 ／ 佐井クロンマグナム"
+  },
+  {
+   "id": "x-041",
+   "url": "https://x.com/gurinx2/status/1364388596329844736",
+   "color": "yellow",
+   "source": "auto",
+   "auto": "yellow",
+   "ratio": 0.399,
+   "kept": 0.401,
+   "share": {
+    "yellow": 0.399,
+    "orange": 0.256,
+    "black": 0.115,
+    "gold": 0.106,
+    "red": 0.054
+   },
+   "files": [
+    "Eu9ILrcVEAAui3H.jpg",
+    "Eu9IL_TUcAA10IQ.jpg",
+    "Eu9IMSRUcAAAxnu.jpg",
+    "Eu9IMmVVkAEW8c1.jpg"
+   ],
+   "memo": "#コジマコンデレ No.13 ／ エビフライダガー"
+  },
+  {
+   "id": "x-042",
+   "url": "https://x.com/Saz0813/status/1956507552138879065",
+   "color": "black",
+   "source": "auto",
+   "auto": "black",
+   "ratio": 0.498,
+   "kept": 0.405,
+   "share": {
+    "black": 0.498,
+    "silver": 0.21,
+    "blue": 0.183,
+    "white": 0.102,
+    "green": 0.006
+   },
+   "files": [
+    "GybpD1VawAAll67.jpg",
+    "GybpD2ja4AAxOUh.jpg",
+    "GybpD1XbAAATVTc.jpg",
+    "GybpD1Va4AAexKh.jpg"
+   ],
+   "memo": "#コジデレ No.05 ／ 推し活 オープンの部"
+  },
+  {
+   "id": "x-043",
+   "url": "https://x.com/kataoji_channel/status/1964694079440335210",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.295,
+   "kept": 0.364,
+   "share": {
+    "blue": 0.295,
+    "yellow": 0.224,
+    "black": 0.216,
+    "silver": 0.111,
+    "orange": 0.054
+   },
+   "files": [
+    "G0P-2Xea0AA7Nqh.jpg",
+    "G0P-2XYa8AArtvD.jpg",
+    "G0P-2XqbsAA2MY8.jpg"
+   ],
+   "memo": "#コジデレ No.06 ／ カオスドライブ"
+  },
+  {
+   "id": "x-044",
+   "url": "https://x.com/to_shinobu0315/status/1964699762835550668",
+   "color": "black",
+   "source": "auto",
+   "auto": "black",
+   "ratio": 0.692,
+   "kept": 0.791,
+   "share": {
+    "black": 0.692,
+    "blue": 0.185,
+    "silver": 0.072,
+    "yellow": 0.027,
+    "white": 0.01
+   },
+   "files": [
+    "G0QDxqjagAAxuOI.jpg",
+    "G0QDzxUaUAAOMmE.jpg",
+    "G0QD0xnaMAEPn8V.jpg",
+    "G0QD1gDaEAAkWOl.jpg"
+   ],
+   "memo": "#コジデレ No.07 ／ GO!GO!ヤウージャ号"
+  },
+  {
+   "id": "x-045",
+   "url": "https://x.com/takky_1215/status/1962858218369229263",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.276,
+   "kept": 0.344,
+   "share": {
+    "blue": 0.276,
+    "black": 0.207,
+    "red": 0.136,
+    "white": 0.121,
+    "silver": 0.111
+   },
+   "files": [
+    "Gz15JBFXkAAXXLZ.jpg",
+    "Gz15JBAX0AAQ4CY.jpg",
+    "Gz15JA8XMAA4U2M.jpg",
+    "Gz15JA_XAAARqOd.jpg"
+   ],
+   "memo": "#コジデレ No.08 ／ Horo e"
+  },
+  {
+   "id": "x-046",
+   "url": "https://x.com/contapunch_suzu/status/1960273148449792370",
+   "color": "multi",
+   "source": "auto",
+   "auto": "multi",
+   "ratio": 0.199,
+   "kept": 0.323,
+   "share": {
+    "silver": 0.199,
+    "black": 0.164,
+    "white": 0.134,
+    "blue": 0.117,
+    "green": 0.094
+   },
+   "files": [
+    "GzRJ-8TbYAASkd9.jpg",
+    "GzRJ_EhbEAAuIqe.jpg",
+    "GzRJ_JLacAAa89X.jpg",
+    "GzRJ_I6aQAAtmB3.jpg"
+   ],
+   "memo": "#コジデレ No.09 ／ フラワースマイルのグラスホッパー"
+  },
+  {
+   "id": "x-047",
+   "url": "https://x.com/hrdu1/status/1964703703652540665",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.239,
+   "kept": 0.358,
+   "share": {
+    "black": 0.331,
+    "blue": 0.239,
+    "silver": 0.177,
+    "yellow": 0.102,
+    "white": 0.091
+   },
+   "files": [
+    "G0QFTyDbsAE34ig.jpg",
+    "G0QFWdobAAExx9P.jpg",
+    "G0QFXOeaIAAuK0i.jpg",
+    "G0QFY-jaQAA7VJH.jpg"
+   ],
+   "memo": "#コジデレ No.10 ／ ヤリス WRC ドラテルエディション"
+  },
+  {
+   "id": "x-048",
+   "url": "https://x.com/suzuki_koma/status/1846202365885796804",
+   "color": "black",
+   "source": "auto",
+   "auto": "black",
+   "ratio": 0.462,
+   "kept": 0.323,
+   "share": {
+    "black": 0.462,
+    "silver": 0.21,
+    "white": 0.172,
+    "blue": 0.124,
+    "green": 0.029
+   },
+   "files": [
+    "GZ8HQ7Zb0AUMcwV.jpg",
+    "GZ8HQ7Zb0AM02Li.jpg",
+    "GZ8HQ7YboAAHTWa.jpg"
+   ],
+   "memo": "#ReFEEDコンデレ No.05 ／ 開闢の虚(ホロウ)"
+  },
+  {
+   "id": "x-049",
+   "url": "https://x.com/umasan_shikasan/status/1531603470658072578",
+   "color": "multi",
+   "source": "auto",
+   "auto": "multi",
+   "ratio": 0.204,
+   "kept": 0.318,
+   "share": {
+    "black": 0.361,
+    "yellow": 0.204,
+    "silver": 0.147,
+    "gold": 0.075,
+    "blue": 0.071
+   },
+   "files": [
+    "FUFZK_5VEAATWSV.jpg",
+    "FUFZNYsUAAABRXb.jpg",
+    "FUFZOZNUYAIjFlr.jpg"
+   ],
+   "memo": "#ReFEEDコンデレ No.06 ／ リフィコン4へ"
+  },
+  {
+   "id": "x-050",
+   "url": "https://x.com/DAI7TEN_DAICHI/status/1806997138901246231",
+   "color": "yellow",
+   "source": "auto",
+   "auto": "yellow",
+   "ratio": 0.46,
+   "kept": 0.47,
+   "share": {
+    "yellow": 0.46,
+    "black": 0.151,
+    "gold": 0.123,
+    "orange": 0.093,
+    "silver": 0.091
+   },
+   "files": [
+    "GRO-ThMbcAAAQha.jpg"
+   ],
+   "memo": "#ReFEEDコンデレ No.07"
+  },
+  {
+   "id": "x-051",
+   "url": "https://x.com/corno2_mini4wd/status/1531262154028249089",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.322,
+   "kept": 0.385,
+   "share": {
+    "blue": 0.322,
+    "white": 0.242,
+    "silver": 0.233,
+    "yellow": 0.093,
+    "black": 0.077
+   },
+   "files": [
+    "FUAizcmagAEM7WK.jpg",
+    "FUAi0APaAAAj85O.jpg"
+   ],
+   "memo": "#ReFEED No.05 ／ 実車も塗る"
+  },
+  {
+   "id": "x-052",
+   "url": "https://x.com/883COBRA/status/1879583572081975448",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.475,
+   "kept": 0.311,
+   "share": {
+    "blue": 0.475,
+    "orange": 0.15,
+    "yellow": 0.142,
+    "black": 0.137,
+    "silver": 0.042
+   },
+   "files": [
+    "GhWfTFBaUAAgceL.jpg"
+   ],
+   "memo": "#ReFEED No.06 ／ バギートラック試作"
+  },
+  {
+   "id": "x-053",
+   "url": "https://x.com/jawsashabo3298/status/1882818067388158420",
+   "color": "multi",
+   "source": "auto",
+   "auto": "multi",
+   "ratio": 0.22,
+   "kept": 0.498,
+   "share": {
+    "black": 0.269,
+    "silver": 0.252,
+    "yellow": 0.22,
+    "white": 0.114,
+    "gold": 0.044
+   },
+   "files": [
+    "GiEdDVVa4AAIwE8.jpg",
+    "GiEdDafbAAExumo.jpg",
+    "GiEdDhEagAEnf0g.jpg"
+   ],
+   "memo": "#ReFEED No.07 ／ 公式NYマシン"
+  },
+  {
+   "id": "x-054",
+   "url": "https://x.com/corno2_mini4wd/status/1333029988510040064",
+   "color": "yellow",
+   "source": "auto",
+   "auto": "yellow",
+   "ratio": 0.547,
+   "kept": 0.155,
+   "share": {
+    "yellow": 0.547,
+    "black": 0.18,
+    "white": 0.134,
+    "silver": 0.118,
+    "gold": 0.008
+   },
+   "files": [
+    "En_ftU0VcAE-W0v.jpg"
+   ],
+   "memo": "#ReFEED No.08 ／ リフィコン準備"
+  },
+  {
+   "id": "x-055",
+   "url": "https://x.com/DashMini4wd/status/1441806102769799171",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.41,
+   "kept": 0.606,
+   "share": {
+    "blue": 0.41,
+    "yellow": 0.208,
+    "black": 0.101,
+    "gold": 0.1,
+    "green": 0.09
+   },
+   "files": [
+    "FAJTAPlVgAY5mpW.jpg",
+    "FAJTAPhUcAECgl-.jpg",
+    "FAJTAQbVkAIwpYp.jpg",
+    "FAJTAQZVcAMXpxE.jpg"
+   ],
+   "memo": "#ReFEED No.09 ／ レイスピアー ver.ReFEED"
+  },
+  {
+   "id": "x-056",
+   "url": "https://x.com/yamabata86/status/1488764415730401281",
+   "color": "green",
+   "source": "auto",
+   "auto": "green",
+   "ratio": 0.401,
+   "kept": 0.954,
+   "share": {
+    "green": 0.401,
+    "blue": 0.22,
+    "silver": 0.182,
+    "white": 0.078,
+    "black": 0.074
+   },
+   "files": [
+    "FKknSt1aMAEZuYs.jpg",
+    "FKknTs3acAAErz1.jpg",
+    "FKknUs-acAA0JkY.jpg",
+    "FKknVf8aAAAF6MU.jpg"
+   ],
+   "memo": "カスタム系 No.01"
+  },
+  {
+   "id": "x-057",
+   "url": "https://x.com/Hasuha_Nata/status/2089598928610288086",
+   "color": "orange",
+   "source": "auto",
+   "auto": "orange",
+   "ratio": 0.775,
+   "kept": 1.0,
+   "share": {
+    "orange": 0.775,
+    "silver": 0.091,
+    "black": 0.068,
+    "red": 0.049,
+    "white": 0.011
+   },
+   "files": [
+    "HP-_Jm7bIAAKyyR.jpg"
+   ],
+   "memo": "カスタム系 No.02"
+  },
+  {
+   "id": "x-058",
+   "url": "https://x.com/taka_4_mini/status/2089705834091864455",
+   "color": "silver",
+   "source": "auto",
+   "auto": "silver",
+   "ratio": 0.594,
+   "kept": 0.436,
+   "share": {
+    "silver": 0.594,
+    "black": 0.27,
+    "white": 0.096,
+    "blue": 0.018,
+    "yellow": 0.014
+   },
+   "files": [
+    "HQAgVGNaIAAlH2R.jpg"
+   ],
+   "memo": "カスタム系 No.03"
+  },
+  {
+   "id": "x-059",
+   "url": "https://x.com/Y_mini4_cube/status/2090466659039686658",
+   "color": "black",
+   "source": "auto",
+   "auto": "black",
+   "ratio": 0.781,
+   "kept": 0.372,
+   "share": {
+    "black": 0.781,
+    "silver": 0.198,
+    "white": 0.008,
+    "yellow": 0.008,
+    "orange": 0.005
+   },
+   "files": [
+    "HQLUWFbasAA2wqZ.jpg"
+   ],
+   "memo": "カスタム系 No.04"
+  },
+  {
+   "id": "x-060",
+   "url": "https://x.com/karasi_M4D/status/2088295641072230660",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.287,
+   "kept": 0.384,
+   "share": {
+    "blue": 0.287,
+    "black": 0.249,
+    "silver": 0.099,
+    "yellow": 0.091,
+    "red": 0.089
+   },
+   "files": [
+    "HPsd0JAaQAAk34b.jpg"
+   ],
+   "memo": "カスタム系 No.05"
+  },
+  {
+   "id": "x-061",
+   "url": "https://x.com/kashmi_r/status/2090379827341889679",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.5,
+   "kept": 0.701,
+   "share": {
+    "blue": 0.5,
+    "silver": 0.197,
+    "black": 0.136,
+    "white": 0.058,
+    "red": 0.045
+   },
+   "files": [
+    "HQKFS9Na0AAE-nU.jpg"
+   ],
+   "memo": "カスタム系 No.06"
+  },
+  {
+   "id": "x-062",
+   "url": "https://x.com/4kura1/status/2087131048744497581",
+   "color": "white",
+   "source": "auto",
+   "auto": "white",
+   "ratio": 0.352,
+   "kept": 0.538,
+   "share": {
+    "white": 0.352,
+    "silver": 0.309,
+    "black": 0.229,
+    "blue": 0.11
+   },
+   "files": [
+    "HPb5m5UaEAA6_i1.jpg"
+   ],
+   "memo": "まんが・エンタメ No.01"
+  },
+  {
+   "id": "x-063",
+   "url": "https://x.com/madaomoshiroi/status/2089653782615621755",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.342,
+   "kept": 0.413,
+   "share": {
+    "blue": 0.342,
+    "black": 0.18,
+    "silver": 0.115,
+    "orange": 0.092,
+    "red": 0.086
+   },
+   "files": [
+    "7e6i3Fc0tp7BhkqE.jpg"
+   ],
+   "memo": "まんが・エンタメ No.02"
+  },
+  {
+   "id": "x-064",
+   "url": "https://x.com/mini4_kurosuke/status/1556488835802238976",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.424,
+   "kept": 0.515,
+   "share": {
+    "blue": 0.424,
+    "black": 0.218,
+    "silver": 0.205,
+    "white": 0.103,
+    "yellow": 0.024
+   },
+   "files": [
+    "FZnCU6EaAAE3sZZ.jpg",
+    "FZnCVT6aAAAGTiU.jpg",
+    "FZnCVxJacAArd7A.jpg",
+    "FZnCWIaaIAEBELj.jpg"
+   ],
+   "memo": "#evilwire No.01 ／ 蛍光カミナリ ネオファルコン"
+  },
+  {
+   "id": "x-065",
+   "url": "https://x.com/KK_illustrate/status/1643614511763537921",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.226,
+   "kept": 0.223,
+   "share": {
+    "blue": 0.226,
+    "black": 0.224,
+    "silver": 0.192,
+    "yellow": 0.142,
+    "orange": 0.078
+   },
+   "files": [
+    "Fs9KrekXgAAXq3f.jpg",
+    "Fs9KreSWwAELXFj.jpg",
+    "Fs9KrevXoAMCbaQ.jpg",
+    "Fs9KrejWYAEpXOZ.jpg"
+   ],
+   "memo": "#evilwire No.02 ／ Baron Viento Shaker"
+  },
+  {
+   "id": "x-066",
+   "url": "https://x.com/to_shinobu0315/status/1468560231311765507",
+   "color": "white",
+   "source": "auto",
+   "auto": "white",
+   "ratio": 0.44,
+   "kept": 0.438,
+   "share": {
+    "white": 0.44,
+    "silver": 0.258,
+    "yellow": 0.155,
+    "black": 0.103,
+    "green": 0.034
+   },
+   "files": [
+    "FGFfvFeVcAAStnd.jpg",
+    "FGFfvFeVEAMxRq3.jpg",
+    "FGFfvF8VIAgrThk.jpg",
+    "FGFfvG1VgAM6k0c.jpg"
+   ],
+   "memo": "#evilwire No.03 ／ ALTADE コラボ"
+  },
+  {
+   "id": "x-067",
+   "url": "https://x.com/erupt_takechan/status/1814425689459978628",
+   "color": "black",
+   "source": "auto",
+   "auto": "black",
+   "ratio": 0.536,
+   "kept": 0.379,
+   "share": {
+    "black": 0.536,
+    "silver": 0.229,
+    "green": 0.092,
+    "yellow": 0.062,
+    "blue": 0.059
+   },
+   "files": [
+    "GS4ii2mbsAA8_iN.jpg",
+    "GS4ii2kasAA1cyG.jpg",
+    "GS4ii2mb0AEyGAK.jpg",
+    "GS4ii2mbEAAKa0E.jpg"
+   ],
+   "memo": "#evilwire No.04 ／ ニューMAシン エアMAックス95"
+  },
+  {
+   "id": "x-068",
+   "url": "https://x.com/KK_illustrate/status/1708790407189217505",
+   "color": "black",
+   "source": "auto",
+   "auto": "black",
+   "ratio": 0.546,
+   "kept": 0.272,
+   "share": {
+    "black": 0.546,
+    "silver": 0.217,
+    "red": 0.185,
+    "white": 0.023,
+    "yellow": 0.015
+   },
+   "files": [
+    "F7bXz4RbwAAHz9L.jpg",
+    "F7bXz4La8AAcjgw.jpg",
+    "F7bXz4LaMAAxSXv.jpg",
+    "F7bXz4RbUAA6Jt8.jpg"
+   ],
+   "memo": "#evilwire No.05 ／ K4 Tasche Wide"
+  },
+  {
+   "id": "x-069",
+   "url": "https://x.com/83Evo/status/1476198649818644483",
+   "color": "yellow",
+   "source": "auto",
+   "auto": "yellow",
+   "ratio": 0.228,
+   "kept": 0.463,
+   "share": {
+    "black": 0.36,
+    "yellow": 0.228,
+    "silver": 0.165,
+    "red": 0.064,
+    "white": 0.054
+   },
+   "files": [
+    "FHyC140aQAA07XH.jpg"
+   ],
+   "memo": "#evilwire No.06 ／ 旧バンキッシュ迷彩風"
+  },
+  {
+   "id": "x-070",
+   "url": "https://x.com/mini4wd_mediaPR/status/2090635005727002753",
+   "color": "yellow",
+   "source": "auto",
+   "auto": "yellow",
+   "ratio": 0.379,
+   "kept": 0.648,
+   "share": {
+    "yellow": 0.379,
+    "white": 0.202,
+    "gold": 0.176,
+    "orange": 0.072,
+    "silver": 0.057
+   },
+   "files": [
+    "HP_DyNSa0AAhmmU.jpg"
+   ],
+   "memo": "@mini4wd_mediaPR No.01 ／ スピンアックス"
+  },
+  {
+   "id": "x-071",
+   "url": "https://x.com/mini4wd_mediaPR/status/2090272617194229865",
+   "color": "yellow",
+   "source": "auto",
+   "auto": "yellow",
+   "ratio": 0.359,
+   "kept": 0.587,
+   "share": {
+    "yellow": 0.359,
+    "red": 0.188,
+    "gold": 0.127,
+    "white": 0.123,
+    "orange": 0.079
+   },
+   "files": [
+    "HP_DguZbAAEo_Qv.jpg"
+   ],
+   "memo": "@mini4wd_mediaPR No.02 ／ ソニックセイバー"
+  },
+  {
+   "id": "x-072",
+   "url": "https://x.com/mini4wd_mediaPR/status/2089910227516661992",
+   "color": "yellow",
+   "source": "auto",
+   "auto": "yellow",
+   "ratio": 0.323,
+   "kept": 0.659,
+   "share": {
+    "yellow": 0.323,
+    "blue": 0.216,
+    "white": 0.175,
+    "gold": 0.11,
+    "silver": 0.06
+   },
+   "files": [
+    "HP_DRygakAAvqox.jpg"
+   ],
+   "memo": "@mini4wd_mediaPR No.03 ／ マグナムセイバー"
+  },
+  {
+   "id": "x-073",
+   "url": "https://x.com/mini4wd_mediaPR/status/2088807959241330895",
+   "color": "orange",
+   "source": "auto",
+   "auto": "orange",
+   "ratio": 0.242,
+   "kept": 0.512,
+   "share": {
+    "orange": 0.242,
+    "blue": 0.171,
+    "red": 0.144,
+    "white": 0.133,
+    "black": 0.11
+   },
+   "files": [
+    "HPluPVZakAEwr4X.jpg",
+    "HPluQ6ja8AALhga.jpg",
+    "HPluTDfbIAA5elB.jpg",
+    "HPluUudacAAX2ka.jpg"
+   ],
+   "memo": "@mini4wd_mediaPR No.04 ／ シェン・ホワァン誕生日"
+  },
+  {
+   "id": "x-075",
+   "url": "https://x.com/kazzflagway/status/2085505760558281157",
+   "color": "white",
+   "source": "auto",
+   "auto": "white",
+   "ratio": 0.35,
+   "kept": 0.327,
+   "share": {
+    "white": 0.35,
+    "silver": 0.257,
+    "blue": 0.218,
+    "black": 0.137,
+    "red": 0.018
+   },
+   "files": [
+    "HPE0b2haQAAShmh.jpg",
+    "HPE0b2hagAA70jC.jpg",
+    "HPE0b2ga0AAgGcX.jpg",
+    "HPE0b2kacAAlkOS.jpg"
+   ],
+   "memo": "#コンデレ No.11 ／ Eternal shooting star（フリー部門）"
+  },
+  {
+   "id": "x-076",
+   "url": "https://x.com/ymd3a1977/status/2086642705304887704",
+   "color": "red",
+   "source": "auto",
+   "auto": "red",
+   "ratio": 0.24,
+   "kept": 0.396,
+   "share": {
+    "black": 0.25,
+    "red": 0.24,
+    "silver": 0.198,
+    "yellow": 0.127,
+    "orange": 0.085
+   },
+   "files": [
+    "HPU-esKa0AIipTj.jpg",
+    "HPU-esWagAAHBgY.jpg",
+    "HPU-esYasAAg0UP.jpg",
+    "HPU-esLa0AAxKS2.jpg"
+   ],
+   "memo": "#コンデレ No.12 ／ Good Morning Girl（フリー部門）"
+  },
+  {
+   "id": "x-077",
+   "url": "https://x.com/mini4_kurosuke/status/2091555383651491923",
+   "color": "silver",
+   "source": "auto",
+   "auto": "silver",
+   "ratio": 0.286,
+   "kept": 0.441,
+   "share": {
+    "black": 0.444,
+    "silver": 0.286,
+    "orange": 0.093,
+    "blue": 0.084,
+    "green": 0.036
+   },
+   "files": [
+    "HQayhHhbsAAsZZ6.jpg",
+    "HQayh6vbUAAPBW0.jpg"
+   ],
+   "memo": "カスタム系 No.07 ／ ちは車 一部色変更"
+  },
+  {
+   "id": "x-078",
+   "url": "https://x.com/kazzflagway/status/2091481278386479376",
+   "color": "multi",
+   "source": "auto",
+   "auto": "multi",
+   "ratio": 0.179,
+   "kept": 0.461,
+   "share": {
+    "black": 0.239,
+    "white": 0.182,
+    "blue": 0.179,
+    "silver": 0.152,
+    "red": 0.113
+   },
+   "files": [
+    "HQZvIx8a0AAcdxS.jpg"
+   ],
+   "memo": "カスタム系 No.08 ／ ダッシュ軍団"
+  },
+  {
+   "id": "x-079",
+   "url": "https://x.com/yasm3249/status/2091357189751632184",
+   "color": "black",
+   "source": "auto",
+   "auto": "black",
+   "ratio": 0.54,
+   "kept": 0.316,
+   "share": {
+    "black": 0.54,
+    "silver": 0.212,
+    "blue": 0.063,
+    "purple": 0.05,
+    "orange": 0.046
+   },
+   "files": [
+    "HQX-QrfakAAdv_V.jpg",
+    "HQX-QrYa4AASNJW.jpg"
+   ],
+   "memo": "カスタム系 No.09 ／ ゼッチョウチ VZ提灯AT"
+  },
+  {
+   "id": "x-080",
+   "url": "https://x.com/yasu_u40/status/2090783982791323898",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.376,
+   "kept": 0.436,
+   "share": {
+    "blue": 0.376,
+    "black": 0.219,
+    "yellow": 0.141,
+    "silver": 0.135,
+    "orange": 0.041
+   },
+   "files": [
+    "HQP08s9aIAAkJyp.jpg"
+   ],
+   "memo": "カスタム系 No.10 ／ SPIN COBRA デカール"
+  },
+  {
+   "id": "x-081",
+   "url": "https://x.com/Hasuha_Nata/status/2086669617985163338",
+   "color": "green",
+   "source": "auto",
+   "auto": "green",
+   "ratio": 0.339,
+   "kept": 0.306,
+   "share": {
+    "green": 0.339,
+    "black": 0.252,
+    "silver": 0.244,
+    "yellow": 0.077,
+    "red": 0.027
+   },
+   "files": [
+    "HPVW9Cqb0AAZHE4.jpg"
+   ],
+   "memo": "カスタム系 No.11 ／ 片軸VZ"
+  },
+  {
+   "id": "x-082",
+   "url": "https://x.com/tuta8/status/2086613538509033833",
+   "color": "yellow",
+   "source": "auto",
+   "auto": "yellow",
+   "ratio": 0.297,
+   "kept": 0.605,
+   "share": {
+    "yellow": 0.297,
+    "silver": 0.18,
+    "white": 0.123,
+    "black": 0.093,
+    "blue": 0.084
+   },
+   "files": [
+    "HPUj2KfbIAAKgZH.jpg",
+    "HPUj2KUbwAAQ8Xp.jpg"
+   ],
+   "memo": "カスタム系 No.12 ／ 前ペラー考察"
+  },
+  {
+   "id": "x-083",
+   "url": "https://x.com/kojicoji3249/status/2091370003341943049",
+   "color": "silver",
+   "source": "auto",
+   "auto": "silver",
+   "ratio": 0.383,
+   "kept": 0.573,
+   "share": {
+    "silver": 0.383,
+    "black": 0.265,
+    "yellow": 0.225,
+    "gold": 0.057,
+    "white": 0.042
+   },
+   "files": [
+    "HQYJ7SrasAA3nrG.jpg",
+    "HQYJ7SXa0AAYiPL.jpg"
+   ],
+   "memo": "カスタム系 No.13 ／ チャレンジ作"
+  },
+  {
+   "id": "x-084",
+   "url": "https://x.com/necozame_tarou/status/2091298026560327972",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.261,
+   "kept": 0.422,
+   "share": {
+    "blue": 0.261,
+    "red": 0.162,
+    "green": 0.14,
+    "silver": 0.118,
+    "black": 0.107
+   },
+   "files": [
+    "HQXIbpyaIAAEEqV.jpg",
+    "HQXIbpnawAA1cvC.jpg",
+    "HQXIbpzaEAAikO4.jpg",
+    "HQXIbpnbYAAIUgi.jpg"
+   ],
+   "memo": "カスタム系 No.14 ／ 自分の楽しみのためだけに作った作品"
+  },
+  {
+   "id": "x-085",
+   "url": "https://x.com/ryuryu_31_34/status/2091364948069040387",
+   "color": "red",
+   "source": "auto",
+   "auto": "red",
+   "ratio": 0.441,
+   "kept": 0.362,
+   "share": {
+    "red": 0.441,
+    "blue": 0.331,
+    "black": 0.087,
+    "silver": 0.043,
+    "yellow": 0.04
+   },
+   "files": [
+    "HQYFUmxbkAAuVY1.jpg",
+    "HQYFUmybwAAN2af.jpg",
+    "HQYFUnGaYAACgeN.jpg"
+   ],
+   "memo": "カスタム系 No.15 ／ 父が作ったトライダガーX"
+  },
+  {
+   "id": "x-086",
+   "url": "https://x.com/H_63/status/2090933532935979514",
+   "color": "black",
+   "source": "auto",
+   "auto": "black",
+   "ratio": 1.0,
+   "kept": 1.0,
+   "share": {
+    "black": 1.0
+   },
+   "files": [
+    "RG28Nprase9KF2JP.jpg"
+   ],
+   "memo": "カスタム系 No.16 ／ ファンブルン"
+  },
+  {
+   "id": "x-087",
+   "url": "https://x.com/erupt_takechan/status/1949840815041220724",
+   "color": "black",
+   "source": "auto",
+   "auto": "black",
+   "ratio": 0.5,
+   "kept": 0.397,
+   "share": {
+    "black": 0.5,
+    "silver": 0.267,
+    "blue": 0.152,
+    "green": 0.039,
+    "white": 0.038
+   },
+   "files": [
+    "Gw854mFaIAACCv9.jpg",
+    "Gw854l9agAATWhW.jpg",
+    "Gw854mObQAIU_zD.jpg",
+    "Gw854mNaMAAAl7w.jpg"
+   ],
+   "memo": "#JC2025コンデレ1 No.01 ／ ネオVQSストッククラスver"
+  },
+  {
+   "id": "x-088",
+   "url": "https://x.com/yonkuyarou/status/1949843850815852687",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.287,
+   "kept": 0.537,
+   "share": {
+    "blue": 0.287,
+    "black": 0.206,
+    "red": 0.149,
+    "yellow": 0.12,
+    "silver": 0.089
+   },
+   "files": [
+    "Gw88nrPaQAAs4rp.jpg",
+    "Gw88nrpbYAAFyKQ.jpg",
+    "Gw88nrQbgAAADvz.jpg",
+    "Gw88nraaIAAfZs3.jpg"
+   ],
+   "memo": "#JC2025コンデレ1 No.02 ／ CLODBUSTER REVOLUTION"
+  },
+  {
+   "id": "x-089",
+   "url": "https://x.com/poultry_palace/status/1946952840901226761",
+   "color": "red",
+   "source": "auto",
+   "auto": "red",
+   "ratio": 0.314,
+   "kept": 0.337,
+   "share": {
+    "red": 0.314,
+    "blue": 0.196,
+    "black": 0.193,
+    "silver": 0.158,
+    "white": 0.055
+   },
+   "files": [
+    "GwT3SRGWQAApeiE.jpg",
+    "GwT3SQ-WcAAdzsx.jpg",
+    "GwT3SRCXkAAlj2K.jpg",
+    "GwT3SRAXAAAZUs_.jpg"
+   ],
+   "memo": "#JC2025コンデレ1 No.03 ／ トレイルホーネット🐝"
+  },
+  {
+   "id": "x-090",
+   "url": "https://x.com/DAI7TEN_DAICHI/status/1947974581651972261",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.317,
+   "kept": 0.29,
+   "share": {
+    "blue": 0.317,
+    "black": 0.21,
+    "silver": 0.155,
+    "yellow": 0.146,
+    "white": 0.091
+   },
+   "files": [
+    "GwiYjmcbgAAD_Nx.jpg",
+    "GwiYjmdaoAAN4uZ.jpg",
+    "GwiYjmibMAAb6c1.jpg",
+    "GwiYjmnbkAAymH8.jpg"
+   ],
+   "memo": "#JC2025コンデレ1 No.04 ／ BIGBANG GHOST TRUST SPECIAL"
+  },
+  {
+   "id": "x-091",
+   "url": "https://x.com/nobori1101/status/1947957121636815008",
+   "color": "black",
+   "source": "auto",
+   "auto": "black",
+   "ratio": 0.453,
+   "kept": 0.215,
+   "share": {
+    "black": 0.453,
+    "silver": 0.231,
+    "red": 0.128,
+    "yellow": 0.097,
+    "orange": 0.04
+   },
+   "files": [
+    "GwiIrPrbYAAIWba.jpg",
+    "GwiIrPsa0AATn7h.jpg",
+    "GwiIrPmaoAA1FbK.jpg",
+    "GwiIrPqboAAoilv.jpg"
+   ],
+   "memo": "#JC2025コンデレ1 No.05 ／ メタルホッパー02"
+  },
+  {
+   "id": "x-092",
+   "url": "https://x.com/muka_dee/status/1957329988367286776",
+   "color": "black",
+   "source": "auto",
+   "auto": "black",
+   "ratio": 0.439,
+   "kept": 0.366,
+   "share": {
+    "black": 0.439,
+    "silver": 0.191,
+    "orange": 0.11,
+    "white": 0.102,
+    "red": 0.081
+   },
+   "files": [
+    "GynVPXvaUAArguD.jpg",
+    "GynVPXibwAA2HeM.jpg",
+    "GynVPX7awAEpSM4.jpg",
+    "GynVPXPa0AA2FV5.jpg"
+   ],
+   "memo": "#JC2025コンデレ2 No.01 ／ D-Hopper"
+  },
+  {
+   "id": "x-093",
+   "url": "https://x.com/_ConCry/status/1957210043570655622",
+   "color": "silver",
+   "source": "auto",
+   "auto": "silver",
+   "ratio": 0.265,
+   "kept": 0.378,
+   "share": {
+    "black": 0.389,
+    "silver": 0.265,
+    "blue": 0.128,
+    "white": 0.083,
+    "red": 0.059
+   },
+   "files": [
+    "GyloJ8fa4AA-eYr.jpg",
+    "GyloJ_fa8AAyJ2H.jpg",
+    "GyloKKJakAAhyVw.jpg",
+    "GyloKQwacAAkbDO.jpg"
+   ],
+   "memo": "#JC2025コンデレ2 No.02 ／ 超大帝"
+  },
+  {
+   "id": "x-094",
+   "url": "https://x.com/yonkuyarou/status/1954039048680747276",
+   "color": "multi",
+   "source": "auto",
+   "auto": "multi",
+   "ratio": 0.151,
+   "kept": 0.284,
+   "share": {
+    "black": 0.221,
+    "yellow": 0.151,
+    "silver": 0.145,
+    "orange": 0.14,
+    "green": 0.132
+   },
+   "files": [
+    "Gx4kII3b0AAcViG.jpg",
+    "Gx4kIIwbwAAycrE.jpg",
+    "Gx4kIIwa8AAI3ch.jpg",
+    "Gx4kIIsbAAA7_gR.jpg"
+   ],
+   "memo": "#JC2025コンデレ2 No.03 ／ WILLYS M38 Jr."
+  },
+  {
+   "id": "x-095",
+   "url": "https://x.com/Saz0813/status/1957257877619703957",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.551,
+   "kept": 0.319,
+   "share": {
+    "blue": 0.551,
+    "silver": 0.165,
+    "white": 0.105,
+    "black": 0.083,
+    "green": 0.059
+   },
+   "files": [
+    "GymTqEOboAA1TdL.jpg",
+    "GymTqERbQAEW94D.jpg",
+    "GymTqERasAAGbKT.jpg",
+    "GymTqEZbIAASGP-.jpg"
+   ],
+   "memo": "#JC2025コンデレ2 No.04 ／ モンスターミニヨンククラブ"
+  },
+  {
+   "id": "x-096",
+   "url": "https://x.com/DuN83221462/status/1956864741202362477",
+   "color": "yellow",
+   "source": "auto",
+   "auto": "yellow",
+   "ratio": 0.221,
+   "kept": 0.383,
+   "share": {
+    "yellow": 0.221,
+    "blue": 0.221,
+    "black": 0.212,
+    "silver": 0.175,
+    "gold": 0.057
+   },
+   "files": [
+    "GyguGieasAA2vbV.jpg",
+    "GyguGiZaIAAuwnu.jpg",
+    "GyguGiYa8AAN9-2.jpg",
+    "GyguGibbwAAcFGl.jpg"
+   ],
+   "memo": "#JC2025コンデレ2 No.05 ／ バーニングDuN"
+  },
+  {
+   "id": "x-097",
+   "url": "https://x.com/nyagomini/status/1967495310856585237",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.265,
+   "kept": 0.421,
+   "share": {
+    "blue": 0.265,
+    "black": 0.197,
+    "red": 0.188,
+    "silver": 0.153,
+    "white": 0.094
+   },
+   "files": [
+    "G03yiekbcAAYDS_.jpg",
+    "G03yjMlbUAAOTzb.jpg",
+    "G03yjn9bwAAUiMJ.jpg",
+    "G03yjqGakAAmuUy.jpg"
+   ],
+   "memo": "#JC2025コンデレ3 No.01 ／ VマグナムとVソニックの完全融合！"
+  },
+  {
+   "id": "x-098",
+   "url": "https://x.com/mmarry31/status/1967200546546446614",
+   "color": "silver",
+   "source": "auto",
+   "auto": "silver",
+   "ratio": 0.282,
+   "kept": 0.279,
+   "share": {
+    "silver": 0.282,
+    "white": 0.236,
+    "black": 0.178,
+    "blue": 0.167,
+    "red": 0.077
+   },
+   "files": [
+    "G0zmc83bEAAsiwj.jpg",
+    "G0zmdTVasAAW2WY.jpg",
+    "G0zmdtlbAAAvWeJ.jpg",
+    "G0zmeGxboAAGFPD.jpg"
+   ],
+   "memo": "#JC2025コンデレ3 No.02 ／ 完全変形！バイスイントルーダー！"
+  },
+  {
+   "id": "x-099",
+   "url": "https://x.com/poultry_palace/status/1964818462225903639",
+   "color": "red",
+   "source": "auto",
+   "auto": "red",
+   "ratio": 0.415,
+   "kept": 0.239,
+   "share": {
+    "red": 0.415,
+    "black": 0.201,
+    "blue": 0.097,
+    "white": 0.092,
+    "silver": 0.066
+   },
+   "files": [
+    "G0Rv-XmaMAEmtSN.jpg",
+    "G0Rv-XqaEAE4gUR.jpg",
+    "G0Rv-XqaoAAFBJe.jpg",
+    "G0Rv-XdbQAA9kUU.jpg"
+   ],
+   "memo": "#JC2025コンデレ3 No.03 ／ あの頃のHOTSHOT Jr."
+  },
+  {
+   "id": "x-100",
+   "url": "https://x.com/mamennma/status/1966850730880639200",
+   "color": "silver",
+   "source": "auto",
+   "auto": "silver",
+   "ratio": 0.257,
+   "kept": 0.39,
+   "share": {
+    "silver": 0.257,
+    "black": 0.212,
+    "blue": 0.188,
+    "red": 0.187,
+    "pink": 0.049
+   },
+   "files": [
+    "G0un84obcAQjz-I.jpg",
+    "G0un_uObcAQKxoP.jpg",
+    "G0un_p-bcAMqRf2.jpg",
+    "G0un_pMaYAEZDRJ.jpg"
+   ],
+   "memo": "#JC2025コンデレ3 No.04 ／ トライダガーXまめSP"
+  },
+  {
+   "id": "x-101",
+   "url": "https://x.com/kojikoji_m4wd/status/1966083851094278262",
+   "color": "red",
+   "source": "auto",
+   "auto": "red",
+   "ratio": 0.59,
+   "kept": 0.178,
+   "share": {
+    "red": 0.59,
+    "black": 0.138,
+    "orange": 0.083,
+    "silver": 0.069,
+    "blue": 0.065
+   },
+   "files": [
+    "G0ju11WbkAAK7Pp.jpg",
+    "G0ju12DaMAAPFkr.jpg",
+    "G0ju13Ca0AAgdI0.jpg",
+    "G0ju15_aMAMmfdn.jpg"
+   ],
+   "memo": "#JC2025コンデレ3 No.05 ／ CRIMSON GALE"
+  },
+  {
+   "id": "x-102",
+   "url": "https://x.com/himoQ1/status/1975857252050645318",
+   "color": "red",
+   "source": "auto",
+   "auto": "red",
+   "ratio": 0.234,
+   "kept": 0.388,
+   "share": {
+    "black": 0.358,
+    "red": 0.234,
+    "silver": 0.195,
+    "white": 0.066,
+    "orange": 0.051
+   },
+   "files": [
+    "G2unru8aUAIR5dH.jpg",
+    "G2unru0acAAfkKA.jpg",
+    "G2unruxbkAAme4v.jpg",
+    "G2unru3a8AAmNyD.jpg"
+   ],
+   "memo": "#JC2025コンデレ4 No.01 ／ ネオトライダガーZMC -Keep on Running!-"
+  },
+  {
+   "id": "x-103",
+   "url": "https://x.com/mmarry31/status/1977697863028163007",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.401,
+   "kept": 0.428,
+   "share": {
+    "blue": 0.401,
+    "white": 0.168,
+    "black": 0.161,
+    "silver": 0.093,
+    "purple": 0.05
+   },
+   "files": [
+    "G3IxsmkbsAAuyxs.jpg",
+    "G3IxtpSaoAAVAtM.jpg",
+    "G3IxuEzbEAAB0ua.jpg",
+    "G3Ixub-bAAAWo2t.jpg"
+   ],
+   "memo": "#JC2025コンデレ4 No.02 ／ Gマグナムタイプゼロ"
+  },
+  {
+   "id": "x-104",
+   "url": "https://x.com/11311k_mini4wd/status/1976996522509451657",
+   "color": "red",
+   "source": "auto",
+   "auto": "red",
+   "ratio": 0.558,
+   "kept": 0.444,
+   "share": {
+    "red": 0.558,
+    "black": 0.217,
+    "yellow": 0.072,
+    "orange": 0.058,
+    "silver": 0.038
+   },
+   "files": [
+    "G2-z2UrakAAwcdz.jpg",
+    "G2-z2Ura0AAe1_g.jpg",
+    "G2-z2UsbwAc-Qdo.jpg",
+    "G2-z2UrbwAIfIxE.jpg"
+   ],
+   "memo": "#JC2025コンデレ4 No.03 ／ MagnumFerrari2025"
+  },
+  {
+   "id": "x-105",
+   "url": "https://x.com/akf0ver2022/status/1977746916814340402",
+   "color": "silver",
+   "source": "auto",
+   "auto": "silver",
+   "ratio": 0.254,
+   "kept": 0.401,
+   "share": {
+    "silver": 0.254,
+    "white": 0.249,
+    "black": 0.173,
+    "blue": 0.116,
+    "yellow": 0.099
+   },
+   "files": [
+    "G3JeVM3a8AE-Ith.jpg",
+    "G3JeVL3bYAAgm7j.jpg",
+    "G3JeVL6aAAALbWt.jpg",
+    "G3JeVL4a8AE6fdV.jpg"
+   ],
+   "memo": "#JC2025コンデレ4 No.04 ／ 装甲Vマグナム＆Vソニック"
+  },
+  {
+   "id": "x-106",
+   "url": "https://x.com/ymd3a1977/status/1812972437015044413",
+   "color": "yellow",
+   "source": "auto",
+   "auto": "yellow",
+   "ratio": 0.424,
+   "kept": 0.364,
+   "share": {
+    "yellow": 0.424,
+    "black": 0.214,
+    "gold": 0.169,
+    "orange": 0.062,
+    "red": 0.047
+   },
+   "files": [
+    "GSj40j8bUAAnzId.jpg",
+    "GSj40j7bIAcO2D-.jpg",
+    "GSj40j7bIAAAzQO.jpg",
+    "GSj40j7acAMT7Pw.jpg"
+   ],
+   "memo": "#JC2024コンデレ1 No.01 ／ HEROES"
+  },
+  {
+   "id": "x-107",
+   "url": "https://x.com/yonkuyarou/status/1811415697786011880",
+   "color": "orange",
+   "source": "auto",
+   "auto": "orange",
+   "ratio": 0.228,
+   "kept": 0.522,
+   "share": {
+    "black": 0.282,
+    "orange": 0.228,
+    "silver": 0.155,
+    "red": 0.125,
+    "yellow": 0.122
+   },
+   "files": [
+    "GSNw9_OaUAA1nKm.jpg",
+    "GSNw9_Qa4AAtWlV.jpg",
+    "GSNw9_Ma8AA_g3l.jpg",
+    "GSNw9_NbQAAixtu.jpg"
+   ],
+   "memo": "#JC2024コンデレ1 No.02 ／ BLAZING SHUTTLE Jr."
+  },
+  {
+   "id": "x-108",
+   "url": "https://x.com/sanosuka15/status/1811915840541073725",
+   "color": "black",
+   "source": "auto",
+   "auto": "black",
+   "ratio": 0.413,
+   "kept": 0.395,
+   "share": {
+    "black": 0.413,
+    "blue": 0.193,
+    "yellow": 0.135,
+    "red": 0.098,
+    "silver": 0.086
+   },
+   "files": [
+    "GSU310nXUAAmywq.jpg",
+    "GSU310lXAAERrNH.jpg",
+    "GSU310qW0AAFiti.jpg",
+    "GSU310sWoAA64-o.jpg"
+   ],
+   "memo": "#JC2024コンデレ1 No.03 ／ ブラック・ブーメラン"
+  },
+  {
+   "id": "x-109",
+   "url": "https://x.com/DAI7TEN_DAICHI/status/1813576060728140267",
+   "color": "silver",
+   "source": "auto",
+   "auto": "silver",
+   "ratio": 0.293,
+   "kept": 0.33,
+   "share": {
+    "black": 0.304,
+    "silver": 0.293,
+    "blue": 0.221,
+    "red": 0.058,
+    "white": 0.045
+   },
+   "files": [
+    "GSsdzzSaAAADahq.jpg",
+    "GSsdzzRa4AAUHFF.jpg",
+    "GSsdzzTbkAARFnc.jpg",
+    "GSsdzzRbcAAx8CM.jpg"
+   ],
+   "memo": "#JC2024コンデレ1 No.04 ／ SUPER EGRESS"
+  },
+  {
+   "id": "x-110",
+   "url": "https://x.com/DAI7TEN_DAICHI/status/1825156890046984686",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.286,
+   "kept": 0.275,
+   "share": {
+    "silver": 0.297,
+    "blue": 0.286,
+    "black": 0.227,
+    "white": 0.166,
+    "purple": 0.022
+   },
+   "files": [
+    "GVRChDmakAAnH7Z.jpg",
+    "GVRChDnaUAAMSGm.jpg",
+    "GVRChDlbIAAJD8R.jpg",
+    "GVRChDma4AA80iY.jpg"
+   ],
+   "memo": "#JC2024コンデレ2 No.01 ／ CROSS CYGNUS"
+  },
+  {
+   "id": "x-111",
+   "url": "https://x.com/mine4wd/status/1823338386884870641",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.425,
+   "kept": 0.285,
+   "share": {
+    "blue": 0.425,
+    "white": 0.322,
+    "silver": 0.08,
+    "black": 0.062,
+    "purple": 0.053
+   },
+   "files": [
+    "GU3MmJ_aAAAmypn.jpg",
+    "GU3MmKZbwAArD2z.jpg",
+    "GU3MmLZa8AAoMbk.jpg",
+    "GU3MmMwagAAAz4Q.jpg"
+   ],
+   "memo": "#JC2024コンデレ2 No.02 ／ エルブランシュ"
+  },
+  {
+   "id": "x-112",
+   "url": "https://x.com/ymd3a1977/status/1822445524764750192",
+   "color": "yellow",
+   "source": "auto",
+   "auto": "yellow",
+   "ratio": 0.224,
+   "kept": 0.345,
+   "share": {
+    "black": 0.356,
+    "yellow": 0.224,
+    "silver": 0.157,
+    "green": 0.094,
+    "blue": 0.083
+   },
+   "files": [
+    "GUqgitCbcAAOjkZ.jpg",
+    "GUqgitBa0AA6bW4.jpg",
+    "GUqgis-bcAAZOGO.jpg",
+    "GUqgis_asAANAHa.jpg"
+   ],
+   "memo": "#JC2024コンデレ2 No.03 ／ Rebel Rebel"
+  },
+  {
+   "id": "x-113",
+   "url": "https://x.com/DuN83221462/status/1821881019047481682",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.368,
+   "kept": 0.477,
+   "share": {
+    "blue": 0.368,
+    "silver": 0.197,
+    "white": 0.158,
+    "black": 0.155,
+    "yellow": 0.063
+   },
+   "files": [
+    "GUifIIKa8AADxoX.jpg",
+    "GUifIIGacAAdQp2.jpg",
+    "GUifIIHbQAAQN2d.jpg",
+    "GUifIIrWwAAOKeu.jpg"
+   ],
+   "memo": "#JC2024コンデレ2 No.04 ／ ビッグDuNゴースト"
+  },
+  {
+   "id": "x-114",
+   "url": "https://x.com/isono_130/status/1838205218611405254",
+   "color": "red",
+   "source": "auto",
+   "auto": "red",
+   "ratio": 0.435,
+   "kept": 0.311,
+   "share": {
+    "red": 0.435,
+    "silver": 0.251,
+    "blue": 0.134,
+    "white": 0.069,
+    "black": 0.065
+   },
+   "files": [
+    "GYKd5qAa0AAr1OA.jpg",
+    "GYKd5qBakAApRBc.jpg",
+    "GYKd5qCbAAAGq1Y.jpg",
+    "GYKd5qQa4AAeDh0.jpg"
+   ],
+   "memo": "#JC2024コンデレ3 No.01 ／ DIOSPADA GT"
+  },
+  {
+   "id": "x-115",
+   "url": "https://x.com/poultry_palace/status/1835900151925272882",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.37,
+   "kept": 0.266,
+   "share": {
+    "blue": 0.37,
+    "yellow": 0.232,
+    "silver": 0.139,
+    "white": 0.064,
+    "gold": 0.063
+   },
+   "files": [
+    "GXptdE1acAEqRfQ.jpg",
+    "GXptdE3a8AAUkBA.jpg",
+    "GXptdE2aMAAIeZx.jpg",
+    "GXptdE0bgAAeS5-.jpg"
+   ],
+   "memo": "#JC2024コンデレ3 No.02 ／ The BIGWIG Jr."
+  },
+  {
+   "id": "x-116",
+   "url": "https://x.com/muuro166/status/1836796888005378131",
+   "color": "silver",
+   "source": "auto",
+   "auto": "silver",
+   "ratio": 0.271,
+   "kept": 0.414,
+   "share": {
+    "silver": 0.271,
+    "black": 0.223,
+    "yellow": 0.125,
+    "gold": 0.086,
+    "blue": 0.073
+   },
+   "files": [
+    "GX2dBcobAAAthnv.jpg",
+    "GX2dBsNbwAACKZV.jpg",
+    "GX2dB-SbUAABBy_.jpg",
+    "GX2dCSPaAAAL6km.jpg"
+   ],
+   "memo": "#JC2024コンデレ3 No.03 ／ 自由煌帝"
+  },
+  {
+   "id": "x-117",
+   "url": "https://x.com/mine4wd/status/1834746150362243503",
+   "color": "red",
+   "source": "auto",
+   "auto": "red",
+   "ratio": 0.33,
+   "kept": 0.322,
+   "share": {
+    "black": 0.352,
+    "red": 0.33,
+    "blue": 0.11,
+    "silver": 0.078,
+    "white": 0.06
+   },
+   "files": [
+    "GXZT5HYbwAMBwUj.jpg"
+   ],
+   "memo": "#JC2024コンデレ3 No.04 ／ エクストラ バーニング サン"
+  },
+  {
+   "id": "x-118",
+   "url": "https://x.com/DAI7TEN_DAICHI/status/1838212881722274071",
+   "color": "yellow",
+   "source": "auto",
+   "auto": "yellow",
+   "ratio": 0.274,
+   "kept": 0.339,
+   "share": {
+    "yellow": 0.274,
+    "black": 0.253,
+    "green": 0.231,
+    "silver": 0.167,
+    "blue": 0.056
+   },
+   "files": [
+    "GYKk3uqa8AEEJf2.jpg",
+    "GYKk3u0bQAAAQSr.jpg",
+    "GYKk3uuasAANXZj.jpg",
+    "GYKk3upakAAol_W.jpg"
+   ],
+   "memo": "#JC2024コンデレ3 No.05 ／ JAUNE NE:10"
+  },
+  {
+   "id": "x-119",
+   "url": "https://x.com/monkshiryu/status/1845832835254587525",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.505,
+   "kept": 0.373,
+   "share": {
+    "blue": 0.505,
+    "black": 0.214,
+    "silver": 0.092,
+    "green": 0.082,
+    "white": 0.065
+   },
+   "files": [
+    "GZ23Ll-asAA3siC.jpg",
+    "GZ23LmqaAAETPm_.jpg",
+    "GZ23LoIbsAABBU7.jpg"
+   ],
+   "memo": "#JC2024コンデレ4 No.01 ／ アバンテJr. -蒼- next stage"
+  },
+  {
+   "id": "x-120",
+   "url": "https://x.com/poultry_palace/status/1843143688941363352",
+   "color": "yellow",
+   "source": "auto",
+   "auto": "yellow",
+   "ratio": 0.224,
+   "kept": 0.329,
+   "share": {
+    "yellow": 0.224,
+    "silver": 0.179,
+    "black": 0.169,
+    "blue": 0.15,
+    "orange": 0.092
+   },
+   "files": [
+    "GZQpabrakAEmN-M.jpg",
+    "GZQpabqa4AAff--.jpg",
+    "GZQpabqbMAAN1Fp.jpg",
+    "GZQpabrawAAGJ9l.jpg"
+   ],
+   "memo": "#JC2024コンデレ4 No.02 ／ ゼンキッシュism"
+  },
+  {
+   "id": "x-121",
+   "url": "https://x.com/sanosuka15/status/1845382391604641937",
+   "color": "black",
+   "source": "auto",
+   "auto": "black",
+   "ratio": 0.418,
+   "kept": 0.289,
+   "share": {
+    "black": 0.418,
+    "red": 0.151,
+    "silver": 0.136,
+    "yellow": 0.093,
+    "blue": 0.063
+   },
+   "files": [
+    "GZwdfx-aAAAjUEu.jpg",
+    "GZwdfx7a8AAN06S.jpg",
+    "GZwdfx5bAAA6sP7.jpg",
+    "GZwdfx8bkAEAcyP.jpg"
+   ],
+   "memo": "#JC2024コンデレ4 No.03 ／ ゴールドブーメラン JC攻略 俺スペシャル"
+  },
+  {
+   "id": "x-122",
+   "url": "https://x.com/nyagomini/status/1845107591825002983",
+   "color": "silver",
+   "source": "auto",
+   "auto": "silver",
+   "ratio": 0.39,
+   "kept": 0.385,
+   "share": {
+    "silver": 0.39,
+    "black": 0.23,
+    "white": 0.156,
+    "red": 0.081,
+    "blue": 0.05
+   },
+   "files": [
+    "GZsjkveaAAYKM60.jpg",
+    "GZsjkyQaAAAblYP.jpg",
+    "GZsjk48aIAEtfLl.jpg",
+    "GZsjk6raAAEm8f1.jpg"
+   ],
+   "memo": "#JC2024コンデレ4 No.04 ／ ウイングセイバー"
+  },
+  {
+   "id": "x-123",
+   "url": "https://x.com/DAI7TEN_DAICHI/status/1845711653805146450",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.293,
+   "kept": 0.336,
+   "share": {
+    "black": 0.361,
+    "blue": 0.293,
+    "silver": 0.165,
+    "gold": 0.062,
+    "yellow": 0.048
+   },
+   "files": [
+    "GZ1I9wibcAAA3p2.jpg",
+    "GZ1I9wgawAAfsFh.jpg",
+    "GZ1I9wgaUAAdeMp.jpg",
+    "GZ1I9whaoAAvHE3.jpg"
+   ],
+   "memo": "#JC2024コンデレ4 No.05 ／ AVANTE Re:boot"
+  },
+  {
+   "id": "x-124",
+   "url": "https://x.com/poultry_palace/status/1846169745491681606",
+   "color": "white",
+   "source": "auto",
+   "auto": "white",
+   "ratio": 0.268,
+   "kept": 0.377,
+   "share": {
+    "white": 0.268,
+    "silver": 0.23,
+    "black": 0.223,
+    "red": 0.107,
+    "blue": 0.064
+   },
+   "files": [
+    "GZ7pmBKb0AUT_nq.jpg",
+    "GZ7pmBKb0AIKIHn.jpg",
+    "GZ7pmBOb0AQC6-k.jpg",
+    "GZ7pmBNb0AE28Kl.jpg"
+   ],
+   "memo": "#JC2024コンデレ5 No.01 ／ スーパーバトルレーサー"
+  },
+  {
+   "id": "x-125",
+   "url": "https://x.com/NSB50V/status/1850547108744679785",
+   "color": "yellow",
+   "source": "auto",
+   "auto": "yellow",
+   "ratio": 0.33,
+   "kept": 0.657,
+   "share": {
+    "yellow": 0.33,
+    "blue": 0.245,
+    "green": 0.124,
+    "black": 0.109,
+    "silver": 0.063
+   },
+   "files": [
+    "Ga52xN2bIAEV5-q.jpg",
+    "Ga52xN1aYAERvCb.jpg",
+    "Ga52xN3bkAA5Z6R.jpg"
+   ],
+   "memo": "#JC2024コンデレ5 No.02 ／ 某学校イベントにウチの会社のミニ四駆部が協力出展✌️"
+  },
+  {
+   "id": "x-126",
+   "url": "https://x.com/CalvinTmd/status/1854701230817497222",
+   "color": "black",
+   "source": "auto",
+   "auto": "black",
+   "ratio": 0.559,
+   "kept": 0.378,
+   "share": {
+    "black": 0.559,
+    "silver": 0.251,
+    "red": 0.078,
+    "orange": 0.046,
+    "white": 0.043
+   },
+   "files": [
+    "Gb047HjbwAEaPvF.jpg",
+    "Gb047HmagAAsSv8.jpg",
+    "Gb047HkbwAQ5B4K.jpg",
+    "Gb047LWbwAIj5K1.jpg"
+   ],
+   "memo": "#JC2024コンデレ5 No.03 ／ 私の車はほぼ完成しました。古いスタイルのレーシングカーを作ることにし…"
+  },
+  {
+   "id": "x-127",
+   "url": "https://x.com/DuN83221462/status/1674794933629362177",
+   "color": "green",
+   "source": "auto",
+   "auto": "green",
+   "ratio": 0.251,
+   "kept": 0.384,
+   "share": {
+    "green": 0.251,
+    "blue": 0.216,
+    "red": 0.169,
+    "white": 0.116,
+    "silver": 0.114
+   },
+   "files": [
+    "Fz4RHJ6aYAI8vRx.jpg",
+    "Fz4RHJJaIAInOKz.jpg",
+    "Fz4RHJNaMAQb7Ou.jpg",
+    "Fz4RHJbacAA1zJl.jpg"
+   ],
+   "memo": "#JC2023コンデレ1 No.01 ／ トライDuNガーＸ"
+  },
+  {
+   "id": "x-128",
+   "url": "https://x.com/_ConCry/status/1674794996229357569",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.359,
+   "kept": 0.351,
+   "share": {
+    "blue": 0.359,
+    "silver": 0.214,
+    "red": 0.112,
+    "black": 0.098,
+    "white": 0.091
+   },
+   "files": [
+    "Fz4RISQaYAEek8s.jpg",
+    "Fz4RInKakAIqoKW.jpg",
+    "Fz4RJP9aIAM1MfP.jpg",
+    "Fz4RKfragAINfXv.jpg"
+   ],
+   "memo": "#JC2023コンデレ1 No.02 ／ スピンアックス-エア-"
+  },
+  {
+   "id": "x-129",
+   "url": "https://x.com/monokuro_ubon/status/1680875196293713923",
+   "color": "red",
+   "source": "auto",
+   "auto": "red",
+   "ratio": 0.225,
+   "kept": 0.463,
+   "share": {
+    "red": 0.225,
+    "silver": 0.197,
+    "black": 0.165,
+    "yellow": 0.118,
+    "white": 0.088
+   },
+   "files": [
+    "F1OrE3caMAEgq_W.jpg",
+    "F1OrE3faEAEP2mk.jpg",
+    "F1OrE3dagAAhS_1.jpg",
+    "F1OrE3aakAAZm1i.jpg"
+   ],
+   "memo": "#JC2023コンデレ1 No.03 ／ ギャンボースターター"
+  },
+  {
+   "id": "x-130",
+   "url": "https://x.com/mine4wd/status/1680218230013689856",
+   "color": "black",
+   "source": "auto",
+   "auto": "black",
+   "ratio": 0.462,
+   "kept": 0.381,
+   "share": {
+    "black": 0.462,
+    "silver": 0.27,
+    "red": 0.079,
+    "white": 0.074,
+    "yellow": 0.051
+   },
+   "files": [
+    "F1FVjLVacAEwY7v.jpg",
+    "F1FVjr3aYAEI75h.jpg",
+    "F1FVkQkaIAE4Lct.jpg",
+    "F1FVktJakAANQwY.jpg"
+   ],
+   "memo": "#JC2023コンデレ1 No.04 ／ BlackSaber BANDIT"
+  },
+  {
+   "id": "x-131",
+   "url": "https://x.com/oktoy6/status/1692612018707239098",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.582,
+   "kept": 0.437,
+   "share": {
+    "blue": 0.582,
+    "black": 0.209,
+    "silver": 0.105,
+    "white": 0.065,
+    "yellow": 0.022
+   },
+   "files": [
+    "F31ci_masAAnLQZ.jpg",
+    "F31ci_eaYAEuyqn.jpg",
+    "F31ci_gaYAIxcLa.jpg",
+    "F31ci_hbYAACCKg.jpg"
+   ],
+   "memo": "#JC2023コンデレ2 No.01 ／ サイクロンマグナムP34"
+  },
+  {
+   "id": "x-132",
+   "url": "https://x.com/mine4wd/status/1683408611203239936",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.445,
+   "kept": 0.327,
+   "share": {
+    "blue": 0.445,
+    "black": 0.243,
+    "silver": 0.168,
+    "white": 0.041,
+    "pink": 0.038
+   },
+   "files": [
+    "F1yrL24akAEjaCx.jpg",
+    "F1yrMT7aUAAD95i.jpg",
+    "F1yrMxCaUAEFz52.jpg",
+    "F1yrNR1aQAI6Bl1.jpg"
+   ],
+   "memo": "#JC2023コンデレ2 No.02 ／ HAYABUSA"
+  },
+  {
+   "id": "x-133",
+   "url": "https://x.com/hideyuki_50/status/1691026930223685632",
+   "color": "yellow",
+   "source": "auto",
+   "auto": "yellow",
+   "ratio": 0.336,
+   "kept": 0.295,
+   "share": {
+    "yellow": 0.336,
+    "silver": 0.253,
+    "white": 0.139,
+    "black": 0.125,
+    "gold": 0.092
+   },
+   "files": [
+    "F3e8BYDagAAUtqP.jpg",
+    "F3e8BlLaQAAaeMN.jpg",
+    "F3e8BzKacAAktcO.jpg",
+    "F3e8CCUbwAAXkX_.jpg"
+   ],
+   "memo": "#JC2023コンデレ2 No.03 ／ スーパーアバンテRS"
+  },
+  {
+   "id": "x-134",
+   "url": "https://x.com/tkfm_hobby/status/1692504771259695149",
+   "color": "silver",
+   "source": "auto",
+   "auto": "silver",
+   "ratio": 0.545,
+   "kept": 0.212,
+   "share": {
+    "silver": 0.545,
+    "black": 0.389,
+    "white": 0.031,
+    "blue": 0.03,
+    "pink": 0.003
+   },
+   "files": [
+    "F3z8HgHbsAEUnYh.jpg",
+    "F3z8HgGbwAAQL1Q.jpg",
+    "F3z8HgJaYAAniI4.jpg"
+   ],
+   "memo": "#JC2023コンデレ2 No.04 ／ ブロッケンG-repaint"
+  },
+  {
+   "id": "x-135",
+   "url": "https://x.com/mine4wd/status/1696061685633892532",
+   "color": "multi",
+   "source": "auto",
+   "auto": "multi",
+   "ratio": 0.196,
+   "kept": 0.242,
+   "share": {
+    "black": 0.256,
+    "silver": 0.196,
+    "white": 0.188,
+    "yellow": 0.139,
+    "blue": 0.139
+   },
+   "files": [
+    "F4mfFxNbgAA3R7a.jpg",
+    "F4mfGPsaAAAG5su.jpg",
+    "F4mfGu7asAA2ZuY.jpg",
+    "F4mfHE4aMAARQzg.jpg"
+   ],
+   "memo": "#JC2023コンデレ3 No.01 ／ Kaiser Tribute"
+  },
+  {
+   "id": "x-136",
+   "url": "https://x.com/mini4_kurosuke/status/1696164751045230606",
+   "color": "yellow",
+   "source": "auto",
+   "auto": "yellow",
+   "ratio": 0.222,
+   "kept": 0.386,
+   "share": {
+    "black": 0.268,
+    "silver": 0.222,
+    "yellow": 0.222,
+    "white": 0.09,
+    "blue": 0.083
+   },
+   "files": [
+    "F4n81BSXkAAMCpp.jpg",
+    "F4n81gFWsAAIp31.jpg",
+    "F4n82ASWMAApY8s.jpg",
+    "F4n82d4WIAAUpd4.jpg"
+   ],
+   "memo": "#JC2023コンデレ3 No.02 ／ FM Hurricane Sonic 2023"
+  },
+  {
+   "id": "x-137",
+   "url": "https://x.com/MANGA7TARO/status/1696133856167100434",
+   "color": "yellow",
+   "source": "auto",
+   "auto": "yellow",
+   "ratio": 0.242,
+   "kept": 0.418,
+   "share": {
+    "yellow": 0.242,
+    "silver": 0.184,
+    "blue": 0.15,
+    "orange": 0.125,
+    "gold": 0.077
+   },
+   "files": [
+    "F4ngv1La8AAS4ZY.jpg",
+    "F4ngv1PaEAE_Xgq.jpg",
+    "F4ngv1PbAAE1wCJ.jpg",
+    "F4ngv1SaoAESMKC.jpg"
+   ],
+   "memo": "#JC2023コンデレ3 No.03 ／ ASTRO BOOMERANG 1996"
+  },
+  {
+   "id": "x-138",
+   "url": "https://x.com/Masato_m4wd/status/1697359167655161944",
+   "color": "red",
+   "source": "auto",
+   "auto": "red",
+   "ratio": 0.482,
+   "kept": 0.273,
+   "share": {
+    "red": 0.482,
+    "black": 0.166,
+    "silver": 0.15,
+    "white": 0.055,
+    "blue": 0.051
+   },
+   "files": [
+    "F447KkcbcAALr5u.jpg",
+    "F447KkabEAAJ_pY.jpg",
+    "F447KkjaAAACp_9.jpg",
+    "F447KkcaQAATEnd.jpg"
+   ],
+   "memo": "#JC2023コンデレ3 No.04 ／ シェヴァリアGT"
+  },
+  {
+   "id": "x-139",
+   "url": "https://x.com/aoba_rc/status/1714520075070558709",
+   "color": "multi",
+   "source": "auto",
+   "auto": "multi",
+   "ratio": 0.172,
+   "kept": 0.382,
+   "share": {
+    "black": 0.236,
+    "red": 0.172,
+    "silver": 0.135,
+    "orange": 0.131,
+    "blue": 0.114
+   },
+   "files": [
+    "F8sy0CrawAAESPr.jpg",
+    "F8sy1C9a8AAUStg.jpg"
+   ],
+   "memo": "#JC2023コンデレ4 No.01 ／ ゴキ◯リ君"
+  },
+  {
+   "id": "x-140",
+   "url": "https://x.com/mine4wd/status/1715303972175856120",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.287,
+   "kept": 0.333,
+   "share": {
+    "blue": 0.287,
+    "black": 0.215,
+    "yellow": 0.21,
+    "silver": 0.096,
+    "red": 0.057
+   },
+   "files": [
+    "F8373D5aUAAuIYY.jpg",
+    "F8373WKagAAGOqr.jpg",
+    "F8373giawAAPI2H.jpg",
+    "F8373u-bQAA_iqb.jpg"
+   ],
+   "memo": "#JC2023コンデレ4 No.02 ／ BSフリーダムナイツ"
+  },
+  {
+   "id": "x-141",
+   "url": "https://x.com/nobori1101/status/1716100958848213438",
+   "color": "yellow",
+   "source": "auto",
+   "auto": "yellow",
+   "ratio": 0.514,
+   "kept": 0.376,
+   "share": {
+    "yellow": 0.514,
+    "black": 0.146,
+    "red": 0.086,
+    "silver": 0.066,
+    "orange": 0.056
+   },
+   "files": [
+    "F9DQuGEb0AAq_VN.jpg",
+    "F9DQuGBbwAAAQgM.jpg",
+    "F9DQuGEbgAAJ3TY.jpg",
+    "F9DQuGFaQAADXgV.jpg"
+   ],
+   "memo": "#JC2023コンデレ4 No.03 ／ アビリスタ"
+  },
+  {
+   "id": "x-142",
+   "url": "https://x.com/KitchenMini4ker/status/1716105620854829249",
+   "color": "silver",
+   "source": "auto",
+   "auto": "silver",
+   "ratio": 0.296,
+   "kept": 0.203,
+   "share": {
+    "silver": 0.296,
+    "black": 0.279,
+    "pink": 0.216,
+    "white": 0.188,
+    "red": 0.015
+   },
+   "files": [
+    "F9DU9NPaQAATB9_.jpg",
+    "F9DU9b4asAAbOKp.jpg",
+    "F9DU9qgaIAACn8g.jpg",
+    "F9DU94ibMAAO8de.jpg"
+   ],
+   "memo": "#JC2023コンデレ4 No.04 ／ Spirit of Wonder"
+  },
+  {
+   "id": "x-143",
+   "url": "https://x.com/naniirorenj/status/1539454607906074624",
+   "color": "yellow",
+   "source": "auto",
+   "auto": "yellow",
+   "ratio": 0.378,
+   "kept": 0.396,
+   "share": {
+    "yellow": 0.378,
+    "black": 0.176,
+    "orange": 0.14,
+    "blue": 0.099,
+    "silver": 0.075
+   },
+   "files": [
+    "FV09xF2UAAA8lOH.jpg",
+    "FV09x4NUUAI2atu.jpg",
+    "FV09yshVUAUbubU.jpg",
+    "FV09zRsUEAA-xfo.jpg"
+   ],
+   "memo": "#JC2022コンデレ1 No.01 ／ ビートマグナム LAL"
+  },
+  {
+   "id": "x-144",
+   "url": "https://x.com/tkmt3249/status/1549012993589284864",
+   "color": "silver",
+   "source": "auto",
+   "auto": "silver",
+   "ratio": 0.298,
+   "kept": 0.414,
+   "share": {
+    "black": 0.391,
+    "silver": 0.298,
+    "yellow": 0.138,
+    "white": 0.06,
+    "orange": 0.051
+   },
+   "files": [
+    "FX8zErHaUAARt3M.jpg",
+    "FX8zFluaIAE0rNT.jpg",
+    "FX8zGGzakAAX0dS.jpg",
+    "FX8zGoqacAACh8P.jpg"
+   ],
+   "memo": "#JC2022コンデレ1 No.02 ／ スピリットイントルーダー"
+  },
+  {
+   "id": "x-145",
+   "url": "https://x.com/tkfm_hobby/status/1546449155102765056",
+   "color": "silver",
+   "source": "auto",
+   "auto": "silver",
+   "ratio": 0.361,
+   "kept": 0.46,
+   "share": {
+    "black": 0.431,
+    "silver": 0.361,
+    "blue": 0.184,
+    "white": 0.021,
+    "red": 0.002
+   },
+   "files": [
+    "FXYV3A0aIAAprQu.jpg",
+    "FXYV3AoaIAE7yOC.jpg",
+    "FXYV3A3agAIyKqS.jpg"
+   ],
+   "memo": "#JC2022コンデレ1 No.03 ／ ゴッドバーニングサン_repaint"
+  },
+  {
+   "id": "x-146",
+   "url": "https://x.com/jinfujixx11/status/1549015948606476290",
+   "color": "multi",
+   "source": "auto",
+   "auto": "multi",
+   "ratio": 0.168,
+   "kept": 0.491,
+   "share": {
+    "white": 0.168,
+    "black": 0.139,
+    "yellow": 0.135,
+    "blue": 0.128,
+    "orange": 0.122
+   },
+   "files": [
+    "FX81y1OakAA__A8.jpg",
+    "FX81y2PaQAAPsWC.jpg",
+    "FX81y2sacAAyG3C.jpg",
+    "FX81y3PaUAEvZ1k.jpg"
+   ],
+   "memo": "#JC2022コンデレ1 No.04 ／ ホライゾン ボックスアート風"
+  },
+  {
+   "id": "x-147",
+   "url": "https://x.com/KK_illustrate/status/1539591469761437697",
+   "color": "green",
+   "source": "auto",
+   "auto": "green",
+   "ratio": 0.29,
+   "kept": 0.254,
+   "share": {
+    "black": 0.424,
+    "green": 0.29,
+    "silver": 0.115,
+    "yellow": 0.08,
+    "blue": 0.056
+   },
+   "files": [
+    "FV26P0AaIAETRbK.jpg",
+    "FV26Pz-acAABQ8j.jpg",
+    "FV26P0DaQAAr2th.jpg",
+    "FV26Pz_acAA-vaV.jpg"
+   ],
+   "memo": "#JC2022コンデレ1 No.05 ／ K4 Gambol Wide"
+  },
+  {
+   "id": "x-148",
+   "url": "https://x.com/raven_mini4wd/status/1551494685222248449",
+   "color": "black",
+   "source": "auto",
+   "auto": "black",
+   "ratio": 0.675,
+   "kept": 0.335,
+   "share": {
+    "black": 0.675,
+    "silver": 0.256,
+    "white": 0.042,
+    "yellow": 0.023,
+    "green": 0.002
+   },
+   "files": [
+    "FYgEMIgUYAAGcIW.jpg",
+    "FYgEMIgVsAARd6Q.jpg",
+    "FYgEMIeUIAAYdJp.jpg",
+    "FYgEMIeUUAEN6Ad.jpg"
+   ],
+   "memo": "#JC2022コンデレ2 No.01 ／ THE END"
+  },
+  {
+   "id": "x-149",
+   "url": "https://x.com/mzr_4wd/status/1557887487238111233",
+   "color": "black",
+   "source": "auto",
+   "auto": "black",
+   "ratio": 0.52,
+   "kept": 0.407,
+   "share": {
+    "black": 0.52,
+    "silver": 0.191,
+    "yellow": 0.18,
+    "gold": 0.039,
+    "blue": 0.027
+   },
+   "files": [
+    "FZ66aQAaIAA5E2_.jpg",
+    "FZ66aP9aUAA22Bd.jpg",
+    "FZ66aP9aMAAq548.jpg"
+   ],
+   "memo": "#JC2022コンデレ2 No.02 ／ 重量感とゴツさを意識したFM-Aジャドーエースオフロード仕様です。"
+  },
+  {
+   "id": "x-150",
+   "url": "https://x.com/kazzflagway/status/1558981276823998466",
+   "color": "silver",
+   "source": "auto",
+   "auto": "silver",
+   "ratio": 0.336,
+   "kept": 0.474,
+   "share": {
+    "black": 0.374,
+    "silver": 0.336,
+    "blue": 0.083,
+    "red": 0.068,
+    "white": 0.063
+   },
+   "files": [
+    "FaKdMfjaMAAQsae.jpg",
+    "FaKdMflacAAltL2.jpg",
+    "FaKdMftaMAEwGRA.jpg",
+    "FaKdMfjakAATvNe.jpg"
+   ],
+   "memo": "#JC2022コンデレ2 No.03 ／ 少年時代の君へ"
+  },
+  {
+   "id": "x-151",
+   "url": "https://x.com/earth_tubuyaki/status/1559891281584979968",
+   "color": "silver",
+   "source": "auto",
+   "auto": "silver",
+   "ratio": 0.278,
+   "kept": 0.505,
+   "share": {
+    "silver": 0.278,
+    "white": 0.234,
+    "yellow": 0.146,
+    "black": 0.125,
+    "blue": 0.116
+   },
+   "files": [
+    "FaXY2b8agAAU1dv.jpg",
+    "FaXY2b4aQAAj3hO.jpg",
+    "FaXY2b5agAAybRB.jpg",
+    "FaXY2b9aMAAKmxZ.jpg"
+   ],
+   "memo": "#JC2022コンデレ2 No.04 ／ ミニ四駆販売中"
+  },
+  {
+   "id": "x-152",
+   "url": "https://x.com/ymd3a1977/status/1568769758144905217",
+   "color": "silver",
+   "source": "auto",
+   "auto": "silver",
+   "ratio": 0.319,
+   "kept": 0.29,
+   "share": {
+    "black": 0.506,
+    "silver": 0.319,
+    "yellow": 0.076,
+    "white": 0.045,
+    "orange": 0.037
+   },
+   "files": [
+    "FcVjxuoaUAABJHC.jpg",
+    "FcVjxuqaMAAYaGe.jpg",
+    "FcVjxuraIAQtYBp.jpg",
+    "FcVjxutaAAE4DAY.jpg"
+   ],
+   "memo": "#JC2022コンデレ3 No.01 ／ Be-1 CLUBMAN RACER"
+  },
+  {
+   "id": "x-153",
+   "url": "https://x.com/mac_m4d/status/1568571966629769218",
+   "color": "red",
+   "source": "auto",
+   "auto": "red",
+   "ratio": 0.412,
+   "kept": 0.265,
+   "share": {
+    "red": 0.412,
+    "black": 0.355,
+    "silver": 0.123,
+    "blue": 0.038,
+    "white": 0.037
+   },
+   "files": [
+    "FcSv4xQacAA0llr.jpg",
+    "FcSv4xUacAAHEm4.jpg",
+    "FcSv4zWaUAE2d6i.jpg",
+    "FcSv41maAAMOFdr.jpg"
+   ],
+   "memo": "#JC2022コンデレ3 No.02 ／ アンタレス"
+  },
+  {
+   "id": "x-154",
+   "url": "https://x.com/DAI7TEN_DAICHI/status/1571811382580084740",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.575,
+   "kept": 0.332,
+   "share": {
+    "blue": 0.575,
+    "black": 0.148,
+    "silver": 0.124,
+    "yellow": 0.087,
+    "orange": 0.021
+   },
+   "files": [
+    "FdAyHCRaUAEK-vE.jpg",
+    "FdAyHCJakAESUDd.jpg",
+    "FdAyHCQaUAEJdZ8.jpg",
+    "FdAyHCEaIAArzq2.jpg"
+   ],
+   "memo": "#JC2022コンデレ3 No.03 ／ GTS40"
+  },
+  {
+   "id": "x-155",
+   "url": "https://x.com/amakawa19/status/1569344753808084998",
+   "color": "yellow",
+   "source": "auto",
+   "auto": "yellow",
+   "ratio": 0.66,
+   "kept": 0.66,
+   "share": {
+    "yellow": 0.66,
+    "orange": 0.164,
+    "blue": 0.135,
+    "black": 0.025,
+    "red": 0.008
+   },
+   "files": [
+    "Fcduu-JaMAAXM68.jpg",
+    "FcduvLIagAAHUkD.jpg"
+   ],
+   "memo": "#JC2022コンデレ3 No.04 ／ 注意書はなくさないように保管してください。"
+  },
+  {
+   "id": "x-156",
+   "url": "https://x.com/FamilyArt86/status/1568463759655706625",
+   "color": "silver",
+   "source": "auto",
+   "auto": "silver",
+   "ratio": 0.304,
+   "kept": 0.303,
+   "share": {
+    "black": 0.495,
+    "silver": 0.304,
+    "red": 0.171,
+    "blue": 0.012,
+    "white": 0.01
+   },
+   "files": [
+    "FcRNdEyacAAPvpd.jpg",
+    "FcRNdl2aMAMMwVD.jpg",
+    "FcRNeCZaIAAln8Y.jpg",
+    "FcRNecvaUAAovbE.jpg"
+   ],
+   "memo": "#JC2022コンデレ3 No.05 ／ MA-R"
+  },
+  {
+   "id": "x-157",
+   "url": "https://x.com/ymd3a1977/status/1582489967728545792",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.328,
+   "kept": 0.335,
+   "share": {
+    "blue": 0.328,
+    "black": 0.252,
+    "orange": 0.147,
+    "red": 0.12,
+    "white": 0.063
+   },
+   "files": [
+    "FfYiPJyVsAIi-9c.jpg",
+    "FfYiPJ3UYAAixXg.jpg",
+    "FfYiPJ7UcAAJfV9.jpg",
+    "FfYiPJzVUAAaesm.jpg"
+   ],
+   "memo": "#JC2022コンデレ4 No.01 ／ Raindrops Keep Fallin’ On My Head"
+  },
+  {
+   "id": "x-158",
+   "url": "https://x.com/Tbreak_Racing/status/1584137101557534721",
+   "color": "multi",
+   "source": "auto",
+   "auto": "multi",
+   "ratio": 0.184,
+   "kept": 0.208,
+   "share": {
+    "black": 0.233,
+    "silver": 0.184,
+    "yellow": 0.148,
+    "blue": 0.112,
+    "green": 0.088
+   },
+   "files": [
+    "Ffv8SV4agAAPYpG.jpg",
+    "Ffv8SV1agAAFZSj.jpg",
+    "Ffv8SV2aYAIMJdN.jpg",
+    "Ffv8SV4aMAEz0er.jpg"
+   ],
+   "memo": "#JC2022コンデレ4 No.02 ／ TOP FORCE EVO. C.L.A.P custom"
+  },
+  {
+   "id": "x-159",
+   "url": "https://x.com/NAO_teamRAIKIRI/status/1583364722279460865",
+   "color": "blue",
+   "source": "auto",
+   "auto": "blue",
+   "ratio": 0.451,
+   "kept": 0.41,
+   "share": {
+    "blue": 0.451,
+    "yellow": 0.164,
+    "black": 0.134,
+    "silver": 0.109,
+    "white": 0.063
+   },
+   "files": [
+    "Ffk90ZRaAAAboYU.jpg",
+    "Ffk90ZRagAIanms.jpg",
+    "Ffk90ZYaAAE82oP.jpg",
+    "Ffk90ZUaEAIafjQ.jpg"
+   ],
+   "memo": "#JC2022コンデレ4 No.03 ／ ロードナイト・トラジェクトリア"
+  },
+  {
+   "id": "x-160",
+   "url": "https://x.com/FamilyArt86/status/1580456260817760256",
+   "color": "silver",
+   "source": "auto",
+   "auto": "silver",
+   "ratio": 0.237,
+   "kept": 0.261,
+   "share": {
+    "silver": 0.237,
+    "black": 0.161,
+    "white": 0.131,
+    "yellow": 0.124,
+    "red": 0.089
+   },
+   "files": [
+    "Fe7okM-UoAEa-sC.jpg",
+    "Fe7ok23VsAIGoc7.jpg",
+    "Fe7olaqUYAIsQLl.jpg",
+    "Fe7ol8xVUAEJNEM.jpg"
+   ],
+   "memo": "#JC2022コンデレ4 No.04 ／ 金ハブ"
+  },
+  {
+   "id": "x-161",
+   "url": "https://x.com/nakaochi_324wd/status/1584138312830177280",
+   "color": "multi",
+   "source": "auto",
+   "auto": "multi",
+   "ratio": 0.207,
+   "kept": 0.466,
+   "share": {
+    "black": 0.358,
+    "green": 0.207,
+    "blue": 0.206,
+    "silver": 0.135,
+    "yellow": 0.06
+   },
+   "files": [
+    "FfvPY3QakAEfvQ9.jpg",
+    "FfvPCjYaYAIixrp.jpg",
+    "FfvO76XacAAl2Va.jpg"
+   ],
+   "memo": "#JC2022コンデレ4 No.05 ／ エンペラーHYPERピットアタッシュ"
+  }
+ ]
+}
