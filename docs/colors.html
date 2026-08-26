@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>マシンカラーで探す｜ミニ四駆の作品を色から｜ミニ四リン駆</title>
+<meta name="description" content="X に投稿されたミニ四駆のマシンを、色から探せるページです。写真の専有面積がいちばん多い色でマシンを分類しています。">
+<link rel="canonical" href="https://mini4lin9.fun/colors.html">
+<link rel="icon" href="assets/favicon.ico?v=2" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png?v=2">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=2">
+<meta name="theme-color" content="#d81f2a">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ミニ四リン駆">
+<meta property="og:title" content="マシンカラーで探す｜ミニ四駆の作品を色から">
+<meta property="og:description" content="X に投稿されたミニ四駆のマシンを、色から探せるページです。写真の専有面積がいちばん多い色でマシンを分類しています。">
+<meta property="og:url" content="https://mini4lin9.fun/colors.html">
+<meta property="og:image" content="https://mini4lin9.fun/assets/icon-512.png">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","url":"https://mini4lin9.fun/colors.html","name":"マシンカラーで探す","description":"X に投稿されたミニ四駆のマシンを、色から探せるページです。写真の専有面積がいちばん多い色でマシンを分類しています。","inLanguage":"ja","isPartOf":{"@id":"https://mini4lin9.fun/#website"},"breadcrumb":{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ミニ四リン駆","item":"https://mini4lin9.fun/"},{"@type":"ListItem","position":2,"name":"マシンカラーで探す"}]}}</script>
+<style>
+:root{--bg:#f5f6f8;--surface:#fff;--ink:#1a2233;--ink2:#5a6478;--ink3:#8b93a5;
+--brand:#1256c4;--line:#e3e6ec;
+font-family:"Hiragino Sans","Noto Sans JP",Meiryo,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-size:14px;line-height:1.6}
+a{color:inherit;text-decoration:none}
+.topbar{background:#fff;border-bottom:1px solid #e2e6eb}
+header{max-width:1120px;margin:0 auto;padding:10px 12px;
+display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+@media(max-width:600px){header{padding:12px}}
+.logo{display:block;line-height:0}
+.logo img{width:190px;height:auto;max-width:52vw;display:block}
+@media(max-width:600px){.logo img{width:160px}}
+.back{margin-left:auto;font-size:13px;color:#1a5fd0}
+.back:hover{text-decoration:underline}
+.wrap{max-width:1120px;margin:0 auto;padding:16px 12px 48px}
+h1{font-size:18px;margin:0 0 4px}
+.lead{font-size:12.5px;color:var(--ink3);margin-bottom:16px}
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+/* ---- カラーホイール ---- */
+.wheelbox{display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:24px}
+.wheel{width:min(92vw,500px);aspect-ratio:1;touch-action:manipulation}
+.wheel svg{width:100%;height:100%;display:block;overflow:visible}
+.sect{cursor:pointer}
+.g{transition:transform .22s cubic-bezier(.34,1.35,.5,1),opacity .18s;
+transform-origin:280px 280px}
+.g:hover{transform:scale(1.035)}
+.g.on{transform:scale(1.06)}
+.g.empty{opacity:.26;pointer-events:none}
+.g.dim{opacity:.32}
+/* マウスで押したときに四角い枠が出ないようにする。キーボード操作のときだけ出す */
+.g:focus{outline:none}
+.g:focus-visible{outline:2px dashed var(--brand);outline-offset:2px}
+/* SVGの文字はビューボックスと一緒に縮むので、狭い画面では指定を大きくする */
+.zlabel{font-size:15px;font-weight:800;fill:var(--ink);letter-spacing:.04em;
+paint-order:stroke;stroke:#fff;stroke-width:3.5px;stroke-linejoin:round;
+pointer-events:none;user-select:none}
+.zcount{font-size:12px;font-weight:800;fill:var(--ink2);
+paint-order:stroke;stroke:#fff;stroke-width:3px;pointer-events:none;user-select:none}
+.zlabel.inr{fill:#fff;stroke:rgba(0,0,0,.5)}
+.zcount.inr{fill:rgba(255,255,255,.9);stroke:rgba(0,0,0,.5)}
+/* 明るい扇（ホワイトなど）の上では、白文字だと読めないので黒文字にする */
+.zlabel.inr.lt{fill:var(--ink);stroke:rgba(255,255,255,.75)}
+.zcount.inr.lt{fill:var(--ink2);stroke:rgba(255,255,255,.75)}
+@media(max-width:600px){
+  .zlabel{font-size:20px;stroke-width:4.5px}
+  .zcount{font-size:16px;stroke-width:4px}
+}
+.chipimg{pointer-events:none}
+.chipimg circle{fill:none;stroke:rgba(255,255,255,.9);stroke-width:1.5}
+.reshuffle{background:var(--surface);border:1.5px solid var(--line);color:var(--ink2);
+border-radius:999px;padding:7px 16px;font:inherit;font-size:12px;font-weight:700;cursor:pointer}
+.reshuffle:hover{color:var(--ink);border-color:#c8cfda}
+.hint{font-size:11.5px;color:var(--ink3);text-align:center}
+
+/* ---- 絞り込みの結果 ---- */
+.head{display:flex;align-items:baseline;gap:10px;margin:0 0 10px}
+.head h2{font-size:15px}
+.head .n{font-size:12px;color:var(--ink3)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;
+overflow:hidden;display:flex;flex-direction:column;align-self:start}
+.card:hover{box-shadow:0 4px 14px rgba(20,40,80,.10)}
+.card img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:#eceff3}
+.card .m{padding:8px 10px 10px;display:flex;flex-direction:column;gap:4px}
+.card .t{font-size:11px;color:var(--ink2);line-height:1.4;
+display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card .u{font-size:10px;color:var(--ink3)}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:800}
+.badge i{width:11px;height:11px;border-radius:50%;background:var(--c);
+border:1px solid rgba(0,0,0,.15)}
+footer{max-width:1120px;margin:0 auto;padding:0 12px 40px;font-size:11.5px;color:var(--ink3)}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <header>
+    <a class="logo" href="index.html"><img src="assets/logo-title.png?v=3"
+       width="462" height="86" alt="ミニ四リン駆" fetchpriority="high"
+       decoding="async"></a>
+    <a class="back" href="index.html">← パーツカタログへ戻る</a>
+  </header>
+</div>
+
+<div class="wrap">
+  <h1>マシンカラーで探す<span class="sr">｜X に投稿されたミニ四駆の作品を色から</span></h1>
+  <p class="lead">写真の専有面積がいちばん多い色で分類しています。
+  輪の外側が色みのある色、内側が白・銀・黒、中心がカラフルです。
+  写真の散らばりは開くたびに変わります。</p>
+
+  <div class="wheelbox">
+    <div class="wheel"><svg id="wheel" viewBox="0 0 560 560" role="group"
+      aria-label="色で絞り込むカラーホイール"></svg></div>
+    <button class="reshuffle" id="reshuffle" type="button">配置をシャッフル</button>
+    <p class="hint">もう一度同じ色を押すと絞り込みを解除します。</p>
+  </div>
+
+  <div id="result">
+    <div class="head"><h2 id="title"></h2><span class="n" id="num"></span></div>
+    <div class="grid" id="grid"></div>
+  </div>
+</div>
+
+<footer>
+  <p>写真は各投稿者のものです。カードを押すと元の投稿へ移動します。
+  掲載の取り下げをご希望の方は X からご連絡ください。</p>
+</footer>
+
+<script>
+const DATA=[{"url":"https://x.com/yaaamadaaa_/status/1046017148424925189","photo":"https://pbs.twimg.com/media/DoQxoNzVsAA-NSi.jpg","color":"blue","memo":"NEWマックスブレイカー","handle":"yaaamadaaa_"},{"url":"https://x.com/Taiyo209/status/1159866861774786560","photo":"https://pbs.twimg.com/media/EBisv0AUYAAsxwh.jpg","color":"green","memo":"レイザーナイトHXA(ヘキサ)-RS","handle":"Taiyo209"},{"url":"https://x.com/Gotos57/status/907022804553318400","photo":"https://pbs.twimg.com/media/DJZka3gVoAAPQft.jpg","color":"silver","memo":"ゴトスさん","handle":"Gotos57"},{"url":"https://x.com/mini4wd/status/745758689798172673","photo":"https://pbs.twimg.com/media/Cll3kI2UsAA3z1x.jpg","color":"yellow","memo":"アンパンマン号","handle":"mini4wd"},{"url":"https://x.com/mini4wd/status/765695609395224576","photo":"https://pbs.twimg.com/media/CqBMFpTUsAESkqu.jpg","color":"blue","memo":"デジラーダ","handle":"mini4wd"},{"url":"https://x.com/moonTakaya/status/936955806913675266","photo":"https://pbs.twimg.com/media/DQC8VPCUEAAqnD-.jpg","color":"yellow","memo":"バーニングゴッドサン 冬仕様","handle":"moonTakaya"},{"url":"https://x.com/tsukasan774/status/2081707478287536491","photo":"https://pbs.twimg.com/media/HOO16jSbgAAXZqB.jpg","color":"blue","memo":"#コンデレ No.01 ／ ガンブラスター 2nd ignition","handle":"tsukasan774"},{"url":"https://x.com/13Phyrexian/status/2079325933002170706","photo":"https://pbs.twimg.com/media/HNs_4xkacAA8qb0.jpg","color":"black","memo":"#コンデレ No.02 ／ GENUINE","handle":"13Phyrexian"},{"url":"https://x.com/yamazakiYu16305/status/2079902660162154908","photo":"https://pbs.twimg.com/media/HN1MaOEa8AAhDeX.jpg","color":"multi","memo":"#コンデレ No.03 ／ ジオグライダー SPORTS","handle":"yamazakiYu16305"},{"url":"https://x.com/03ziong/status/2081539799274680560","photo":"https://pbs.twimg.com/media/HOMdY7ga4AAgsUb.jpg","color":"red","memo":"#コンデレ No.04 ／ ディノレーシング","handle":"03ziong"},{"url":"https://x.com/zgmfx47a/status/2079164810215018978","photo":"https://pbs.twimg.com/media/HNqtW5wasAAr4hy.jpg","color":"blue","memo":"#コンデレ No.05 ／ ゼノエアロ・スパイダー","handle":"zgmfx47a"},{"url":"https://x.com/motivilleneuve/status/2089237564947599713","photo":"https://pbs.twimg.com/media/HP52fYWaUAA6fN6.jpg","color":"blue","memo":"#コンデレ No.06 ／ TaNaKa さん フリー部門","handle":"motivilleneuve"},{"url":"https://x.com/zork7i/status/2086784755341906258","photo":"https://pbs.twimg.com/media/HPW_pZ4aQAAELZs.jpg","color":"red","memo":"#コンデレ No.07 ／ BLITZER-SONIC BLAZE SPECIAL","handle":"zork7i"},{"url":"https://x.com/BassMs06r2/status/2085410302909448383","photo":"https://pbs.twimg.com/media/HPDdnMga8AANNH6.jpg","color":"silver","memo":"#コンデレ No.08 ／ Silver Bullet-RB","handle":"BassMs06r2"},{"url":"https://x.com/KK_illustrate/status/2087818757490217209","photo":"https://pbs.twimg.com/media/HPlsFvgaEAEtMou.jpg","color":"blue","memo":"#コンデレ No.09 ／ GE.RM/","handle":"KK_illustrate"},{"url":"https://x.com/PandaFainted/status/2089101691459457416","photo":"https://pbs.twimg.com/media/HP366PHakAAbhnq.jpg","color":"red","memo":"#コンデレ No.10 ／ ADVAN Razorback","handle":"PandaFainted"},{"url":"https://x.com/hiroshi19860517/status/1321700708563914753","photo":"https://pbs.twimg.com/media/Elefx8cVcAA8Nsu.jpg","color":"silver","memo":"#コジマコンデレ No.01","handle":"hiroshi19860517"},{"url":"https://x.com/____tmy____/status/1321071873904443392","photo":"https://pbs.twimg.com/media/ElVj3JJVcAE6-Kc.jpg","color":"red","memo":"#コジマコンデレ No.02 ／ コジマのチラシでステッカー","handle":"____tmy____"},{"url":"https://x.com/grbz1qt8geVggqm/status/1319889696986517504","photo":"https://pbs.twimg.com/media/ElEwo6tVgAAw0HH.jpg","color":"silver","memo":"#コジマコンデレ No.03 ／ つぼ八杯コジマGP","handle":"grbz1qt8geVggqm"},{"url":"https://x.com/maido_fukushima/status/1319656523597967361","photo":"https://pbs.twimg.com/media/ElBck7FUcAIlM6N.jpg","color":"orange","memo":"#コジマコンデレ No.04 ／ HWパンプキンまいどくん号","handle":"maido_fukushima"},{"url":"https://x.com/hf011011/status/1320239742445707264","photo":"https://pbs.twimg.com/media/ElJvCxOVMAExWCR.jpg","color":"blue","memo":"#コジマコンデレ No.05 ／ アースグランナースープラ","handle":"hf011011"},{"url":"https://x.com/papa23_noboru/status/1955857280794288187","photo":"https://pbs.twimg.com/media/GySZz0ta4AAJdXq.jpg","color":"blue","memo":"#コジデレ No.01 ／ タチコマ","handle":"papa23_noboru"},{"url":"https://x.com/corno2_mini4wd/status/1827351072094220661","photo":"https://pbs.twimg.com/media/GVwOGxFa8AMvJ-V.jpg","color":"blue","memo":"#コジデレ No.02 ／ オープンの部","handle":"corno2_mini4wd"},{"url":"https://x.com/jawsashabo3298/status/1826209059466629171","photo":"https://pbs.twimg.com/media/GVf_a5MW4AATgXd.jpg","color":"blue","memo":"#コジデレ No.03 ／ ガンブラスター","handle":"jawsashabo3298"},{"url":"https://x.com/KK_illustrate/status/1957017214353285435","photo":"https://pbs.twimg.com/media/Gyi4xhVaoAAxB1L.jpg","color":"yellow","memo":"#コジデレ No.04 ／ NT-FDK P192B","handle":"KK_illustrate"},{"url":"https://x.com/southern_green/status/1146006980453994497","photo":"https://pbs.twimg.com/media/D-dvQ92UwAA60SL.jpg","color":"yellow","memo":"#ReFEEDコンデレ No.01 ／ SG6 Gelbe Streif","handle":"southern_green"},{"url":"https://x.com/CaCruelangel2nd/status/1153116527626842112","photo":"https://pbs.twimg.com/media/EACxWauVUAADcla.jpg","color":"yellow","memo":"#ReFEEDコンデレ No.02 ／ JC福井","handle":"CaCruelangel2nd"},{"url":"https://x.com/AtsutoPaPa211/status/1151615459151585280","photo":"https://pbs.twimg.com/media/D_tcJdFVUAExaaX.jpg","color":"yellow","memo":"#ReFEEDコンデレ No.03","handle":"AtsutoPaPa211"},{"url":"https://x.com/kojikoji_m4wd/status/1148862415087398912","photo":"https://pbs.twimg.com/media/D_GUPUiVAAAssNW.jpg","color":"yellow","memo":"#ReFEEDコンデレ No.04 ／ ReFEED EMPEROR","handle":"kojikoji_m4wd"},{"url":"https://x.com/BassMs06r2/status/1972700218559988111","photo":"https://pbs.twimg.com/media/G2BwYqGbcAAEDHa.jpg","color":"yellow","memo":"#ReFEED No.01 ／ BLUE NIGHT-R","handle":"BassMs06r2"},{"url":"https://x.com/bodywork_mini4/status/2006180088539181065","photo":"https://pbs.twimg.com/media/G9diJ3UaUAAipbj.jpg","color":"silver","memo":"#ReFEED No.02 ／ ケースステッカー","handle":"bodywork_mini4"},{"url":"https://x.com/gakudougama/status/1972612526878949692","photo":"https://pbs.twimg.com/media/G2AgnRSbkAI16OD.jpg","color":"white","memo":"#ReFEED No.03 ／ リフィコン参加賞","handle":"gakudougama"},{"url":"https://x.com/Ft7mjsG/status/2087670828674793516","photo":"https://pbs.twimg.com/media/HPjli7BaIAAU0RT.jpg","color":"multi","memo":"#ReFEED No.04 ／ ドラテル GG","handle":"Ft7mjsG"},{"url":"https://x.com/hiro29t/status/1356574920583512064","photo":"https://pbs.twimg.com/media/EtOFqg3UcAIRlYU.jpg","color":"blue","memo":"#コジマコンデレ No.06 ／ City-Bred Blast","handle":"hiro29t"},{"url":"https://x.com/massuMALOVE/status/1360475168905199619","photo":"https://pbs.twimg.com/media/EuFg6FtVgAYXuUp.jpg","color":"multi","memo":"#コジマコンデレ No.07 ／ ヤリス 飯坂真尋version","handle":"massuMALOVE"},{"url":"https://x.com/ztn555913333/status/1359532438075047940","photo":"https://pbs.twimg.com/media/Et4HilQVkAIryCp.jpg","color":"red","memo":"#コジマコンデレ No.08 ／ バーニングサン むぎせんべい","handle":"ztn555913333"},{"url":"https://x.com/yusuke_padm/status/1366014125063557121","photo":"https://pbs.twimg.com/media/EvUOmWdUcAEv8Bj.jpg","color":"silver","memo":"#コジマコンデレ No.09 ／ 浜松愛","handle":"yusuke_padm"},{"url":"https://x.com/cost3553/status/1359534162286268416","photo":"https://pbs.twimg.com/media/Et4JHK0VgAATQjZ.jpg","color":"orange","memo":"#コジマコンデレ No.10 ／ ままどおるミニ四駆","handle":"cost3553"},{"url":"https://x.com/pointterminal1/status/1364195311527190529","photo":"https://pbs.twimg.com/media/Eu6YYTeVEAIFjuf.jpg","color":"silver","memo":"#コジマコンデレ No.11 ／ 笹かマッハビュレット","handle":"pointterminal1"},{"url":"https://x.com/pokuchinyoshida/status/1365139958881685505","photo":"https://pbs.twimg.com/media/EvHzjMGUcAMmxCU.jpg","color":"multi","memo":"#コジマコンデレ No.12 ／ 佐井クロンマグナム","handle":"pokuchinyoshida"},{"url":"https://x.com/gurinx2/status/1364388596329844736","photo":"https://pbs.twimg.com/media/Eu9ILrcVEAAui3H.jpg","color":"yellow","memo":"#コジマコンデレ No.13 ／ エビフライダガー","handle":"gurinx2"},{"url":"https://x.com/Saz0813/status/1956507552138879065","photo":"https://pbs.twimg.com/media/GybpD1VawAAll67.jpg","color":"black","memo":"#コジデレ No.05 ／ 推し活 オープンの部","handle":"Saz0813"},{"url":"https://x.com/kataoji_channel/status/1964694079440335210","photo":"https://pbs.twimg.com/media/G0P-2Xea0AA7Nqh.jpg","color":"blue","memo":"#コジデレ No.06 ／ カオスドライブ","handle":"kataoji_channel"},{"url":"https://x.com/to_shinobu0315/status/1964699762835550668","photo":"https://pbs.twimg.com/media/G0QDxqjagAAxuOI.jpg","color":"black","memo":"#コジデレ No.07 ／ GO!GO!ヤウージャ号","handle":"to_shinobu0315"},{"url":"https://x.com/takky_1215/status/1962858218369229263","photo":"https://pbs.twimg.com/media/Gz15JBFXkAAXXLZ.jpg","color":"blue","memo":"#コジデレ No.08 ／ Horo e","handle":"takky_1215"},{"url":"https://x.com/contapunch_suzu/status/1960273148449792370","photo":"https://pbs.twimg.com/media/GzRJ-8TbYAASkd9.jpg","color":"multi","memo":"#コジデレ No.09 ／ フラワースマイルのグラスホッパー","handle":"contapunch_suzu"},{"url":"https://x.com/hrdu1/status/1964703703652540665","photo":"https://pbs.twimg.com/media/G0QFTyDbsAE34ig.jpg","color":"blue","memo":"#コジデレ No.10 ／ ヤリス WRC ドラテルエディション","handle":"hrdu1"},{"url":"https://x.com/suzuki_koma/status/1846202365885796804","photo":"https://pbs.twimg.com/media/GZ8HQ7Zb0AUMcwV.jpg","color":"black","memo":"#ReFEEDコンデレ No.05 ／ 開闢の虚(ホロウ)","handle":"suzuki_koma"},{"url":"https://x.com/umasan_shikasan/status/1531603470658072578","photo":"https://pbs.twimg.com/media/FUFZK_5VEAATWSV.jpg","color":"yellow","memo":"#ReFEEDコンデレ No.06 ／ リフィコン4へ","handle":"umasan_shikasan"},{"url":"https://x.com/DAI7TEN_DAICHI/status/1806997138901246231","photo":"https://pbs.twimg.com/media/GRO-ThMbcAAAQha.jpg","color":"yellow","memo":"#ReFEEDコンデレ No.07","handle":"DAI7TEN_DAICHI"},{"url":"https://x.com/corno2_mini4wd/status/1531262154028249089","photo":"https://pbs.twimg.com/media/FUAizcmagAEM7WK.jpg","color":"blue","memo":"#ReFEED No.05 ／ 実車も塗る","handle":"corno2_mini4wd"},{"url":"https://x.com/883COBRA/status/1879583572081975448","photo":"https://pbs.twimg.com/media/GhWfTFBaUAAgceL.jpg","color":"blue","memo":"#ReFEED No.06 ／ バギートラック試作","handle":"883COBRA"},{"url":"https://x.com/jawsashabo3298/status/1882818067388158420","photo":"https://pbs.twimg.com/media/GiEdDVVa4AAIwE8.jpg","color":"silver","memo":"#ReFEED No.07 ／ 公式NYマシン","handle":"jawsashabo3298"},{"url":"https://x.com/corno2_mini4wd/status/1333029988510040064","photo":"https://pbs.twimg.com/media/En_ftU0VcAE-W0v.jpg","color":"yellow","memo":"#ReFEED No.08 ／ リフィコン準備","handle":"corno2_mini4wd"},{"url":"https://x.com/DashMini4wd/status/1441806102769799171","photo":"https://pbs.twimg.com/media/FAJTAPlVgAY5mpW.jpg","color":"blue","memo":"#ReFEED No.09 ／ レイスピアー ver.ReFEED","handle":"DashMini4wd"},{"url":"https://x.com/yamabata86/status/1488764415730401281","photo":"https://pbs.twimg.com/media/FKknSt1aMAEZuYs.jpg","color":"green","memo":"カスタム系 No.01","handle":"yamabata86"},{"url":"https://x.com/Hasuha_Nata/status/2089598928610288086","photo":"https://pbs.twimg.com/media/HP-_Jm7bIAAKyyR.jpg","color":"orange","memo":"カスタム系 No.02","handle":"Hasuha_Nata"},{"url":"https://x.com/taka_4_mini/status/2089705834091864455","photo":"https://pbs.twimg.com/media/HQAgVGNaIAAlH2R.jpg","color":"silver","memo":"カスタム系 No.03","handle":"taka_4_mini"},{"url":"https://x.com/Y_mini4_cube/status/2090466659039686658","photo":"https://pbs.twimg.com/media/HQLUWFbasAA2wqZ.jpg","color":"black","memo":"カスタム系 No.04","handle":"Y_mini4_cube"},{"url":"https://x.com/karasi_M4D/status/2088295641072230660","photo":"https://pbs.twimg.com/media/HPsd0JAaQAAk34b.jpg","color":"blue","memo":"カスタム系 No.05","handle":"karasi_M4D"},{"url":"https://x.com/kashmi_r/status/2090379827341889679","photo":"https://pbs.twimg.com/media/HQKFS9Na0AAE-nU.jpg","color":"blue","memo":"カスタム系 No.06","handle":"kashmi_r"},{"url":"https://x.com/4kura1/status/2087131048744497581","photo":"https://pbs.twimg.com/media/HPb5m5UaEAA6_i1.jpg","color":"white","memo":"まんが・エンタメ No.01","handle":"4kura1"},{"url":"https://x.com/madaomoshiroi/status/2089653782615621755","photo":"https://pbs.twimg.com/amplify_video_thumb/1912097005414793216/img/7e6i3Fc0tp7BhkqE.jpg","color":"blue","memo":"まんが・エンタメ No.02","handle":"madaomoshiroi"},{"url":"https://x.com/mini4_kurosuke/status/1556488835802238976","photo":"https://pbs.twimg.com/media/FZnCU6EaAAE3sZZ.jpg","color":"blue","memo":"#evilwire No.01 ／ 蛍光カミナリ ネオファルコン","handle":"mini4_kurosuke"},{"url":"https://x.com/KK_illustrate/status/1643614511763537921","photo":"https://pbs.twimg.com/media/Fs9KrekXgAAXq3f.jpg","color":"blue","memo":"#evilwire No.02 ／ Baron Viento Shaker","handle":"KK_illustrate"},{"url":"https://x.com/to_shinobu0315/status/1468560231311765507","photo":"https://pbs.twimg.com/media/FGFfvFeVcAAStnd.jpg","color":"white","memo":"#evilwire No.03 ／ ALTADE コラボ","handle":"to_shinobu0315"},{"url":"https://x.com/erupt_takechan/status/1814425689459978628","photo":"https://pbs.twimg.com/media/GS4ii2mbsAA8_iN.jpg","color":"black","memo":"#evilwire No.04 ／ ニューMAシン エアMAックス95","handle":"erupt_takechan"},{"url":"https://x.com/KK_illustrate/status/1708790407189217505","photo":"https://pbs.twimg.com/media/F7bXz4RbwAAHz9L.jpg","color":"black","memo":"#evilwire No.05 ／ K4 Tasche Wide","handle":"KK_illustrate"},{"url":"https://x.com/83Evo/status/1476198649818644483","photo":"https://pbs.twimg.com/media/FHyC140aQAA07XH.jpg","color":"yellow","memo":"#evilwire No.06 ／ 旧バンキッシュ迷彩風","handle":"83Evo"},{"url":"https://x.com/mini4wd_mediaPR/status/2090635005727002753","photo":"https://pbs.twimg.com/media/HP_DyNSa0AAhmmU.jpg","color":"gold","memo":"@mini4wd_mediaPR No.01 ／ スピンアックス","handle":"mini4wd_mediaPR"},{"url":"https://x.com/mini4wd_mediaPR/status/2090272617194229865","photo":"https://pbs.twimg.com/media/HP_DguZbAAEo_Qv.jpg","color":"gold","memo":"@mini4wd_mediaPR No.02 ／ ソニックセイバー","handle":"mini4wd_mediaPR"},{"url":"https://x.com/mini4wd_mediaPR/status/2089910227516661992","photo":"https://pbs.twimg.com/media/HP_DRygakAAvqox.jpg","color":"gold","memo":"@mini4wd_mediaPR No.03 ／ マグナムセイバー","handle":"mini4wd_mediaPR"},{"url":"https://x.com/mini4wd_mediaPR/status/2088807959241330895","photo":"https://pbs.twimg.com/media/HPluPVZakAEwr4X.jpg","color":"orange","memo":"@mini4wd_mediaPR No.04 ／ シェン・ホワァン誕生日","handle":"mini4wd_mediaPR"},{"url":"https://x.com/kazzflagway/status/2085505760558281157","photo":"https://pbs.twimg.com/media/HPE0b2haQAAShmh.jpg","color":"white","memo":"#コンデレ No.11 ／ Eternal shooting star（フリー部門）","handle":"kazzflagway"},{"url":"https://x.com/ymd3a1977/status/2086642705304887704","photo":"https://pbs.twimg.com/media/HPU-esKa0AIipTj.jpg","color":"red","memo":"#コンデレ No.12 ／ Good Morning Girl（フリー部門）","handle":"ymd3a1977"},{"url":"https://x.com/mini4_kurosuke/status/2091555383651491923","photo":"https://pbs.twimg.com/media/HQayhHhbsAAsZZ6.jpg","color":"silver","memo":"カスタム系 No.07 ／ ちは車 一部色変更","handle":"mini4_kurosuke"},{"url":"https://x.com/kazzflagway/status/2091481278386479376","photo":"https://pbs.twimg.com/media/HQZvIx8a0AAcdxS.jpg","color":"multi","memo":"カスタム系 No.08 ／ ダッシュ軍団","handle":"kazzflagway"},{"url":"https://x.com/yasm3249/status/2091357189751632184","photo":"https://pbs.twimg.com/media/HQX-QrfakAAdv_V.jpg","color":"black","memo":"カスタム系 No.09 ／ ゼッチョウチ VZ提灯AT","handle":"yasm3249"},{"url":"https://x.com/yasu_u40/status/2090783982791323898","photo":"https://pbs.twimg.com/media/HQP08s9aIAAkJyp.jpg","color":"blue","memo":"カスタム系 No.10 ／ SPIN COBRA デカール","handle":"yasu_u40"},{"url":"https://x.com/Hasuha_Nata/status/2086669617985163338","photo":"https://pbs.twimg.com/media/HPVW9Cqb0AAZHE4.jpg","color":"green","memo":"カスタム系 No.11 ／ 片軸VZ","handle":"Hasuha_Nata"},{"url":"https://x.com/tuta8/status/2086613538509033833","photo":"https://pbs.twimg.com/media/HPUj2KfbIAAKgZH.jpg","color":"yellow","memo":"カスタム系 No.12 ／ 前ペラー考察","handle":"tuta8"},{"url":"https://x.com/kojicoji3249/status/2091370003341943049","photo":"https://pbs.twimg.com/media/HQYJ7SrasAA3nrG.jpg","color":"silver","memo":"カスタム系 No.13 ／ チャレンジ作","handle":"kojicoji3249"},{"url":"https://x.com/necozame_tarou/status/2091298026560327972","photo":"https://pbs.twimg.com/media/HQXIbpyaIAAEEqV.jpg","color":"blue","memo":"カスタム系 No.14 ／ 自分の楽しみのためだけに作った作品","handle":"necozame_tarou"},{"url":"https://x.com/ryuryu_31_34/status/2091364948069040387","photo":"https://pbs.twimg.com/media/HQYFUmxbkAAuVY1.jpg","color":"red","memo":"カスタム系 No.15 ／ 父が作ったトライダガーX","handle":"ryuryu_31_34"},{"url":"https://x.com/H_63/status/2090933532935979514","photo":"https://pbs.twimg.com/amplify_video_thumb/2090933333463281664/img/RG28Nprase9KF2JP.jpg","color":"black","memo":"カスタム系 No.16 ／ ファンブルン","handle":"H_63"},{"url":"https://x.com/erupt_takechan/status/1949840815041220724","photo":"https://pbs.twimg.com/media/Gw854mFaIAACCv9.jpg","color":"black","memo":"#JC2025コンデレ1 No.01 ／ ネオVQSストッククラスver","handle":"erupt_takechan"},{"url":"https://x.com/yonkuyarou/status/1949843850815852687","photo":"https://pbs.twimg.com/media/Gw88nrPaQAAs4rp.jpg","color":"blue","memo":"#JC2025コンデレ1 No.02 ／ CLODBUSTER REVOLUTION","handle":"yonkuyarou"},{"url":"https://x.com/poultry_palace/status/1946952840901226761","photo":"https://pbs.twimg.com/media/GwT3SRGWQAApeiE.jpg","color":"red","memo":"#JC2025コンデレ1 No.03 ／ トレイルホーネット🐝","handle":"poultry_palace"},{"url":"https://x.com/DAI7TEN_DAICHI/status/1947974581651972261","photo":"https://pbs.twimg.com/media/GwiYjmcbgAAD_Nx.jpg","color":"blue","memo":"#JC2025コンデレ1 No.04 ／ BIGBANG GHOST TRUST SPECIAL","handle":"DAI7TEN_DAICHI"},{"url":"https://x.com/nobori1101/status/1947957121636815008","photo":"https://pbs.twimg.com/media/GwiIrPrbYAAIWba.jpg","color":"black","memo":"#JC2025コンデレ1 No.05 ／ メタルホッパー02","handle":"nobori1101"},{"url":"https://x.com/muka_dee/status/1957329988367286776","photo":"https://pbs.twimg.com/media/GynVPXvaUAArguD.jpg","color":"black","memo":"#JC2025コンデレ2 No.01 ／ D-Hopper","handle":"muka_dee"},{"url":"https://x.com/_ConCry/status/1957210043570655622","photo":"https://pbs.twimg.com/media/GyloJ8fa4AA-eYr.jpg","color":"silver","memo":"#JC2025コンデレ2 No.02 ／ 超大帝","handle":"_ConCry"},{"url":"https://x.com/yonkuyarou/status/1954039048680747276","photo":"https://pbs.twimg.com/media/Gx4kII3b0AAcViG.jpg","color":"multi","memo":"#JC2025コンデレ2 No.03 ／ WILLYS M38 Jr.","handle":"yonkuyarou"},{"url":"https://x.com/Saz0813/status/1957257877619703957","photo":"https://pbs.twimg.com/media/GymTqEOboAA1TdL.jpg","color":"blue","memo":"#JC2025コンデレ2 No.04 ／ モンスターミニヨンククラブ","handle":"Saz0813"},{"url":"https://x.com/DuN83221462/status/1956864741202362477","photo":"https://pbs.twimg.com/media/GyguGieasAA2vbV.jpg","color":"blue","memo":"#JC2025コンデレ2 No.05 ／ バーニングDuN","handle":"DuN83221462"},{"url":"https://x.com/nyagomini/status/1967495310856585237","photo":"https://pbs.twimg.com/media/G03yiekbcAAYDS_.jpg","color":"blue","memo":"#JC2025コンデレ3 No.01 ／ VマグナムとVソニックの完全融合！","handle":"nyagomini"},{"url":"https://x.com/mmarry31/status/1967200546546446614","photo":"https://pbs.twimg.com/media/G0zmc83bEAAsiwj.jpg","color":"silver","memo":"#JC2025コンデレ3 No.02 ／ 完全変形！バイスイントルーダー！","handle":"mmarry31"},{"url":"https://x.com/poultry_palace/status/1964818462225903639","photo":"https://pbs.twimg.com/media/G0Rv-XmaMAEmtSN.jpg","color":"red","memo":"#JC2025コンデレ3 No.03 ／ あの頃のHOTSHOT Jr.","handle":"poultry_palace"},{"url":"https://x.com/mamennma/status/1966850730880639200","photo":"https://pbs.twimg.com/media/G0un84obcAQjz-I.jpg","color":"silver","memo":"#JC2025コンデレ3 No.04 ／ トライダガーXまめSP","handle":"mamennma"},{"url":"https://x.com/kojikoji_m4wd/status/1966083851094278262","photo":"https://pbs.twimg.com/media/G0ju11WbkAAK7Pp.jpg","color":"red","memo":"#JC2025コンデレ3 No.05 ／ CRIMSON GALE","handle":"kojikoji_m4wd"},{"url":"https://x.com/himoQ1/status/1975857252050645318","photo":"https://pbs.twimg.com/media/G2unru8aUAIR5dH.jpg","color":"red","memo":"#JC2025コンデレ4 No.01 ／ ネオトライダガーZMC -Keep on Running!-","handle":"himoQ1"},{"url":"https://x.com/mmarry31/status/1977697863028163007","photo":"https://pbs.twimg.com/media/G3IxsmkbsAAuyxs.jpg","color":"blue","memo":"#JC2025コンデレ4 No.02 ／ Gマグナムタイプゼロ","handle":"mmarry31"},{"url":"https://x.com/11311k_mini4wd/status/1976996522509451657","photo":"https://pbs.twimg.com/media/G2-z2UrakAAwcdz.jpg","color":"red","memo":"#JC2025コンデレ4 No.03 ／ MagnumFerrari2025","handle":"11311k_mini4wd"},{"url":"https://x.com/akf0ver2022/status/1977746916814340402","photo":"https://pbs.twimg.com/media/G3JeVM3a8AE-Ith.jpg","color":"silver","memo":"#JC2025コンデレ4 No.04 ／ 装甲Vマグナム＆Vソニック","handle":"akf0ver2022"},{"url":"https://x.com/ymd3a1977/status/1812972437015044413","photo":"https://pbs.twimg.com/media/GSj40j8bUAAnzId.jpg","color":"yellow","memo":"#JC2024コンデレ1 No.01 ／ HEROES","handle":"ymd3a1977"},{"url":"https://x.com/yonkuyarou/status/1811415697786011880","photo":"https://pbs.twimg.com/media/GSNw9_OaUAA1nKm.jpg","color":"orange","memo":"#JC2024コンデレ1 No.02 ／ BLAZING SHUTTLE Jr.","handle":"yonkuyarou"},{"url":"https://x.com/sanosuka15/status/1811915840541073725","photo":"https://pbs.twimg.com/media/GSU310nXUAAmywq.jpg","color":"black","memo":"#JC2024コンデレ1 No.03 ／ ブラック・ブーメラン","handle":"sanosuka15"},{"url":"https://x.com/DAI7TEN_DAICHI/status/1813576060728140267","photo":"https://pbs.twimg.com/media/GSsdzzSaAAADahq.jpg","color":"silver","memo":"#JC2024コンデレ1 No.04 ／ SUPER EGRESS","handle":"DAI7TEN_DAICHI"},{"url":"https://x.com/DAI7TEN_DAICHI/status/1825156890046984686","photo":"https://pbs.twimg.com/media/GVRChDmakAAnH7Z.jpg","color":"blue","memo":"#JC2024コンデレ2 No.01 ／ CROSS CYGNUS","handle":"DAI7TEN_DAICHI"},{"url":"https://x.com/mine4wd/status/1823338386884870641","photo":"https://pbs.twimg.com/media/GU3MmJ_aAAAmypn.jpg","color":"blue","memo":"#JC2024コンデレ2 No.02 ／ エルブランシュ","handle":"mine4wd"},{"url":"https://x.com/ymd3a1977/status/1822445524764750192","photo":"https://pbs.twimg.com/media/GUqgitCbcAAOjkZ.jpg","color":"multi","memo":"#JC2024コンデレ2 No.03 ／ Rebel Rebel","handle":"ymd3a1977"},{"url":"https://x.com/DuN83221462/status/1821881019047481682","photo":"https://pbs.twimg.com/media/GUifIIKa8AADxoX.jpg","color":"blue","memo":"#JC2024コンデレ2 No.04 ／ ビッグDuNゴースト","handle":"DuN83221462"},{"url":"https://x.com/isono_130/status/1838205218611405254","photo":"https://pbs.twimg.com/media/GYKd5qAa0AAr1OA.jpg","color":"red","memo":"#JC2024コンデレ3 No.01 ／ DIOSPADA GT","handle":"isono_130"},{"url":"https://x.com/poultry_palace/status/1835900151925272882","photo":"https://pbs.twimg.com/media/GXptdE1acAEqRfQ.jpg","color":"blue","memo":"#JC2024コンデレ3 No.02 ／ The BIGWIG Jr.","handle":"poultry_palace"},{"url":"https://x.com/muuro166/status/1836796888005378131","photo":"https://pbs.twimg.com/media/GX2dBcobAAAthnv.jpg","color":"silver","memo":"#JC2024コンデレ3 No.03 ／ 自由煌帝","handle":"muuro166"},{"url":"https://x.com/mine4wd/status/1834746150362243503","photo":"https://pbs.twimg.com/media/GXZT5HYbwAMBwUj.jpg","color":"red","memo":"#JC2024コンデレ3 No.04 ／ エクストラ バーニング サン","handle":"mine4wd"},{"url":"https://x.com/DAI7TEN_DAICHI/status/1838212881722274071","photo":"https://pbs.twimg.com/media/GYKk3uqa8AEEJf2.jpg","color":"yellow","memo":"#JC2024コンデレ3 No.05 ／ JAUNE NE:10","handle":"DAI7TEN_DAICHI"},{"url":"https://x.com/monkshiryu/status/1845832835254587525","photo":"https://pbs.twimg.com/media/GZ23Ll-asAA3siC.jpg","color":"blue","memo":"#JC2024コンデレ4 No.01 ／ アバンテJr. -蒼- next stage","handle":"monkshiryu"},{"url":"https://x.com/poultry_palace/status/1843143688941363352","photo":"https://pbs.twimg.com/media/GZQpabrakAEmN-M.jpg","color":"yellow","memo":"#JC2024コンデレ4 No.02 ／ ゼンキッシュism","handle":"poultry_palace"},{"url":"https://x.com/sanosuka15/status/1845382391604641937","photo":"https://pbs.twimg.com/media/GZwdfx-aAAAjUEu.jpg","color":"black","memo":"#JC2024コンデレ4 No.03 ／ ゴールドブーメラン JC攻略 俺スペシャル","handle":"sanosuka15"},{"url":"https://x.com/nyagomini/status/1845107591825002983","photo":"https://pbs.twimg.com/media/GZsjkveaAAYKM60.jpg","color":"silver","memo":"#JC2024コンデレ4 No.04 ／ ウイングセイバー","handle":"nyagomini"},{"url":"https://x.com/DAI7TEN_DAICHI/status/1845711653805146450","photo":"https://pbs.twimg.com/media/GZ1I9wibcAAA3p2.jpg","color":"blue","memo":"#JC2024コンデレ4 No.05 ／ AVANTE Re:boot","handle":"DAI7TEN_DAICHI"},{"url":"https://x.com/poultry_palace/status/1846169745491681606","photo":"https://pbs.twimg.com/media/GZ7pmBKb0AUT_nq.jpg","color":"white","memo":"#JC2024コンデレ5 No.01 ／ スーパーバトルレーサー","handle":"poultry_palace"},{"url":"https://x.com/NSB50V/status/1850547108744679785","photo":"https://pbs.twimg.com/media/Ga52xN2bIAEV5-q.jpg","color":"yellow","memo":"#JC2024コンデレ5 No.02 ／ 某学校イベントにウチの会社のミニ四駆部が協力出展✌️","handle":"NSB50V"},{"url":"https://x.com/CalvinTmd/status/1854701230817497222","photo":"https://pbs.twimg.com/media/Gb047HjbwAEaPvF.jpg","color":"black","memo":"#JC2024コンデレ5 No.03 ／ 私の車はほぼ完成しました。古いスタイルのレーシングカーを作ることにし…","handle":"CalvinTmd"},{"url":"https://x.com/DuN83221462/status/1674794933629362177","photo":"https://pbs.twimg.com/media/Fz4RHJ6aYAI8vRx.jpg","color":"green","memo":"#JC2023コンデレ1 No.01 ／ トライDuNガーＸ","handle":"DuN83221462"},{"url":"https://x.com/_ConCry/status/1674794996229357569","photo":"https://pbs.twimg.com/media/Fz4RISQaYAEek8s.jpg","color":"blue","memo":"#JC2023コンデレ1 No.02 ／ スピンアックス-エア-","handle":"_ConCry"},{"url":"https://x.com/monokuro_ubon/status/1680875196293713923","photo":"https://pbs.twimg.com/media/F1OrE3caMAEgq_W.jpg","color":"red","memo":"#JC2023コンデレ1 No.03 ／ ギャンボースターター","handle":"monokuro_ubon"},{"url":"https://x.com/mine4wd/status/1680218230013689856","photo":"https://pbs.twimg.com/media/F1FVjLVacAEwY7v.jpg","color":"black","memo":"#JC2023コンデレ1 No.04 ／ BlackSaber BANDIT","handle":"mine4wd"},{"url":"https://x.com/oktoy6/status/1692612018707239098","photo":"https://pbs.twimg.com/media/F31ci_masAAnLQZ.jpg","color":"blue","memo":"#JC2023コンデレ2 No.01 ／ サイクロンマグナムP34","handle":"oktoy6"},{"url":"https://x.com/mine4wd/status/1683408611203239936","photo":"https://pbs.twimg.com/media/F1yrL24akAEjaCx.jpg","color":"blue","memo":"#JC2023コンデレ2 No.02 ／ HAYABUSA","handle":"mine4wd"},{"url":"https://x.com/hideyuki_50/status/1691026930223685632","photo":"https://pbs.twimg.com/media/F3e8BYDagAAUtqP.jpg","color":"yellow","memo":"#JC2023コンデレ2 No.03 ／ スーパーアバンテRS","handle":"hideyuki_50"},{"url":"https://x.com/tkfm_hobby/status/1692504771259695149","photo":"https://pbs.twimg.com/media/F3z8HgHbsAEUnYh.jpg","color":"silver","memo":"#JC2023コンデレ2 No.04 ／ ブロッケンG-repaint","handle":"tkfm_hobby"},{"url":"https://x.com/mine4wd/status/1696061685633892532","photo":"https://pbs.twimg.com/media/F4mfFxNbgAA3R7a.jpg","color":"multi","memo":"#JC2023コンデレ3 No.01 ／ Kaiser Tribute","handle":"mine4wd"},{"url":"https://x.com/mini4_kurosuke/status/1696164751045230606","photo":"https://pbs.twimg.com/media/F4n81BSXkAAMCpp.jpg","color":"yellow","memo":"#JC2023コンデレ3 No.02 ／ FM Hurricane Sonic 2023","handle":"mini4_kurosuke"},{"url":"https://x.com/MANGA7TARO/status/1696133856167100434","photo":"https://pbs.twimg.com/media/F4ngv1La8AAS4ZY.jpg","color":"yellow","memo":"#JC2023コンデレ3 No.03 ／ ASTRO BOOMERANG 1996","handle":"MANGA7TARO"},{"url":"https://x.com/Masato_m4wd/status/1697359167655161944","photo":"https://pbs.twimg.com/media/F447KkcbcAALr5u.jpg","color":"red","memo":"#JC2023コンデレ3 No.04 ／ シェヴァリアGT","handle":"Masato_m4wd"},{"url":"https://x.com/aoba_rc/status/1714520075070558709","photo":"https://pbs.twimg.com/media/F8sy0CrawAAESPr.jpg","color":"multi","memo":"#JC2023コンデレ4 No.01 ／ ゴキ◯リ君","handle":"aoba_rc"},{"url":"https://x.com/mine4wd/status/1715303972175856120","photo":"https://pbs.twimg.com/media/F8373D5aUAAuIYY.jpg","color":"blue","memo":"#JC2023コンデレ4 No.02 ／ BSフリーダムナイツ","handle":"mine4wd"},{"url":"https://x.com/nobori1101/status/1716100958848213438","photo":"https://pbs.twimg.com/media/F9DQuGEb0AAq_VN.jpg","color":"yellow","memo":"#JC2023コンデレ4 No.03 ／ アビリスタ","handle":"nobori1101"},{"url":"https://x.com/KitchenMini4ker/status/1716105620854829249","photo":"https://pbs.twimg.com/media/F9DU9NPaQAATB9_.jpg","color":"silver","memo":"#JC2023コンデレ4 No.04 ／ Spirit of Wonder","handle":"KitchenMini4ker"},{"url":"https://x.com/naniirorenj/status/1539454607906074624","photo":"https://pbs.twimg.com/media/FV09xF2UAAA8lOH.jpg","color":"yellow","memo":"#JC2022コンデレ1 No.01 ／ ビートマグナム LAL","handle":"naniirorenj"},{"url":"https://x.com/tkmt3249/status/1549012993589284864","photo":"https://pbs.twimg.com/media/FX8zErHaUAARt3M.jpg","color":"silver","memo":"#JC2022コンデレ1 No.02 ／ スピリットイントルーダー","handle":"tkmt3249"},{"url":"https://x.com/tkfm_hobby/status/1546449155102765056","photo":"https://pbs.twimg.com/media/FXYV3A0aIAAprQu.jpg","color":"silver","memo":"#JC2022コンデレ1 No.03 ／ ゴッドバーニングサン_repaint","handle":"tkfm_hobby"},{"url":"https://x.com/jinfujixx11/status/1549015948606476290","photo":"https://pbs.twimg.com/media/FX81y1OakAA__A8.jpg","color":"multi","memo":"#JC2022コンデレ1 No.04 ／ ホライゾン ボックスアート風","handle":"jinfujixx11"},{"url":"https://x.com/KK_illustrate/status/1539591469761437697","photo":"https://pbs.twimg.com/media/FV26P0AaIAETRbK.jpg","color":"green","memo":"#JC2022コンデレ1 No.05 ／ K4 Gambol Wide","handle":"KK_illustrate"},{"url":"https://x.com/raven_mini4wd/status/1551494685222248449","photo":"https://pbs.twimg.com/media/FYgEMIgUYAAGcIW.jpg","color":"black","memo":"#JC2022コンデレ2 No.01 ／ THE END","handle":"raven_mini4wd"},{"url":"https://x.com/mzr_4wd/status/1557887487238111233","photo":"https://pbs.twimg.com/media/FZ66aQAaIAA5E2_.jpg","color":"black","memo":"#JC2022コンデレ2 No.02 ／ 重量感とゴツさを意識したFM-Aジャドーエースオフロード仕様です。","handle":"mzr_4wd"},{"url":"https://x.com/kazzflagway/status/1558981276823998466","photo":"https://pbs.twimg.com/media/FaKdMfjaMAAQsae.jpg","color":"silver","memo":"#JC2022コンデレ2 No.03 ／ 少年時代の君へ","handle":"kazzflagway"},{"url":"https://x.com/earth_tubuyaki/status/1559891281584979968","photo":"https://pbs.twimg.com/media/FaXY2b8agAAU1dv.jpg","color":"silver","memo":"#JC2022コンデレ2 No.04 ／ ミニ四駆販売中","handle":"earth_tubuyaki"},{"url":"https://x.com/ymd3a1977/status/1568769758144905217","photo":"https://pbs.twimg.com/media/FcVjxuoaUAABJHC.jpg","color":"silver","memo":"#JC2022コンデレ3 No.01 ／ Be-1 CLUBMAN RACER","handle":"ymd3a1977"},{"url":"https://x.com/mac_m4d/status/1568571966629769218","photo":"https://pbs.twimg.com/media/FcSv4xQacAA0llr.jpg","color":"red","memo":"#JC2022コンデレ3 No.02 ／ アンタレス","handle":"mac_m4d"},{"url":"https://x.com/DAI7TEN_DAICHI/status/1571811382580084740","photo":"https://pbs.twimg.com/media/FdAyHCRaUAEK-vE.jpg","color":"blue","memo":"#JC2022コンデレ3 No.03 ／ GTS40","handle":"DAI7TEN_DAICHI"},{"url":"https://x.com/amakawa19/status/1569344753808084998","photo":"https://pbs.twimg.com/media/Fcduu-JaMAAXM68.jpg","color":"yellow","memo":"#JC2022コンデレ3 No.04 ／ 注意書はなくさないように保管してください。","handle":"amakawa19"},{"url":"https://x.com/FamilyArt86/status/1568463759655706625","photo":"https://pbs.twimg.com/media/FcRNdEyacAAPvpd.jpg","color":"silver","memo":"#JC2022コンデレ3 No.05 ／ MA-R","handle":"FamilyArt86"},{"url":"https://x.com/ymd3a1977/status/1582489967728545792","photo":"https://pbs.twimg.com/media/FfYiPJyVsAIi-9c.jpg","color":"blue","memo":"#JC2022コンデレ4 No.01 ／ Raindrops Keep Fallin’ On My Head","handle":"ymd3a1977"},{"url":"https://x.com/Tbreak_Racing/status/1584137101557534721","photo":"https://pbs.twimg.com/media/Ffv8SV4agAAPYpG.jpg","color":"multi","memo":"#JC2022コンデレ4 No.02 ／ TOP FORCE EVO. C.L.A.P custom","handle":"Tbreak_Racing"},{"url":"https://x.com/NAO_teamRAIKIRI/status/1583364722279460865","photo":"https://pbs.twimg.com/media/Ffk90ZRaAAAboYU.jpg","color":"blue","memo":"#JC2022コンデレ4 No.03 ／ ロードナイト・トラジェクトリア","handle":"NAO_teamRAIKIRI"},{"url":"https://x.com/FamilyArt86/status/1580456260817760256","photo":"https://pbs.twimg.com/media/Fe7okM-UoAEa-sC.jpg","color":"silver","memo":"#JC2022コンデレ4 No.04 ／ 金ハブ","handle":"FamilyArt86"},{"url":"https://x.com/nakaochi_324wd/status/1584138312830177280","photo":"https://pbs.twimg.com/media/FfvPY3QakAEfvQ9.jpg","color":"multi","memo":"#JC2022コンデレ4 No.05 ／ エンペラーHYPERピットアタッシュ","handle":"nakaochi_324wd"}], ZONES=[{"key":"red","label":"レッド","swatch":"#e5342c"},{"key":"orange","label":"オレンジ","swatch":"#f07a1a"},{"key":"yellow","label":"イエロー","swatch":"#f5c518"},{"key":"green","label":"グリーン","swatch":"#2fae5a"},{"key":"blue","label":"ブルー","swatch":"#2277dd"},{"key":"purple","label":"パープル","swatch":"#8b5cf6"},{"key":"pink","label":"ピンク","swatch":"#ef5da8"},{"key":"gold","label":"ゴールド","swatch":"#c9a227"},{"key":"silver","label":"シルバー","swatch":"#aab2bd"},{"key":"white","label":"ホワイト","swatch":"#f2f4f7"},{"key":"black","label":"ブラック","swatch":"#2b2f36"},{"key":"multi","label":"カラフル","swatch":"#7d5fff"}];
+const OUTER=["red", "orange", "yellow", "gold", "green", "blue", "purple", "pink"], INNER=["white", "silver", "black"], CENTER="multi";
+
+const CX=280, CY=280, R_OUT=222, R_MID=148, R_IN=84;
+const PHOTO_R=15;       // 散らす写真の半径
+const EMPTY_SHARE=1/3;  // 1台も無いゾーンの幅（通常の何倍か）
+const LABEL_R=246;      // 外側の輪のラベルは輪の外に出す
+const NS='http://www.w3.org/2000/svg';
+const svg=document.getElementById('wheel');
+let cur=null;
+
+const byZone={};
+for(const z of ZONES) byZone[z.key]=[];
+for(const it of DATA)(byZone[it.color]=byZone[it.color]||[]).push(it);
+const zmap=Object.fromEntries(ZONES.map(z=>[z.key,z]));
+
+function pol(cx,cy,r,deg){const a=(deg-90)*Math.PI/180;return[cx+r*Math.cos(a),cy+r*Math.sin(a)];}
+function ring(cx,cy,r1,r2,a1,a2){
+  const [x1,y1]=pol(cx,cy,r2,a1),[x2,y2]=pol(cx,cy,r2,a2);
+  const [x3,y3]=pol(cx,cy,r1,a2),[x4,y4]=pol(cx,cy,r1,a1);
+  const big=(a2-a1)>180?1:0;
+  return 'M'+x1+' '+y1+'A'+r2+' '+r2+' 0 '+big+' 1 '+x2+' '+y2+
+         'L'+x3+' '+y3+'A'+r1+' '+r1+' 0 '+big+' 0 '+x4+' '+y4+'Z';
+}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));
+  [a[i],a[j]]=[a[j],a[i]];}return a;}
+
+// 扇の中に、はみ出さず重ならないように写真を散らす。
+// 内側ほど1度あたりの弧が短いので、角度の余白は半径から計算する。
+function scatter(a1,a2,r1,r2,n,keepOut){
+  const pts=[], pad=PHOTO_R+3, lo=r1+pad, hi=r2-pad;
+  if(hi<=lo) return pts;
+  for(let t=0;t<500&&pts.length<n;t++){
+    const rr=lo+Math.random()*(hi-lo);
+    const margin=Math.asin(Math.min(1,pad/rr))*180/Math.PI;
+    const aLo=a1+margin, aHi=a2-margin;
+    if(aHi<=aLo) continue;
+    const ang=aLo+Math.random()*(aHi-aLo);
+    const [x,y]=pol(CX,CY,rr,ang);
+    if(keepOut&&(x-keepOut[0])**2+(y-keepOut[1])**2<keepOut[2]**2) continue;
+    if(pts.every(p=>(p[0]-x)**2+(p[1]-y)**2>(PHOTO_R*2+3)**2)) pts.push([x,y]);
+  }
+  return pts;
+}
+
+function photoAt(el,defs,it,x,y,key,idx){
+  const r=PHOTO_R, cid='c'+key+idx+Math.floor(Math.random()*1e6);
+  const cp=document.createElementNS(NS,'clipPath'); cp.id=cid;
+  const cc=document.createElementNS(NS,'circle');
+  cc.setAttribute('cx',x); cc.setAttribute('cy',y); cc.setAttribute('r',r);
+  cp.appendChild(cc); defs.appendChild(cp);
+  const gi=document.createElementNS(NS,'g'); gi.setAttribute('class','chipimg');
+  const im=document.createElementNS(NS,'image');
+  im.setAttribute('href',it.photo);
+  im.setAttribute('x',x-r); im.setAttribute('y',y-r);
+  im.setAttribute('width',r*2); im.setAttribute('height',r*2);
+  im.setAttribute('preserveAspectRatio','xMidYMid slice');
+  im.setAttribute('clip-path','url(#'+cid+')');
+  const rg=document.createElementNS(NS,'circle');
+  rg.setAttribute('cx',x); rg.setAttribute('cy',y); rg.setAttribute('r',r);
+  gi.appendChild(im); gi.appendChild(rg); el.appendChild(gi);
+}
+
+// 扇の上に文字を載せるときは、下地の明るさで白文字か黒文字かを決める。
+// ホワイトの扇に白文字だと読めないため。
+function isLight(hex){
+  const m=/^#?([0-9a-f]{6})$/i.exec(hex||'');
+  if(!m) return false;
+  const n=parseInt(m[1],16);
+  const r=(n>>16)&255, g=(n>>8)&255, b=n&255;
+  return (0.299*r+0.587*g+0.114*b) > 150;
+}
+
+function label(el,x,y,text,count,inner,light){
+  const suffix = inner ? (light ? ' inr lt' : ' inr') : '';
+  const t=document.createElementNS(NS,'text');
+  t.setAttribute('class','zlabel'+suffix);
+  t.setAttribute('x',x); t.setAttribute('y',y);
+  t.setAttribute('text-anchor','middle'); t.textContent=text;
+  el.appendChild(t);
+  const t2=document.createElementNS(NS,'text');
+  t2.setAttribute('class','zcount'+suffix);
+  t2.setAttribute('x',x); t2.setAttribute('y',y+15);
+  t2.setAttribute('text-anchor','middle'); t2.textContent=count;
+  el.appendChild(t2);
+}
+
+function build(){
+  svg.textContent='';
+  const defs=document.createElementNS(NS,'defs');
+  svg.appendChild(defs);
+
+  // 1台も無いゾーンは幅を 1/3 にする。消さないのは、
+  // あとから手で色を付けたときに元の幅へ戻るようにするため。
+  function layout(keys,r1,r2,offset){
+    const wsum=keys.reduce((s,k)=>s+((byZone[k]||[]).length?1:EMPTY_SHARE),0);
+    let a=offset;
+    return keys.map(key=>{
+      const wgt=((byZone[key]||[]).length?1:EMPTY_SHARE)/wsum*360;
+      const g={key,a1:a,a2:a+wgt,r1,r2}; a+=wgt; return g;
+    });
+  }
+
+  for(const g of [...layout(OUTER,R_MID,R_OUT,0),...layout(INNER,R_IN,R_MID-6,18)]){
+    const z=zmap[g.key], list=byZone[g.key]||[];
+    const el=document.createElementNS(NS,'g');
+    el.setAttribute('class','g'+(list.length?'':' empty'));
+    el.dataset.zone=g.key;
+    el.setAttribute('role','button');
+    el.setAttribute('tabindex', list.length?'0':'-1');
+    el.setAttribute('aria-label',z.label+' '+list.length+'台');
+
+    const p=document.createElementNS(NS,'path');
+    p.setAttribute('class','sect');
+    p.setAttribute('d',ring(CX,CY,g.r1,g.r2,g.a1,g.a2));
+    p.setAttribute('fill',z.swatch);
+    p.setAttribute('stroke','#fff'); p.setAttribute('stroke-width','2');
+    el.appendChild(p);
+
+    const outer=g.r2>R_MID, mid=(g.a1+g.a2)/2;
+    const [lx,ly]=outer?pol(CX,CY,LABEL_R,mid):pol(CX,CY,R_IN+22,mid);
+    const keepOut=outer?null:[lx,ly,46];
+    const pool=shuffle(list.slice()).slice(0,outer?5:3);
+    const pts=scatter(g.a1,g.a2,g.r1,g.r2,pool.length,keepOut);
+    pool.forEach((it,i)=>{ if(pts[i]) photoAt(el,defs,it,pts[i][0],pts[i][1],g.key,i); });
+    label(el,lx,ly,z.label,list.length,!outer,isLight(z.swatch));
+
+    el.addEventListener('click',()=>select(g.key));
+    el.addEventListener('keydown',e=>{
+      if(e.key==='Enter'||e.key===' '){ select(g.key); e.preventDefault(); }
+    });
+    svg.appendChild(el);
+  }
+
+  // 中心＝カラフル。SVGに円錐グラデーションは無いので細い扇を並べる。
+  const z=zmap[CENTER], list=byZone[CENTER]||[];
+  const el=document.createElementNS(NS,'g');
+  el.setAttribute('class','g'+(list.length?'':' empty'));
+  el.dataset.zone=CENTER;
+  el.setAttribute('role','button');
+  el.setAttribute('tabindex', list.length?'0':'-1');
+  el.setAttribute('aria-label',z.label+' '+list.length+'台');
+  const RC=R_IN-6, hues=['#e5342c','#f07a1a','#f5c518','#2fae5a','#2277dd','#8b5cf6','#ef5da8'];
+  for(let i=0;i<24;i++){
+    const w=document.createElementNS(NS,'path');
+    w.setAttribute('class','sect');
+    w.setAttribute('d',ring(CX,CY,0,RC,i*15,(i+1)*15+0.6));
+    w.setAttribute('fill',hues[i%hues.length]);
+    el.appendChild(w);
+  }
+  const rim=document.createElementNS(NS,'circle');
+  rim.setAttribute('cx',CX); rim.setAttribute('cy',CY); rim.setAttribute('r',RC);
+  rim.setAttribute('fill','none'); rim.setAttribute('stroke','#fff');
+  rim.setAttribute('stroke-width','2'); el.appendChild(rim);
+  const pts=scatter(0,360,26,RC,3,[CX,CY,26]);
+  shuffle(list.slice()).slice(0,3).forEach((it,i)=>{
+    if(pts[i]) photoAt(el,defs,it,pts[i][0],pts[i][1],'mc',i);
+  });
+  const pill=document.createElementNS(NS,'circle');
+  pill.setAttribute('cx',CX); pill.setAttribute('cy',CY); pill.setAttribute('r',30);
+  pill.setAttribute('fill','rgba(20,26,36,.74)'); pill.setAttribute('class','chipimg');
+  el.appendChild(pill);
+  label(el,CX,CY+2,z.label,list.length,true,false);
+  el.addEventListener('click',()=>select(CENTER));
+  el.addEventListener('keydown',e=>{
+    if(e.key==='Enter'||e.key===' '){ select(CENTER); e.preventDefault(); }
+  });
+  svg.appendChild(el);
+
+  mark();
+}
+
+function mark(){
+  for(const g of svg.querySelectorAll('.g')){
+    const on=g.dataset.zone===cur;
+    g.classList.toggle('on',on);
+    g.classList.toggle('dim',!!cur&&!on&&!g.classList.contains('empty'));
+    g.setAttribute('aria-pressed',on?'true':'false');
+  }
+}
+
+function select(key){
+  cur=(cur===key)?null:key;
+  mark(); render();
+  // 選んだ結果がすぐ目に入るようにする
+  if(cur) document.getElementById('result').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function esc(s){ return String(s||'').replace(/[&<>"']/g,
+  c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#x27;'}[c])); }
+
+function render(){
+  const list=cur?(byZone[cur]||[]):DATA;
+  const z=cur?zmap[cur]:null;
+  document.getElementById('title').textContent=z?z.label+' のマシン':'すべてのマシン';
+  document.getElementById('num').textContent=list.length+' 台';
+  document.getElementById('grid').innerHTML=list.map(it=>{
+    const zz=zmap[it.color]||{label:it.color,swatch:'#888'};
+    return '<a class="card" href="'+esc(it.url)+'" target="_blank" rel="noopener">'+
+      '<img src="'+esc(it.photo)+'" alt="" loading="lazy" referrerpolicy="no-referrer">'+
+      '<div class="m"><span class="badge" style="--c:'+zz.swatch+'"><i></i>'+esc(zz.label)+'</span>'+
+      '<span class="t">'+esc(it.memo)+'</span>'+
+      '<span class="u">@'+esc(it.handle)+'</span></div></a>';
+  }).join('');
+}
+
+document.getElementById('reshuffle').addEventListener('click',build);
+build(); render();
+</script>
+</body>
+</html>

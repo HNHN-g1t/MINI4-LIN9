@@ -19,6 +19,7 @@ import sys
 import urllib.parse
 from datetime import datetime, timedelta, timezone
 
+import color_wheel_ui
 import colormap_ui
 import paint_colors
 import x_embed_ui
@@ -321,7 +322,7 @@ clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .nojs p{color:var(--ink2);font-size:12.5px;margin-bottom:10px}
 .nojs ul{list-style:none;display:grid;gap:2px}
 .nojs a{color:var(--brand);font-size:12.5px}
-""" + colormap_ui.CSS + x_embed_ui.CSS
+""" + colormap_ui.CSS + color_wheel_ui.FAB_CSS + x_embed_ui.CSS
 
 JS = """
 const q = document.getElementById('q');
@@ -689,6 +690,7 @@ def write_seo(outdir: str) -> None:
         # (URL, 最終更新日, 更新のめやす, 優先度)
         (f"{SITE_URL}/", today, "weekly", "1.0"),
         (f"{SITE_URL}/race.html", race_lastmod(outdir), "weekly", "0.8"),
+        (f"{SITE_URL}/{color_wheel_ui.PAGE}", today, "weekly", "0.7"),
     ]
     body = "".join(
         f"  <url>\n"
@@ -795,6 +797,8 @@ def build(items: list[dict], outdir: str) -> str:
 
     paint_rows = paint_colors.build([i for i in items if i.get("genre_key") == "paint"])
     cmap_html = colormap_ui.section(paint_rows) if paint_rows else ""
+    # マシンカラーのページがあるときだけ、X Machines 用の丸ボタンを出す
+    wheel_fab = color_wheel_ui.FAB_HTML if color_wheel_ui.load()[1] else ""
 
     doc = f"""<!DOCTYPE html>
 <html lang="ja">
@@ -851,6 +855,7 @@ def build(items: list[dict], outdir: str) -> str:
   <div class="empty" id="empty">該当する商品が見つかりません</div>
   <div class="cmap-tip" id="cmapTip" role="status"></div>
 </main>
+{wheel_fab}
 <footer>
   ミニ四リン駆（プロトタイプ） ・ 品番・名称・価格・写真はタミヤ公式サイトの情報（出典: tamiya.com）<br>
   商品写真は公式サイトから直接参照しています。ECリンクは各モールの検索結果を開きます。
@@ -873,6 +878,7 @@ def build(items: list[dict], outdir: str) -> str:
     os.makedirs(outdir, exist_ok=True)
     copy_assets(outdir)
     write_extras(outdir)
+    color_wheel_ui.write(outdir, SITE_URL, SITE_NAME)
     path = os.path.join(outdir, "index.html")
     with open(path, "w", encoding="utf-8") as f:
         f.write(doc)
