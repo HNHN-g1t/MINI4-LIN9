@@ -333,18 +333,19 @@ def main(argv: list) -> int:
         pid, url = post["id"], post["url"]
         tid = url.rsplit("/", 1)[-1]
 
+        d = tweet_data(tid)      # 1度取ったら cache から読むだけ
+        if d.get("_error"):
+            missing.append((pid, url, d["_error"]))
+            continue
+        urls = photos_of(d)
         prev = old.get(pid)
         if recolor and prev and prev.get("files"):
             paths = [os.path.join(CACHE_IMG, f) for f in prev["files"]]
         else:
-            d = tweet_data(tid)
-            if d.get("_error"):
-                missing.append((pid, url, d["_error"]))
-                continue
-            paths = [p for p in (image_path(u) for u in photos_of(d)) if p]
-            if not paths:
-                missing.append((pid, url, "写真なし"))
-                continue
+            paths = [p for p in (image_path(u) for u in urls) if p]
+        if not paths:
+            missing.append((pid, url, "写真なし"))
+            continue
 
         share, kept = analyze(paths)
         zone, ratio = pick(share)
@@ -364,6 +365,8 @@ def main(argv: list) -> int:
             "share": {k: round(v, 3) for k, v in sorted(
                 share.items(), key=lambda kv: -kv[1])[:5]},
             "files": [os.path.basename(p) for p in paths],
+            "photo": urls[0] if urls else "",
+            "handle": (d.get("user") or {}).get("screen_name", ""),
             "memo": post.get("memo", ""),
         })
         if i % 20 == 0:
