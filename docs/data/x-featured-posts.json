@@ -27,7 +27,10 @@
     "#JC2022コンデレ1",
     "#JC2022コンデレ2",
     "#JC2022コンデレ3",
-    "#JC2022コンデレ4"
+    "#JC2022コンデレ4",
+    "#JC2021コンデレ1",
+    "#JC2021コンデレ3",
+    "#JC2021コンデレ2"
   ],
   "displaySettings": {
     "maxPosts": 2,
@@ -1593,6 +1596,123 @@
       "active": true,
       "addedAt": "2026-08-26",
       "memo": "#JC2022コンデレ4 No.05 ／ エンペラーHYPERピットアタッシュ"
+    },
+    {
+      "id": "x-162",
+      "url": "https://x.com/archlabo_/status/1426527654870614021",
+      "hashtags": [
+        "#JC2021コンデレ1"
+      ],
+      "active": true,
+      "addedAt": "2026-08-27",
+      "memo": "#JC2021コンデレ1 No.01 ／ SENNA FOREVER HOT SHOT Jr."
+    },
+    {
+      "id": "x-163",
+      "url": "https://x.com/jinfujixx11/status/1426691740774199296",
+      "hashtags": [
+        "#JC2021コンデレ1"
+      ],
+      "active": true,
+      "addedAt": "2026-08-27",
+      "memo": "#JC2021コンデレ1 No.02 ／ ダッシュ0号 ホライゾン BOXアート風"
+    },
+    {
+      "id": "x-164",
+      "url": "https://x.com/KitchenMini4ker/status/1439967756871290880",
+      "hashtags": [
+        "#JC2021コンデレ3"
+      ],
+      "active": true,
+      "addedAt": "2026-08-27",
+      "memo": "#JC2021コンデレ3 No.01 ／ スクラッチアート風エンペラー"
+    },
+    {
+      "id": "x-165",
+      "url": "https://x.com/_ConCry/status/1440149949958615040",
+      "hashtags": [
+        "#JC2021コンデレ3"
+      ],
+      "active": true,
+      "addedAt": "2026-08-27",
+      "memo": "#JC2021コンデレ3 No.02 ／ EYE SCREAM RIDGE Jr."
+    },
+    {
+      "id": "x-166",
+      "url": "https://x.com/itk0366/status/1422367191685472256",
+      "hashtags": [
+        "#JC2021コンデレ1"
+      ],
+      "active": true,
+      "addedAt": "2026-08-27",
+      "memo": "#JC2021コンデレ1 No.03 ／ Thunder shot mk2 summerspecial",
+      "color": "pink"
+    },
+    {
+      "id": "x-167",
+      "url": "https://x.com/moonTakaya/status/1446996475460808706",
+      "hashtags": [
+        "#JC2021コンデレ3"
+      ],
+      "active": true,
+      "addedAt": "2026-08-27",
+      "memo": "#JC2021コンデレ3 No.03 ／ DDD＋5T",
+      "color": "pink"
+    },
+    {
+      "id": "x-168",
+      "url": "https://x.com/MasaruKun7/status/1432442443060834306",
+      "hashtags": [
+        "#JC2021コンデレ2"
+      ],
+      "active": true,
+      "addedAt": "2026-08-27",
+      "memo": "#JC2021コンデレ2 No.01 ／ ★ロードスピリット ノスタルジア",
+      "color": "pink"
+    },
+    {
+      "id": "x-169",
+      "url": "https://x.com/kevin_No3/status/1446766530251747335",
+      "hashtags": [
+        "#JC2021コンデレ3"
+      ],
+      "active": true,
+      "addedAt": "2026-08-27",
+      "memo": "#JC2021コンデレ3 No.04 ／ 藤紫",
+      "color": "purple"
+    },
+    {
+      "id": "x-170",
+      "url": "https://x.com/makappe528/status/1419613996701786117",
+      "hashtags": [
+        "#JC2021コンデレ1"
+      ],
+      "active": true,
+      "addedAt": "2026-08-27",
+      "memo": "#JC2021コンデレ1 No.04 ／ SPS-6 Fullspec",
+      "color": "purple"
+    },
+    {
+      "id": "x-171",
+      "url": "https://x.com/Tbreak_Racing/status/1419660759185780737",
+      "hashtags": [
+        "#JC2021コンデレ1"
+      ],
+      "active": true,
+      "addedAt": "2026-08-27",
+      "memo": "#JC2021コンデレ1 No.05 ／ ABILISTA BOOST",
+      "color": "purple"
+    },
+    {
+      "id": "x-172",
+      "url": "https://x.com/_ConCry/status/1426020128068562949",
+      "hashtags": [
+        "#JC2021コンデレ1"
+      ],
+      "active": true,
+      "addedAt": "2026-08-27",
+      "memo": "#JC2021コンデレ1 No.06 ／ Abyss SPEAR",
+      "color": "purple"
     }
   ]
 }
