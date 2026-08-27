@@ -21,6 +21,7 @@ from datetime import datetime, timedelta, timezone
 
 import color_wheel_ui
 import colormap_ui
+import godtools_ui
 import paint_colors
 import x_embed_ui
 
@@ -322,7 +323,7 @@ clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .nojs p{color:var(--ink2);font-size:12.5px;margin-bottom:10px}
 .nojs ul{list-style:none;display:grid;gap:2px}
 .nojs a{color:var(--brand);font-size:12.5px}
-""" + colormap_ui.CSS + color_wheel_ui.FAB_CSS + x_embed_ui.CSS
+""" + colormap_ui.CSS + color_wheel_ui.FAB_CSS + godtools_ui.CSS + x_embed_ui.CSS
 
 JS = """
 const q = document.getElementById('q');
@@ -444,6 +445,7 @@ function syncChips(){
 }
 
 const WALL_GENRE = 'xm';
+const GOD_CAT = '__god';
 
 function apply(resetPage){
   // X Machines は商品一覧ではないので、絞り込みも件数もページ送りも使わない
@@ -451,6 +453,11 @@ function apply(resetPage){
   document.body.classList.toggle('wall', wall);
   if(window.__xwall) wall ? window.__xwall.open() : window.__xwall.close();
   if(wall) return;
+
+  // 神ツールも一覧ではない。チップ行だけ残して、商品一覧は出さない。
+  const god = cat === GOD_CAT;
+  document.body.classList.toggle('god', god);
+  if(god) return;
 
   const terms = q.value.trim().toLowerCase().split(/\\s+/).filter(Boolean);
   matched = ITEMS.filter(it => {
@@ -786,7 +793,7 @@ def build(items: list[dict], outdir: str) -> str:
     chip_html = "".join(
         f'<span class="chip" data-cat="{html.escape(c)}" data-genres="{" ".join(gs)}">{html.escape(c)}</span>'
         for c, gs in cat_genres.items()
-    ) + '<span class="chip on" data-cat="" data-genres="">すべて</span>' 
+    ) + '<span class="chip on" data-cat="" data-genres="">すべて</span>' + godtools_ui.chip()
 
     # カードのHTMLはここでは作らない。データだけ渡してブラウザ側で組み立てる。
     site_desc = SITE_DESC.format(n=len(items))
@@ -797,6 +804,7 @@ def build(items: list[dict], outdir: str) -> str:
 
     paint_rows = paint_colors.build([i for i in items if i.get("genre_key") == "paint"])
     cmap_html = colormap_ui.section(paint_rows) if paint_rows else ""
+    god_html = godtools_ui.section(AMAZON_TAG)
     # マシンカラーのページがあるときだけ、X Machines 用の丸ボタンを出す
     wheel_fab = color_wheel_ui.FAB_HTML if color_wheel_ui.load()[1] else ""
 
@@ -845,6 +853,7 @@ def build(items: list[dict], outdir: str) -> str:
 {x_embed_ui.SECTION}
 {x_embed_ui.WALL_SECTION}
   <div class="chips">{chip_html}</div>
+{god_html}
 {cmap_html}
   <div class="count-line" id="countLine"></div>
   <nav class="pager" id="pagerTop" aria-label="ページ送り（上）"></nav>
