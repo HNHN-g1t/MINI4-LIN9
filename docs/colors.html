@@ -36,8 +36,6 @@ display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .back{margin-left:auto;font-size:13px;color:#1a5fd0}
 .back:hover{text-decoration:underline}
 .wrap{max-width:1120px;margin:0 auto;padding:16px 12px 48px}
-h1{font-size:18px;margin:0 0 4px}
-.lead{font-size:12.5px;color:var(--ink3);margin-bottom:16px}
 .sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
 clip:rect(0 0 0 0);white-space:nowrap;border:0}
 
@@ -61,11 +59,6 @@ paint-order:stroke;stroke:#fff;stroke-width:3.5px;stroke-linejoin:round;
 pointer-events:none;user-select:none}
 .zcount{font-size:12px;font-weight:800;fill:var(--ink2);
 paint-order:stroke;stroke:#fff;stroke-width:3px;pointer-events:none;user-select:none}
-.zlabel.inr{fill:#fff;stroke:rgba(0,0,0,.5)}
-.zcount.inr{fill:rgba(255,255,255,.9);stroke:rgba(0,0,0,.5)}
-/* 明るい扇（ホワイトなど）の上では、白文字だと読めないので黒文字にする */
-.zlabel.inr.lt{fill:var(--ink);stroke:rgba(255,255,255,.75)}
-.zcount.inr.lt{fill:var(--ink2);stroke:rgba(255,255,255,.75)}
 @media(max-width:600px){
   .zlabel{font-size:20px;stroke-width:4.5px}
   .zcount{font-size:16px;stroke-width:4px}
@@ -75,12 +68,17 @@ paint-order:stroke;stroke:#fff;stroke-width:3px;pointer-events:none;user-select:
 .reshuffle{background:var(--surface);border:1.5px solid var(--line);color:var(--ink2);
 border-radius:999px;padding:7px 16px;font:inherit;font-size:12px;font-weight:700;cursor:pointer}
 .reshuffle:hover{color:var(--ink);border-color:#c8cfda}
-.hint{font-size:11.5px;color:var(--ink3);text-align:center}
 
 /* ---- 絞り込みの結果 ---- */
-.head{display:flex;align-items:baseline;gap:10px;margin:0 0 10px}
+.head{display:flex;align-items:baseline;gap:10px;margin:0 0 10px;flex-wrap:wrap}
 .head h2{font-size:15px}
 .head .n{font-size:12px;color:var(--ink3)}
+/* 絞り込み中だけ出る解除ボタン。絞り込んだ色のすぐ横に置く */
+.clear{background:none;border:none;padding:0 2px;font:inherit;font-size:12px;
+font-weight:700;color:var(--ink3);cursor:pointer;text-decoration:underline;
+text-underline-offset:3px}
+.clear:hover{color:var(--ink)}
+.clear[hidden]{display:none}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:12px}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:12px;
 overflow:hidden;display:flex;flex-direction:column;align-self:start}
@@ -107,20 +105,20 @@ footer{max-width:1120px;margin:0 auto;padding:0 12px 40px;font-size:11.5px;color
 </div>
 
 <div class="wrap">
-  <h1>マシンカラーで探す<span class="sr">｜X に投稿されたミニ四駆の作品を色から</span></h1>
-  <p class="lead">写真の専有面積がいちばん多い色で分類しています。
-  輪の外側が色みのある色、内側が白・銀・黒、中心がカラフルです。
-  写真の散らばりは開くたびに変わります。</p>
+  <!-- 見出しは画面には出さない。検索と読み上げのために文字だけ残す。 -->
+  <h1 class="sr">マシンカラーで探す｜X に投稿されたミニ四駆の作品を色から</h1>
 
   <div class="wheelbox">
     <div class="wheel"><svg id="wheel" viewBox="0 0 560 560" role="group"
       aria-label="色で絞り込むカラーホイール"></svg></div>
-    <button class="reshuffle" id="reshuffle" type="button">配置をシャッフル</button>
-    <p class="hint">もう一度同じ色を押すと絞り込みを解除します。</p>
+    <!-- 配置のシャッフルは機能を残したまま隠してある。
+         出したくなったら hidden を外すだけでよい。 -->
+    <button class="reshuffle" id="reshuffle" type="button" hidden>配置をシャッフル</button>
   </div>
 
   <div id="result">
-    <div class="head"><h2 id="title"></h2><span class="n" id="num"></span></div>
+    <div class="head"><h2 id="title"></h2><span class="n" id="num"></span>
+      <button class="clear" id="clear" type="button" hidden>解除</button></div>
     <div class="grid" id="grid"></div>
   </div>
 </div>
@@ -194,28 +192,40 @@ function photoAt(el,defs,it,x,y,key,idx){
   gi.appendChild(im); gi.appendChild(rg); el.appendChild(gi);
 }
 
-// 扇の上に文字を載せるときは、下地の明るさで白文字か黒文字かを決める。
-// ホワイトの扇に白文字だと読めないため。
-function isLight(hex){
+function rgbOf(hex){
   const m=/^#?([0-9a-f]{6})$/i.exec(hex||'');
-  if(!m) return false;
+  if(!m) return [90,100,120];
   const n=parseInt(m[1],16);
-  const r=(n>>16)&255, g=(n>>8)&255, b=n&255;
-  return (0.299*r+0.587*g+0.114*b) > 150;
+  return [(n>>16)&255,(n>>8)&255,n&255];
+}
+function lum(r,g,b){ return 0.299*r+0.587*g+0.114*b; }
+function isLight(hex){ const [r,g,b]=rgbOf(hex); return lum(r,g,b)>150; }
+
+// ラベルはそのゾーンの色で書く（ブルーなら「ブルー43」ごとブルー）。
+// ただし外側の輪は明るいページ背景の上に載るので、
+// 明るすぎる色はそのままだと読めない。読める濃さまで落とす。
+function labelColor(hex){
+  let [r,g,b]=rgbOf(hex);
+  let n=0;
+  while(lum(r,g,b)>150 && n++<12){ r*=0.86; g*=0.86; b*=0.86; }
+  return 'rgb('+Math.round(r)+','+Math.round(g)+','+Math.round(b)+')';
 }
 
-function label(el,x,y,text,count,inner,light){
-  const suffix = inner ? (light ? ' inr lt' : ' inr') : '';
-  const t=document.createElementNS(NS,'text');
-  t.setAttribute('class','zlabel'+suffix);
-  t.setAttribute('x',x); t.setAttribute('y',y);
-  t.setAttribute('text-anchor','middle'); t.textContent=text;
-  el.appendChild(t);
-  const t2=document.createElementNS(NS,'text');
-  t2.setAttribute('class','zcount'+suffix);
-  t2.setAttribute('x',x); t2.setAttribute('y',y+15);
-  t2.setAttribute('text-anchor','middle'); t2.textContent=count;
-  el.appendChild(t2);
+function label(el,x,y,text,count,inner,swatch){
+  // 内側の輪は扇の上に文字が載るので、色はそのまま使い、
+  // 下地と同化しないよう縁取りの色だけ明暗を入れ替える。
+  const fill = inner ? swatch : labelColor(swatch);
+  const edge = inner ? (isLight(swatch) ? 'rgba(0,0,0,.55)' : 'rgba(255,255,255,.85)') : '#fff';
+  for(const [cls,val,dy] of [['zlabel',text,0],['zcount',count,15]]){
+    const t=document.createElementNS(NS,'text');
+    t.setAttribute('class',cls);
+    t.setAttribute('x',x); t.setAttribute('y',y+dy);
+    t.setAttribute('text-anchor','middle');
+    t.setAttribute('fill',fill);
+    t.setAttribute('stroke',edge);
+    t.textContent=val;
+    el.appendChild(t);
+  }
 }
 
 function build(){
@@ -256,7 +266,7 @@ function build(){
     const pool=shuffle(list.slice()).slice(0,outer?5:3);
     const pts=scatter(g.a1,g.a2,g.r1,g.r2,pool.length,keepOut);
     pool.forEach((it,i)=>{ if(pts[i]) photoAt(el,defs,it,pts[i][0],pts[i][1],g.key,i); });
-    label(el,lx,ly,z.label,list.length,!outer,isLight(z.swatch));
+    label(el,lx,ly,z.label,list.length,!outer,z.swatch);
 
     el.addEventListener('click',()=>select(g.key));
     el.addEventListener('keydown',e=>{
@@ -293,7 +303,7 @@ function build(){
   pill.setAttribute('cx',CX); pill.setAttribute('cy',CY); pill.setAttribute('r',30);
   pill.setAttribute('fill','rgba(20,26,36,.74)'); pill.setAttribute('class','chipimg');
   el.appendChild(pill);
-  label(el,CX,CY+2,z.label,list.length,true,false);
+  label(el,CX,CY+2,z.label,list.length,true,'#ffffff');
   el.addEventListener('click',()=>select(CENTER));
   el.addEventListener('keydown',e=>{
     if(e.key==='Enter'||e.key===' '){ select(CENTER); e.preventDefault(); }
@@ -315,8 +325,6 @@ function mark(){
 function select(key){
   cur=(cur===key)?null:key;
   mark(); render();
-  // 選んだ結果がすぐ目に入るようにする
-  if(cur) document.getElementById('result').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 function esc(s){ return String(s||'').replace(/[&<>"']/g,
@@ -325,8 +333,11 @@ function esc(s){ return String(s||'').replace(/[&<>"']/g,
 function render(){
   const list=cur?(byZone[cur]||[]):DATA;
   const z=cur?zmap[cur]:null;
-  document.getElementById('title').textContent=z?z.label+' のマシン':'すべてのマシン';
+  const title=document.getElementById('title');
+  title.textContent=z?z.label+' のマシン':'すべてのマシン';
+  title.style.color=z?labelColor(z.swatch):'';
   document.getElementById('num').textContent=list.length+' 台';
+  document.getElementById('clear').hidden=!cur;
   document.getElementById('grid').innerHTML=list.map(it=>{
     const zz=zmap[it.color]||{label:it.color,swatch:'#888'};
     return '<a class="card" href="'+esc(it.url)+'" target="_blank" rel="noopener">'+
@@ -338,6 +349,9 @@ function render(){
 }
 
 document.getElementById('reshuffle').addEventListener('click',build);
+document.getElementById('clear').addEventListener('click',()=>{
+  cur=null; mark(); render();
+});
 build(); render();
 </script>
 </body>
