@@ -804,7 +804,8 @@ def build(items: list[dict], outdir: str) -> str:
 
     paint_rows = paint_colors.build([i for i in items if i.get("genre_key") == "paint"])
     cmap_html = colormap_ui.section(paint_rows) if paint_rows else ""
-    god_html = godtools_ui.section(AMAZON_TAG)
+    god_html = godtools_ui.section({"amazon": AMAZON_TAG, "mercari": MERCARI_AFID,
+                                    "rakuten": RAKUTEN_AFID})
     # マシンカラーのページがあるときだけ、X Machines 用の丸ボタンを出す
     wheel_fab = color_wheel_ui.FAB_HTML if color_wheel_ui.load()[1] else ""
 

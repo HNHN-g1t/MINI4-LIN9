@@ -9,6 +9,7 @@ asin は Amazon の商品ページURL（/dp/XXXXXXXXXX）から取れる10文字
 image は SiteStripe が出す m.media-amazon.com の画像URLを使う。
 """
 import html
+import urllib.parse
 
 # チップの合言葉。細分類の名前と混ざらないよう、記号で始めておく。
 CAT = "__god"
@@ -20,6 +21,8 @@ ITEMS = [
         "official": "アネックス(ANEX) ハンドル 差替式 精密タイプ (ビットなし) No.3610-H",
         "asin": "B00I0HJEDO",
         "image": "https://m.media-amazon.com/images/I/31ApVgLTOOL._SL500_.jpg",
+        # amazon以外のショップは検索で当てる。ここを変えれば検索語を調整できる。
+        "search": "アネックス 差替ハンドル 3610",
         "text": ("ご本家タミヤ様のOEM先様（と思われます）"
                  "ミニ四ドライバー＆ボックスドライバーに、もちろんスーパーフィット。"
                  "通常ナット用とロックナット用をそれぞれ用意すれば"
@@ -54,10 +57,15 @@ align-items:center;justify-content:center;padding:14px;border-right:1px solid va
 .gbody h3{font-size:15px;letter-spacing:.02em}
 .gbody .official{font-size:11px;color:var(--ink3)}
 .gbody p{font-size:13px;line-height:1.75;color:var(--ink2)}
-.gbuy{align-self:flex-start;margin-top:2px;background:#ff9900;color:#1a2233;
-border-radius:8px;padding:8px 18px;font-size:13px;font-weight:800;
-box-shadow:0 2px 6px rgba(255,153,0,.35)}
-.gbuy:hover{background:#ffad33}
+/* ショップへのリンク。並びは商品一覧のカードと同じ */
+.gecrow{display:flex;gap:7px;flex-wrap:wrap;margin-top:4px}
+.gec{font-size:11.5px;font-weight:700;border-radius:7px;padding:6px 14px;
+border:1px solid var(--line);color:var(--ink2);background:var(--surface)}
+.gec:hover{background:var(--brand-soft);border-color:var(--brand);color:var(--brand)}
+/* amazon だけは品番が分かっていて商品ページへ直接飛ぶので目立たせる */
+.gec.az{background:#ff9900;border-color:#e88a00;color:#1a2233;
+box-shadow:0 2px 6px rgba(255,153,0,.32)}
+.gec.az:hover{background:#ffad33;border-color:#ff9900;color:#1a2233}
 .god-note{font-size:11px;color:var(--ink3);margin-top:2px}
 """
 
@@ -66,11 +74,36 @@ def _link(asin: str, tag: str) -> str:
     return f"https://www.amazon.co.jp/dp/{asin}?tag={tag}&linkCode=ll1&language=ja_JP"
 
 
-def section(tag: str) -> str:
-    """神ツールのHTML。tag はアソシエイトのトラッキングID。"""
+def shops(it: dict, ids: dict) -> list:
+    """ショップへのリンクを (ラベル, URL) で返す。並びは商品一覧と同じ。
+
+    amazon だけは品番が分かっているので商品ページへ直接飛ばす。
+    他は検索結果へ飛ばす（メルカリは中古なので個別の出品はすぐ消えるため、
+    直リンクにすると切れたリンクになってしまう）。
+    Yahoo!とヤフオクにIDを付けないのは、ページに入れてある
+    ValueCommerce の LinkSwitch が自動で差し替えてくれるため。
+    """
+    term = it.get("search") or it["official"]
+    q = urllib.parse.quote(term)
+    rt = urllib.parse.quote(f"https://search.rakuten.co.jp/search/mall/{q}/", safe="")
+    return [
+        ("amazon", _link(it["asin"], ids["amazon"])),
+        ("メルカリ", f"https://jp.mercari.com/search?keyword={q}&afid={ids['mercari']}"),
+        ("Yahoo!", f"https://shopping.yahoo.co.jp/search?p={q}"),
+        ("ヤフオク", f"https://auctions.yahoo.co.jp/search/search?p={q}"),
+        ("楽天", f"https://hb.afl.rakuten.co.jp/hgc/{ids['rakuten']}/?pc={rt}&m={rt}"),
+    ]
+
+
+def section(ids: dict) -> str:
+    """神ツールのHTML。ids は各アフィリエイトの計測ID。"""
     cards = []
     for it in ITEMS:
-        url = html.escape(_link(it["asin"], tag))
+        url = html.escape(_link(it["asin"], ids["amazon"]))
+        row = "".join(
+            f'<a class="gec{" az" if lb == "amazon" else ""}" href="{html.escape(u)}" '
+            f'target="_blank" rel="sponsored noopener">{html.escape(lb)}</a>'
+            for lb, u in shops(it, ids))
         cards.append(f"""  <article class="gitem">
     <a class="gshot" href="{url}" target="_blank" rel="sponsored noopener">
       <img src="{html.escape(it["image"])}" alt="{html.escape(it["name"])}"
@@ -79,7 +112,7 @@ def section(tag: str) -> str:
       <h3>{html.escape(it["name"])}</h3>
       <p class="official">{html.escape(it["official"])}</p>
       <p>{html.escape(it["text"])}</p>
-      <a class="gbuy" href="{url}" target="_blank" rel="sponsored noopener">amazonで見る</a>
+      <div class="gecrow">{row}</div>
     </div>
   </article>""")
     return f"""<section class="god-sec" id="godSec" aria-label="神ツール">
@@ -87,8 +120,8 @@ def section(tag: str) -> str:
   <p class="god-lead">タミヤ純正ではないけれど、ミニ四駆に効く道具を紹介します。
   実際に使ってよかったものだけを載せています。</p>
 {chr(10).join(cards)}
-  <p class="god-note">リンクはAmazonアソシエイトの商品ページへ移動します。
-  価格・在庫はAmazon側の表示をご確認ください。</p>
+  <p class="god-note">amazonは商品ページへ、ほかのショップは検索結果へ移動します。
+  価格・在庫は各ショップの表示をご確認ください。</p>
 </section>"""
 
 
