@@ -263,7 +263,7 @@ background:var(--surface);border-radius:4px 4px 0 0;user-select:none;white-space
   .tab.link{flex:1 0 100%;text-align:center}
 }
 main{max-width:1120px;margin:0 auto;padding:12px 16px 40px}
-/* X Machines タブ表示中は商品一覧まわりを出さない */
+/* カッコ四駆 タブ表示中は商品一覧まわりを出さない */
 body.wall .chips,body.wall .cmap,body.wall .cmap-fab,body.wall .count-line,
 body.wall .pager,body.wall .grid,body.wall .empty{display:none !important}
 .chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px}
@@ -448,7 +448,7 @@ const WALL_GENRE = 'xm';
 const GOD_CAT = '__god';
 
 function apply(resetPage){
-  // X Machines は商品一覧ではないので、絞り込みも件数もページ送りも使わない
+  // カッコ四駆 は商品一覧ではないので、絞り込みも件数もページ送りも使わない
   const wall = genre === WALL_GENRE;
   document.body.classList.toggle('wall', wall);
   if(window.__xwall) wall ? window.__xwall.open() : window.__xwall.close();
@@ -776,7 +776,7 @@ def build(items: list[dict], outdir: str) -> str:
         f'<div class="tab" data-genre="{k}">{html.escape(lb)}<span class="n">{genre_counts[k]}</span></div>'
         for k, lb in genres
     ) + (
-        f'<div class="tab" data-genre="{x_embed_ui.WALL_GENRE}">X Machines'
+        f'<div class="tab" data-genre="{x_embed_ui.WALL_GENRE}">カッコ四駆'
         '<span class="n" id="xmN"></span></div>'
         f'<div class="tab on" data-genre="">すべて<span class="n">{len(items)}</span></div>'
         '<div class="tab fav" data-genre="fav">★ お気に入り<span class="n" id="favN">0</span></div>'
@@ -806,7 +806,7 @@ def build(items: list[dict], outdir: str) -> str:
     cmap_html = colormap_ui.section(paint_rows) if paint_rows else ""
     god_html = godtools_ui.section({"amazon": AMAZON_TAG, "mercari": MERCARI_AFID,
                                     "rakuten": RAKUTEN_AFID})
-    # マシンカラーのページがあるときだけ、X Machines 用の丸ボタンを出す
+    # マシンカラーのページがあるときだけ、カッコ四駆 用の丸ボタンを出す
     wheel_fab = color_wheel_ui.FAB_HTML if color_wheel_ui.load()[1] else ""
 
     doc = f"""<!DOCTYPE html>

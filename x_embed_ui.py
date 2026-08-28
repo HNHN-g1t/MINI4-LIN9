@@ -3,8 +3,8 @@
 
 1. TOPの帯（#xFeatured）… 縮小したサムネイルを横に並べ、シャッフルで入れ替える。
    商品一覧を押しのけないよう高さを固定して切り詰めてある。読ませる場所では
-   ないので、どれを押しても「X Machines」タブへ送る。
-2. X Machines（#xWall）… 上段タブの1つ。投稿を素の大きさで敷き詰める。
+   ないので、どれを押しても「カッコ四駆」タブへ送る。
+2. カッコ四駆（#xWall）… 上段タブの1つ。投稿を素の大きさで敷き詰める。
    こちらが読む場所。タブを開くまで描画しない。全件を一度に出すと重いので、
    商品一覧と同じようにページで区切る（PC 12件／スマホ 6件）。
 
@@ -20,7 +20,7 @@ DATA_URL = "data/x-featured-posts.json"
 WALL_GENRE = "xm"
 
 CSS = """
-/* ---- TOPの帯：縮小サムネを並べ、押すと X Machines へ送る ---- */
+/* ---- TOPの帯：縮小サムネを並べ、押すと カッコ四駆 へ送る ---- */
 /* --xw = Xに描画させる素の幅 / --xs = 縮小率 / --xh = 切り詰めた表示高さ */
 #xFeatured{--xw:250px;--xs:1;--xgap:6px;--xh:136px;--xline:4px;--xtrim:#c9ced6;
 max-width:1120px;margin:0 auto 8px;padding:0;position:relative}
@@ -69,7 +69,7 @@ cursor:pointer;border-radius:8px;-webkit-tap-highlight-color:transparent}
   .xpair.toLeft,.xpair.toRight{transform:none}
 }
 
-/* ---- X Machines：全投稿を2列で敷き詰める ---- */
+/* ---- カッコ四駆：全投稿を2列で敷き詰める ---- */
 /* --xww = Xに描画させる素の幅 / --xws = 列幅に合わせた縮小率 */
 #xWall{--xww:250px;--xws:1;--xwgap:12px;display:none;margin:0 0 10px}
 #xWall.on{display:block}
@@ -90,7 +90,7 @@ grid-template-columns:repeat(4,minmax(0,1fr))}
 """
 
 JS = """
-// ---- Xの投稿（TOPの帯 と X Machines タブ） ----
+// ---- Xの投稿（TOPの帯 と カッコ四駆 タブ） ----
 // 失敗しても本体に影響させない。何かあれば領域ごと隠す。
 (() => {
   const HOST = document.getElementById('xFeatured');
@@ -105,8 +105,8 @@ JS = """
   const COUNT_PC = 4;           // PCで帯に並べる件数
   const COUNT_SP = 2;           // スマホで帯に並べる件数
   const WALL_GAP = 12;
-  const WALL_PER_PC = 8;        // X Machines の1ページ表示数（PC）
-  const WALL_PER_SP = 6;        // X Machines の1ページ表示数（スマホ）
+  const WALL_PER_PC = 8;        // カッコ四駆 の1ページ表示数（PC）
+  const WALL_PER_SP = 6;        // カッコ四駆 の1ページ表示数（スマホ）
   const WALL_PAGE_WINDOW = 7;   // 数字ボタンを並べる最大数
   const DEFAULTS = {random:true, avoidRecentCount:8,
                     autoRotate:false, hideThread:true, dnt:true, lang:'ja'};
@@ -125,7 +125,7 @@ JS = """
   let wallSweepTimer = null, wallSweepBound = false;
   let wallPoll = null, wallPollLeft = 0;
   const WALL_NEAR = 100;        // 画面からこのpx以内に来たら描き始める
-  let bandIds = [];             // いまTOPの帯に出ている並び（X Machines の先頭に使う）
+  let bandIds = [];             // いまTOPの帯に出ている並び（カッコ四駆 の先頭に使う）
   const wallCols = () => isMobile() ? 2 : 4;
   const wallPerPage = () => isMobile() ? WALL_PER_SP : WALL_PER_PC;
 
@@ -319,8 +319,8 @@ JS = """
       const hit = document.createElement('button');
       hit.type = 'button';
       hit.className = 'xhit';
-      hit.dataset.pid = (p && p.id) || '';     // X Machines で先頭に置く1件
-      hit.setAttribute('aria-label', 'X Machines を開く');
+      hit.dataset.pid = (p && p.id) || '';     // カッコ四駆 で先頭に置く1件
+      hit.setAttribute('aria-label', 'カッコ四駆 を開く');
       slot.append(inner, hit);
       pair.appendChild(slot);
       return inner;
@@ -331,7 +331,7 @@ JS = """
 
   // 仕込んだ枠の中でXに描かせる。1件も描けなければ null を返して片付ける。
   async function fillPair(list){
-    // いま帯に出す並びを控えておく。X Machines を開いたとき、
+    // いま帯に出す並びを控えておく。カッコ四駆 を開いたとき、
     // この順のまま先頭の1段に置くため。
     bandIds = list.map(p => p && p.id).filter(Boolean);
     bandFixed = true;             // 以降は素の幅を変えない（描き直しになるため）
@@ -367,7 +367,7 @@ JS = """
     current = pair;
   }
 
-  // X Machines タブへ送る。タブ側の処理はページ本体が持っている。
+  // カッコ四駆 タブへ送る。タブ側の処理はページ本体が持っている。
   // 押した1件は pendingLead に預け、開いた先で先頭に回す。
   function openWall(pid){
     pendingLead = pid || null;
@@ -381,7 +381,7 @@ JS = """
     stage.className = 'xstage';
     HOST.appendChild(stage);
 
-    // サムネはどこを押しても X Machines へ。押した1件を先頭に回す。
+    // サムネはどこを押しても カッコ四駆 へ。押した1件を先頭に回す。
     stage.addEventListener('click', e => {
       const hit = e.target.closest('.xhit');
       if(hit) openWall(hit.dataset.pid);
@@ -404,7 +404,7 @@ JS = """
     });
   }
 
-  // ---- X Machines（全件を2列で敷き詰める） ----
+  // ---- カッコ四駆（全件を2列で敷き詰める） ----
   // 列幅に合わせて素の幅と縮小率を決める。素の幅は組んだ時点で固定する
   // （変えると描き直しになり、iframeが全部読み込み直しになるため）。
   function measureWall(){
@@ -510,12 +510,12 @@ JS = """
     WALL.innerHTML = '';
     const pagerTop = document.createElement('nav');
     pagerTop.className = 'pager xwpager';
-    pagerTop.setAttribute('aria-label', 'X Machines ページ送り（上）');
+    pagerTop.setAttribute('aria-label', 'カッコ四駆 ページ送り（上）');
     const grid = document.createElement('div');
     grid.className = 'xwgrid';
     const pagerBottom = document.createElement('nav');
     pagerBottom.className = 'pager xwpager';
-    pagerBottom.setAttribute('aria-label', 'X Machines ページ送り（下）');
+    pagerBottom.setAttribute('aria-label', 'カッコ四駆 ページ送り（下）');
     WALL.appendChild(pagerTop);
     WALL.appendChild(grid);
     WALL.appendChild(pagerBottom);
@@ -718,7 +718,7 @@ JS = """
     HOST.classList.remove('loading');
     HOST.classList.add('done');
     HOST.dataset.ready = '1';
-    // X Machines を開いた状態で読み終わった場合は帯を出さない
+    // カッコ四駆 を開いた状態で読み終わった場合は帯を出さない
     if(WALL && WALL.classList.contains('on')) HOST.hidden = true;
   }
 
@@ -730,4 +730,4 @@ JS = """
 
 # <main> に置く空の器。中身はJSが入れる。
 SECTION = '  <section id="xFeatured" aria-label="X の投稿" hidden></section>'
-WALL_SECTION = '  <section id="xWall" aria-label="X Machines"></section>'
+WALL_SECTION = '  <section id="xWall" aria-label="カッコ四駆"></section>'

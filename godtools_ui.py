@@ -14,19 +14,32 @@ import urllib.parse
 # チップの合言葉。細分類の名前と混ざらないよう、記号で始めておく。
 CAT = "__god"
 
+# text は1行が1要素。書いたとおりの位置で改行される。
 ITEMS = [
     {
-        "name": "アネックスハンドル 差替式",
+        "name": "アネックス(ANEX) ハンドル 差替式",
         # Amazon上の正式名称。品番まで含めて取り違えを防ぐ。
         "official": "アネックス(ANEX) ハンドル 差替式 精密タイプ (ビットなし) No.3610-H",
         "asin": "B00I0HJEDO",
         "image": "https://m.media-amazon.com/images/I/31ApVgLTOOL._SL500_.jpg",
         # amazon以外のショップは検索で当てる。ここを変えれば検索語を調整できる。
         "search": "アネックス 差替ハンドル 3610",
-        "text": ("ご本家タミヤ様のOEM先様（と思われます）"
-                 "ミニ四ドライバー＆ボックスドライバーに、もちろんスーパーフィット。"
-                 "通常ナット用とロックナット用をそれぞれ用意すれば"
-                 "メンテ効率が大幅アップします。"),
+        "text": [
+            "ご本家同等アイテム。ミニ四ドライバー＆ボックスドライバーにスーパーフィット。",
+            "通常ナット用とロックナット用で2本用意すればメンテ効率が大幅アップします。",
+        ],
+    },
+    {
+        "name": "高儀(Takagi) ホビークイックバークランプ ブラック 100mm 2個組",
+        "official": "高儀(Takagi) ホビークイックバークランプ ブラック 100mm 2個組 HQB-100-2P",
+        "asin": "B00G8PR80G",
+        "image": "https://m.media-amazon.com/images/I/617uV1xgqVL._SL500_.jpg",
+        "search": "高儀 ホビークイックバークランプ 100mm",
+        "text": [
+            "貫通済ホイールのシャフト差しに最適！",
+            "トリガーでギュッと段階的に差し込む手ごたえ◎子供でも使えてケガ防止◎",
+            "サイズバッチリ携行性◎本体シャフトが金属製で耐久性◎",
+        ],
     },
 ]
 
@@ -57,6 +70,8 @@ align-items:center;justify-content:center;padding:14px;border-right:1px solid va
 .gbody h3{font-size:15px;letter-spacing:.02em}
 .gbody .official{font-size:11px;color:var(--ink3)}
 .gbody p{font-size:13px;line-height:1.75;color:var(--ink2)}
+/* 紹介文。書いた位置で改行しつつ、行頭がぶら下がらないようにする */
+.gbody .desc{line-height:1.85;overflow-wrap:anywhere}
 /* ショップへのリンク。並びは商品一覧のカードと同じ */
 .gecrow{display:flex;gap:7px;flex-wrap:wrap;margin-top:4px}
 .gec{font-size:11.5px;font-weight:700;border-radius:7px;padding:6px 14px;
@@ -104,6 +119,9 @@ def section(ids: dict) -> str:
             f'<a class="gec{" az" if lb == "amazon" else ""}" href="{html.escape(u)}" '
             f'target="_blank" rel="sponsored noopener">{html.escape(lb)}</a>'
             for lb, u in shops(it, ids))
+        # 書かれたとおりの位置で改行する。狭い画面では各行がさらに折り返す。
+        lines = it["text"] if isinstance(it["text"], list) else [it["text"]]
+        body = "<br>".join(html.escape(ln) for ln in lines)
         cards.append(f"""  <article class="gitem">
     <a class="gshot" href="{url}" target="_blank" rel="sponsored noopener">
       <img src="{html.escape(it["image"])}" alt="{html.escape(it["name"])}"
@@ -111,7 +129,7 @@ def section(ids: dict) -> str:
     <div class="gbody">
       <h3>{html.escape(it["name"])}</h3>
       <p class="official">{html.escape(it["official"])}</p>
-      <p>{html.escape(it["text"])}</p>
+      <p class="desc">{body}</p>
       <div class="gecrow">{row}</div>
     </div>
   </article>""")

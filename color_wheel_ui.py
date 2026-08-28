@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""マシンカラーで探すページ（colors.html）と、X Machines タブに置く丸ボタン。
+"""マシンカラーで探すページ（colors.html）と、カッコ四駆 タブに置く丸ボタン。
 
 判定データ（docs/data/x-machine-colors.json）を読み、
 色相環の形をした絞り込みUIのページを作る。
@@ -36,10 +36,10 @@ def load() -> tuple:
     return (d.get("zones", []), items)
 
 
-# ---- X Machines タブに出す丸ボタン ------------------------------------
+# ---- カッコ四駆 タブに出す丸ボタン ------------------------------------
 
 FAB_CSS = """
-/* ---- X Machines タブの「マシンカラー」ボタン ---- */
+/* ---- カッコ四駆 タブの「マシンカラー」ボタン ---- */
 /* 塗装タブの丸ボタンと同じ位置・同じ作り。両方が同時に出ることはない。 */
 .wheel-fab{position:fixed;right:14px;bottom:16px;z-index:70;width:74px;height:74px;
 border-radius:50%;border:3px solid #fff;padding:0;cursor:pointer;display:none;
@@ -47,7 +47,7 @@ background:conic-gradient(#e5342c 0deg 45deg,#f07a1a 45deg 90deg,#f5c518 90deg 1
 #c9a227 135deg 180deg,#2fae5a 180deg 225deg,#2277dd 225deg 270deg,
 #8b5cf6 270deg 315deg,#ef5da8 315deg 360deg);
 box-shadow:0 4px 14px rgba(20,40,80,.32)}
-/* X Machines を見ているときだけ出す */
+/* カッコ四駆 を見ているときだけ出す */
 body.wall .wheel-fab{display:block !important}
 .wheel-fab:focus-visible{outline:3px solid var(--brand);outline-offset:3px}
 .wheel-fab .cap{position:absolute;inset:12px;border-radius:50%;background:var(--surface);
