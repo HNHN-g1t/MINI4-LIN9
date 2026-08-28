@@ -118,6 +118,7 @@ JS = """
   let stage = null, current = null, wallFixed = false;
   let wallCells = [], wallNatural = NATURAL, wallScale = 1, pendingLead = null;
   let wallOrder = [];           // 開いたときに決めた並び（全件）
+  let wallTag = null;           // 絞り込み中のタグ（null なら全件）
   let wallPage = 1, wallPerPageNow = WALL_PER_PC;
   let wallToken = 0;            // 描画中にページが変わったら捨てるための番号
   let wtt = null;               // 読み込んだ widgets.js
@@ -132,6 +133,12 @@ JS = """
   const isMobile = () => window.matchMedia('(max-width:900px)').matches;
   const count = () => isMobile() ? COUNT_SP : COUNT_PC;
   const actives = () => allPosts.filter(p => p && p.active === true && tweetIdOf(p.url));
+  // タグで絞ったあとの母集団。ウォールの並び・件数・ページ数はこれで決まる。
+  const wallPool = () => wallTag
+    ? actives().filter(p => Array.isArray(p.tags) && p.tags.indexOf(wallTag) >= 0)
+    : actives();
+  const countTag = t => actives().filter(
+    p => Array.isArray(p.tags) && p.tags.indexOf(t) >= 0).length;
 
   const giveUp = (why) => {
     if(why) console.warn('[x-featured]', why);
@@ -437,7 +444,7 @@ JS = """
   // 押した1件があれば、その中でいちばん前に回す。あとはシャッフル。
   // 並び順は開いたときに1回だけ決め、ページを送っても崩れないようにする。
   function orderWall(leadId){
-    const list = actives();
+    const list = wallPool();
     const byId = id => list.find(p => p.id === id);
 
     let head = (bandIds || []).map(byId).filter(Boolean);
@@ -660,24 +667,40 @@ JS = """
     fitWall();
   }
 
+  // 描きかけを止めて、iframeも捨てる。閉じるときと描き直すときの共通処理。
+  function teardownWall(){
+    if(!WALL) return;
+    if(wro) wallCells.forEach(c => wro.unobserve(c.inner));
+    if(wallDrain){ clearInterval(wallDrain); wallDrain = null; }
+    if(wallSweepTimer){ clearTimeout(wallSweepTimer); wallSweepTimer = null; }
+    stopWallPoll();
+    wallQueue = [];
+    wallCells = [];
+    wallToken++;                 // 描画中なら結果を捨てる
+    WALL.innerHTML = '';         // iframeを残さない
+  }
+
   // ページ本体（タブ切り替え）から呼ばれる
   window.__xwall = {
-    open(){ if(WALL){ WALL.classList.add('on'); openWallView(); } HOST.hidden = true; },
+    // tag を渡すとそのタグの投稿だけにする。null で全件。
+    open(tag){
+      if(!WALL) { HOST.hidden = true; return; }
+      const t = tag || null;
+      const fresh = !WALL.classList.contains('on') || t !== wallTag;
+      wallTag = t;
+      WALL.classList.add('on');
+      HOST.hidden = true;
+      if(fresh){ teardownWall(); openWallView(); }
+    },
     close(){
       if(WALL){
         WALL.classList.remove('on');
-        if(wro) wallCells.forEach(c => wro.unobserve(c.inner));
-        if(wallDrain){ clearInterval(wallDrain); wallDrain = null; }
-        if(wallSweepTimer){ clearTimeout(wallSweepTimer); wallSweepTimer = null; }
-        stopWallPoll();
-        wallQueue = [];
-        wallCells = [];
-        wallToken++;                 // 描画中なら結果を捨てる
-        WALL.innerHTML = '';         // iframeを残さない
+        teardownWall();
       }
       if(HOST.dataset.ready) HOST.hidden = false;
     },
-    count(){ return actives().length; }
+    count(){ return actives().length; },
+    countTag(t){ return countTag(t); }
   };
 
   async function main(){
@@ -694,6 +717,9 @@ JS = """
     // 上段タブの件数を実データで埋める
     const badge = document.getElementById('xmN');
     if(badge) badge.textContent = actives().length;
+    // エンペラー特設チップの件数も、実データから入れる
+    const empBadge = document.getElementById('empN');
+    if(empBadge) empBadge.textContent = countTag('エンペラー');
 
     HOST.hidden = false;
     HOST.classList.add('loading');

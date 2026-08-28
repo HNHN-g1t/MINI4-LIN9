@@ -263,8 +263,17 @@ background:var(--surface);border-radius:4px 4px 0 0;user-select:none;white-space
   .tab.link{flex:1 0 100%;text-align:center}
 }
 main{max-width:1120px;margin:0 auto;padding:12px 16px 40px}
+/* ---- エンペラー特設（カッコ四駆タブの中） ---- */
+/* エンペラーのイメージに合わせてオレンジ。チップもページ送りも同じ色でそろえる */
+.chip.emp{background:#f57c00;border-color:#e06f00;color:#fff;font-weight:800}
+.chip.emp:hover{background:#ff8f1f}
+.chip.emp.on{background:#d35f00;border-color:#bd5500;color:#fff}
+.chip.emp .n{margin-left:5px;font-size:10px;opacity:.9}
+body.emp #xWall .pager button:hover:not(:disabled){border-color:#f57c00;color:#d35f00}
+body.emp #xWall .pager button[aria-current="page"]{background:#f57c00;border-color:#f57c00;color:#fff}
 /* カッコ四駆 タブ表示中は商品一覧まわりを出さない */
-body.wall .chips,body.wall .cmap,body.wall .cmap-fab,body.wall .count-line,
+/* チップ行はエンペラー特設の入口なので、カッコ四駆でも隠さない */
+body.wall .cmap,body.wall .cmap-fab,body.wall .count-line,
 body.wall .pager,body.wall .grid,body.wall .empty{display:none !important}
 .chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px}
 .chip{background:var(--surface);border:1.5px solid var(--line);border-radius:999px;
@@ -430,7 +439,8 @@ function paintFavs(){ favN.textContent = favs.size; }
 function syncChips(){
   // ジャンル未選択（すべて）・お気に入りのときは細分類を出さない。
   // ジャンル選択時は、そのジャンルに存在する細分類だけ出す。
-  const real = genre && genre !== 'fav' && genre !== 'xm';
+  // カッコ四駆でも特設チップ（エンペラー）を出したいので、xm を除外しない
+  const real = genre && genre !== 'fav';
   for(const ch of chips){
     const gs = ch.dataset.genres;
     ch.classList.toggle('hide', !(real && (!gs || gs.split(' ').includes(genre))));
@@ -440,18 +450,26 @@ function syncChips(){
   if(active && active.classList.contains('hide')) cat = '';
   chips.forEach(c => c.classList.toggle('on', c.dataset.cat === cat));
   // 細分類が1種類しかないジャンルでは、絞り込みにならないのでチップ行ごと隠す
-  const usable = chips.filter(c => c.dataset.cat && !c.classList.contains('hide')).length;
-  chipRow.style.display = (real && usable > 1) ? '' : 'none';
+  const shown = chips.filter(c => c.dataset.cat && !c.classList.contains('hide'));
+  // 細分類が1種類だけなら絞り込みにならないので隠す。
+  // ただし特設チップ（神ツール・エンペラー）が出ているときは必ず見せる。
+  const special = shown.some(c => c.dataset.cat.slice(0, 2) === '__');
+  chipRow.style.display = (real && (shown.length > 1 || special)) ? '' : 'none';
 }
 
 const WALL_GENRE = 'xm';
 const GOD_CAT = '__god';
+const EMP_CAT = '__emperor';
+const EMP_TAG = 'エンペラー';
 
 function apply(resetPage){
   // カッコ四駆 は商品一覧ではないので、絞り込みも件数もページ送りも使わない
   const wall = genre === WALL_GENRE;
+  const emp = wall && cat === EMP_CAT;
   document.body.classList.toggle('wall', wall);
-  if(window.__xwall) wall ? window.__xwall.open() : window.__xwall.close();
+  document.body.classList.toggle('emp', emp);
+  if(window.__xwall) wall ? window.__xwall.open(emp ? EMP_TAG : null)
+                          : window.__xwall.close();
   if(wall) return;
 
   // 神ツールも一覧ではない。チップ行だけ残して、商品一覧は出さない。
@@ -793,7 +811,9 @@ def build(items: list[dict], outdir: str) -> str:
     chip_html = "".join(
         f'<span class="chip" data-cat="{html.escape(c)}" data-genres="{" ".join(gs)}">{html.escape(c)}</span>'
         for c, gs in cat_genres.items()
-    ) + '<span class="chip on" data-cat="" data-genres="">すべて</span>' + godtools_ui.chip()
+    ) + '<span class="chip on" data-cat="" data-genres="">すべて</span>' + godtools_ui.chip() + (
+        '<span class="chip emp" data-cat="__emperor" data-genres="xm">エンペラー'
+        '<span class="n" id="empN"></span></span>')
 
     # カードのHTMLはここでは作らない。データだけ渡してブラウザ側で組み立てる。
     site_desc = SITE_DESC.format(n=len(items))
@@ -852,8 +872,8 @@ def build(items: list[dict], outdir: str) -> str:
 </header>
 <main>
 {x_embed_ui.SECTION}
-{x_embed_ui.WALL_SECTION}
   <div class="chips">{chip_html}</div>
+{x_embed_ui.WALL_SECTION}
 {god_html}
 {cmap_html}
   <div class="count-line" id="countLine"></div>

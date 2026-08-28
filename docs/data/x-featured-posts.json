@@ -1045,7 +1045,12 @@
       ],
       "active": true,
       "addedAt": "2026-08-26",
-      "memo": "#JC2024コンデレ1 No.01 ／ HEROES"
+      "memo": "#JC2024コンデレ1 No.01 ／ HEROES",
+      "tags": [
+        "エンペラー",
+        "皇帝",
+        "ダッシュ1号"
+      ]
     },
     {
       "id": "x-107",
@@ -1485,7 +1490,12 @@
       ],
       "active": true,
       "addedAt": "2026-08-26",
-      "memo": "#JC2022コンデレ2 No.03 ／ 少年時代の君へ"
+      "memo": "#JC2022コンデレ2 No.03 ／ 少年時代の君へ",
+      "tags": [
+        "エンペラー",
+        "皇帝",
+        "ダッシュ1号"
+      ]
     },
     {
       "id": "x-151",
@@ -1625,7 +1635,12 @@
       ],
       "active": true,
       "addedAt": "2026-08-27",
-      "memo": "#JC2021コンデレ3 No.01 ／ スクラッチアート風エンペラー"
+      "memo": "#JC2021コンデレ3 No.01 ／ スクラッチアート風エンペラー",
+      "tags": [
+        "エンペラー",
+        "皇帝",
+        "ダッシュ1号"
+      ]
     },
     {
       "id": "x-165",
@@ -1713,6 +1728,266 @@
       "addedAt": "2026-08-27",
       "memo": "#JC2021コンデレ1 No.06 ／ Abyss SPEAR",
       "color": "purple"
+    },
+    {
+      "id": "x-173",
+      "url": "https://x.com/tamiyainc/status/2093113471105904898",
+      "hashtags": [],
+      "tags": [
+        "エンペラー",
+        "皇帝",
+        "ダッシュ1号"
+      ],
+      "active": true,
+      "addedAt": "2026-08-28",
+      "memo": "エンペラー No.01 ／ ダッシュ1号・皇帝 タイプ3シャーシ仕様 発売告知"
+    },
+    {
+      "id": "x-174",
+      "url": "https://x.com/mini4wd/status/2054836212024946885",
+      "hashtags": [],
+      "tags": [
+        "エンペラー",
+        "皇帝",
+        "ダッシュ1号"
+      ],
+      "active": true,
+      "addedAt": "2026-08-28",
+      "memo": "エンペラー No.02 ／ シルバーメッキボディセットほか新製品"
+    },
+    {
+      "id": "x-175",
+      "url": "https://x.com/YamZm5z/status/1948646960350855206",
+      "hashtags": [],
+      "tags": [
+        "エンペラー",
+        "皇帝",
+        "ダッシュ1号"
+      ],
+      "active": true,
+      "addedAt": "2026-08-28",
+      "memo": "エンペラー No.03 ／ 1988年に描かれたエンペラーの原画"
+    },
+    {
+      "id": "x-176",
+      "url": "https://x.com/cupnoodle_jp/status/1575674292880084992",
+      "hashtags": [],
+      "tags": [
+        "エンペラー",
+        "皇帝",
+        "ダッシュ1号"
+      ],
+      "active": true,
+      "addedAt": "2026-08-28",
+      "memo": "エンペラー No.04 ／ カップヌードル監修モデル"
+    },
+    {
+      "id": "x-177",
+      "url": "https://x.com/jinfujixx11/status/1140095866520256512",
+      "hashtags": [],
+      "tags": [
+        "エンペラー",
+        "皇帝",
+        "ダッシュ1号"
+      ],
+      "active": true,
+      "addedAt": "2026-08-28",
+      "memo": "エンペラー No.06 ／ ホライゾンとエンペラー イラストテイスト"
+    },
+    {
+      "id": "x-178",
+      "url": "https://x.com/kojikoji_m4wd/status/1430094666427293696",
+      "hashtags": [],
+      "tags": [
+        "エンペラー",
+        "皇帝",
+        "ダッシュ1号"
+      ],
+      "active": true,
+      "addedAt": "2026-08-28",
+      "memo": "エンペラー No.09 ／ エンペラー クラシック"
+    },
+    {
+      "id": "x-179",
+      "url": "https://x.com/DAI7TEN_DAICHI/status/1969269134669083039",
+      "hashtags": [],
+      "tags": [
+        "エンペラー",
+        "皇帝",
+        "ダッシュ1号"
+      ],
+      "active": true,
+      "addedAt": "2026-08-28",
+      "memo": "エンペラー No.10 ／ Refeedコンデレに出ていたかもしれない世界線"
+    },
+    {
+      "id": "x-180",
+      "url": "https://x.com/AE86_KEN2/status/1992836197903941639",
+      "hashtags": [],
+      "tags": [
+        "エンペラー",
+        "皇帝",
+        "ダッシュ1号"
+      ],
+      "active": true,
+      "addedAt": "2026-08-28",
+      "memo": "エンペラー No.11 ／ DASH-1 EMPEROR 燃えるドラゴン紋章仕様"
+    },
+    {
+      "id": "x-181",
+      "url": "https://x.com/CaCruelangel2nd/status/1695320516457083163",
+      "hashtags": [],
+      "tags": [
+        "エンペラー",
+        "皇帝",
+        "ダッシュ1号"
+      ],
+      "active": true,
+      "addedAt": "2026-08-28",
+      "memo": "エンペラー No.12 ／ INFINITE EMPEROR FINAL “R”"
+    },
+    {
+      "id": "x-182",
+      "url": "https://x.com/mini_maa99/status/1947050803212247244",
+      "hashtags": [],
+      "tags": [
+        "エンペラー",
+        "皇帝",
+        "ダッシュ1号"
+      ],
+      "active": true,
+      "addedAt": "2026-08-28",
+      "memo": "エンペラー No.13 ／ X EMPEROR（クロスエンペラー）"
+    },
+    {
+      "id": "x-183",
+      "url": "https://x.com/kojikoji_m4wd/status/1641080213881905157",
+      "hashtags": [],
+      "tags": [
+        "エンペラー",
+        "皇帝",
+        "ダッシュ1号"
+      ],
+      "active": true,
+      "addedAt": "2026-08-28",
+      "memo": "エンペラー No.14 ／ Fluorescent Moon EMPEROR"
+    },
+    {
+      "id": "x-184",
+      "url": "https://x.com/CaCruelangel2nd/status/1699324749703471441",
+      "hashtags": [],
+      "tags": [
+        "エンペラー",
+        "皇帝",
+        "ダッシュ1号"
+      ],
+      "active": true,
+      "addedAt": "2026-08-28",
+      "memo": "エンペラー No.15 ／ INFINITE EMPEROR ∞無限皇帝"
+    },
+    {
+      "id": "x-185",
+      "url": "https://x.com/kojikoji_m4wd/status/1673194981606162436",
+      "hashtags": [],
+      "tags": [
+        "エンペラー",
+        "皇帝",
+        "ダッシュ1号"
+      ],
+      "active": true,
+      "addedAt": "2026-08-28",
+      "memo": "エンペラー No.16 ／ Fluorescent Moon EMPEROR"
+    },
+    {
+      "id": "x-186",
+      "url": "https://x.com/kojikoji_m4wd/status/1111659686749601792",
+      "hashtags": [],
+      "tags": [
+        "エンペラー",
+        "皇帝",
+        "ダッシュ1号"
+      ],
+      "active": true,
+      "addedAt": "2026-08-28",
+      "memo": "エンペラー No.17 ／ スケルトン・エンペラー"
+    },
+    {
+      "id": "x-187",
+      "url": "https://x.com/u8ABObxjlPFjKqT/status/1939702893290152386",
+      "hashtags": [],
+      "tags": [
+        "エンペラー",
+        "皇帝",
+        "ダッシュ1号"
+      ],
+      "active": true,
+      "addedAt": "2026-08-28",
+      "memo": "エンペラー No.18 ／ エンペラーR"
+    },
+    {
+      "id": "x-188",
+      "url": "https://x.com/HappySongNiisan/status/1891140489371340985",
+      "hashtags": [],
+      "tags": [
+        "エンペラー",
+        "皇帝",
+        "ダッシュ1号"
+      ],
+      "active": true,
+      "addedAt": "2026-08-28",
+      "memo": "エンペラー No.19 ／ ヘヴィメタル・エンペラー"
+    },
+    {
+      "id": "x-189",
+      "url": "https://x.com/kojikoji_m4wd/status/1089157769381330944",
+      "hashtags": [],
+      "tags": [
+        "エンペラー",
+        "皇帝",
+        "ダッシュ1号"
+      ],
+      "active": true,
+      "addedAt": "2026-08-28",
+      "memo": "エンペラー No.20 ／ DASH+1 エンペラー 497"
+    },
+    {
+      "id": "x-190",
+      "url": "https://x.com/hrdu1/status/2074253111993201134",
+      "hashtags": [],
+      "tags": [
+        "エンペラー",
+        "皇帝",
+        "ダッシュ1号"
+      ],
+      "active": true,
+      "addedAt": "2026-08-28",
+      "memo": "エンペラー No.21 ／ タイプ1シャーシ バギーバンパー加工"
+    },
+    {
+      "id": "x-191",
+      "url": "https://x.com/AE86_KEN2/status/1748352855478804529",
+      "hashtags": [],
+      "tags": [
+        "エンペラー",
+        "皇帝",
+        "ダッシュ1号"
+      ],
+      "active": true,
+      "addedAt": "2026-08-28",
+      "memo": "エンペラー No.22 ／ ゼンペラー１"
+    },
+    {
+      "id": "x-192",
+      "url": "https://x.com/awa_mini_4wd/status/1404819217640198145",
+      "hashtags": [],
+      "tags": [
+        "エンペラー",
+        "皇帝",
+        "ダッシュ1号"
+      ],
+      "active": true,
+      "addedAt": "2026-08-28",
+      "memo": "エンペラー No.23 ／ B-MAX風　ダッシュ1号エンペラー"
     }
   ]
 }
