@@ -5027,6 +5027,17 @@
   "gp_no": ""
  },
  {
+  "item_code": "18713",
+  "name": "レイザーバック (FM-Aシャーシ)",
+  "price": 1320,
+  "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/1/18713/18713_s01.jpg",
+  "url": "https://www.tamiya.com/japan/products/18713/index.html",
+  "genre": "キット",
+  "genre_key": "kit",
+  "official_category": "1/32 ミニ四駆REVシリーズ",
+  "gp_no": ""
+ },
+ {
   "item_code": "18651",
   "name": "ダンシング ディバイン ドール（MAシャーシ）",
   "price": 1430,
@@ -5035,17 +5046,6 @@
   "genre": "キット",
   "genre_key": "kit",
   "official_category": "1/32 ミニ四駆PROシリーズ",
-  "gp_no": ""
- },
- {
-  "item_code": "18713",
-  "name": "レイザーバック (FM-Aシャーシ)",
-  "price": 1210,
-  "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/1/18713/18713_s01.jpg",
-  "url": "https://www.tamiya.com/japan/products/18713/index.html",
-  "genre": "キット",
-  "genre_key": "kit",
-  "official_category": "1/32 ミニ四駆REVシリーズ",
   "gp_no": ""
  },
  {
@@ -5304,7 +5304,7 @@
  {
   "item_code": "18089",
   "name": "ミニ四駆ピッグ",
-  "price": 1210,
+  "price": 1540,
   "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/1/18089/18089_s.jpg",
   "url": "https://www.tamiya.com/japan/products/18089/index.html",
   "genre": "キット",
@@ -5557,7 +5557,7 @@
  {
   "item_code": "18086",
   "name": "ミニ四駆ドッグ（スーパーIIシャーシ）",
-  "price": 1320,
+  "price": 1540,
   "image": "https://d7z22c0gz59ng.cloudfront.net/japan_contents/img/usr/item/1/18086/18086_s.jpg",
   "url": "https://www.tamiya.com/japan/products/18086/index.html",
   "genre": "キット",
@@ -6149,22 +6149,22 @@
   "gp_no": ""
  },
  {
-  "item_code": "18082",
-  "name": "ダイハツ コペン XMZ （スーパーIIシャーシ）",
-  "price": 1210,
-  "image": "https://d7z22c0gz59ng.cloudfront.net/japan_contents/img/usr/item/1/18082/18082_s.jpg",
-  "url": "https://www.tamiya.com/japan/products/18082/index.html",
+  "item_code": "18081",
+  "name": "1/32 ダイハツ コペン RMZ （VSシャーシ）",
+  "price": 1430,
+  "image": "https://d7z22c0gz59ng.cloudfront.net/japan_contents/img/usr/item/1/18081/18081_s.jpg",
+  "url": "https://www.tamiya.com/japan/products/18081/index.html",
   "genre": "キット",
   "genre_key": "kit",
   "official_category": "1/32 レーサーミニ四駆シリーズ",
   "gp_no": ""
  },
  {
-  "item_code": "18081",
-  "name": "1/32 ダイハツ コペン RMZ （VSシャーシ）",
+  "item_code": "18082",
+  "name": "ダイハツ コペン XMZ （スーパーIIシャーシ）",
   "price": 1210,
-  "image": "https://d7z22c0gz59ng.cloudfront.net/japan_contents/img/usr/item/1/18081/18081_s.jpg",
-  "url": "https://www.tamiya.com/japan/products/18081/index.html",
+  "image": "https://d7z22c0gz59ng.cloudfront.net/japan_contents/img/usr/item/1/18082/18082_s.jpg",
+  "url": "https://www.tamiya.com/japan/products/18082/index.html",
   "genre": "キット",
   "genre_key": "kit",
   "official_category": "1/32 レーサーミニ四駆シリーズ",
@@ -6877,7 +6877,7 @@
  {
   "item_code": "18614",
   "name": "1/32 アバンテMk.II",
-  "price": 1100,
+  "price": 1320,
   "image": "https://d7z22c0gz59ng.cloudfront.net/japan_contents/img/usr/item/1/18614/18614_s.jpg",
   "url": "https://www.tamiya.com/japan/products/18614/index.html",
   "genre": "キット",
@@ -14469,7 +14469,7 @@
   "name": "AO-1002 ミニ四駆メタル軸受けセット",
   "price": 110,
   "image": "https://d7z22c0gz59ng.cloudfront.net/japan_contents/img/usr/item/9/94381/94381_s.jpg",
-  "url": "https://www.tamiya.com/japan/products/94381/index.html",
+  "url": "https://tamiya.com/japan/products/94381/index.html",
   "genre": "AOパーツ",
   "genre_key": "ao",
   "official_category": "",
@@ -14480,7 +14480,7 @@
   "name": "AO-1001 FA-130タイプノーマルモーター",
   "price": 165,
   "image": "https://d7z22c0gz59ng.cloudfront.net/japan_contents/img/usr/item/9/94380/94380_s.jpg",
-  "url": "https://www.tamiya.com/japan/products/94380/index.html",
+  "url": "https://tamiya.com/japan/products/94380/index.html",
   "genre": "AOパーツ",
   "genre_key": "ao",
   "official_category": "",
