@@ -74,6 +74,18 @@ CATEGORY_RULES = [
 ]
 FALLBACK_CATEGORY = "その他"
 
+# カッコ四駆タブの中に置く特設チップ。
+# cat はチップの合言葉、tag はレジストリの tags に入っている値。
+# days を入れると「その日数以内の投稿だけ」になり、古いものは手を入れずに外れる。
+WALL_CHIPS = [
+    {"cat": "__emperor", "tag": "エンペラー", "label": "エンペラー",
+     "badge": "empN", "cls": "emp"},
+    {"cat": "__condele", "tag": "コンデレ", "label": "コンデレ", "badge": "conN"},
+    {"cat": "__kojidele", "tag": "コジデレ", "label": "コジデレ", "badge": "kojN"},
+    {"cat": "__official", "tag": "ミニ四駆公式", "label": "ミニ四駆公式",
+     "badge": "offN", "days": 7},
+]
+
 
 def categorize(name: str) -> str:
     for cat, kws in CATEGORY_RULES:
@@ -459,17 +471,21 @@ function syncChips(){
 
 const WALL_GENRE = 'xm';
 const GOD_CAT = '__god';
-const EMP_CAT = '__emperor';
-const EMP_TAG = 'エンペラー';
+// カッコ四駆の中の特設チップ。cat をキーに、どのタグで絞るかを引く。
+// days があると「その日数以内の投稿だけ」になり、古いものは自動で外れる。
+const WALL_CHIPS = %WALL_CHIPS%;
+window.__wallChips = WALL_CHIPS;
 
 function apply(resetPage){
   // カッコ四駆 は商品一覧ではないので、絞り込みも件数もページ送りも使わない
   const wall = genre === WALL_GENRE;
-  const emp = wall && cat === EMP_CAT;
+  const spec = wall ? WALL_CHIPS.find(c => c.cat === cat) : null;
   document.body.classList.toggle('wall', wall);
-  document.body.classList.toggle('emp', emp);
-  if(window.__xwall) wall ? window.__xwall.open(emp ? EMP_TAG : null)
-                          : window.__xwall.close();
+  document.body.classList.toggle('emp', !!spec && spec.cat === '__emperor');
+  if(window.__xwall){
+    wall ? window.__xwall.open(spec ? {tag: spec.tag, days: spec.days} : null)
+         : window.__xwall.close();
+  }
   if(wall) return;
 
   // 神ツールも一覧ではない。チップ行だけ残して、商品一覧は出さない。
@@ -811,9 +827,10 @@ def build(items: list[dict], outdir: str) -> str:
     chip_html = "".join(
         f'<span class="chip" data-cat="{html.escape(c)}" data-genres="{" ".join(gs)}">{html.escape(c)}</span>'
         for c, gs in cat_genres.items()
-    ) + '<span class="chip on" data-cat="" data-genres="">すべて</span>' + godtools_ui.chip() + (
-        '<span class="chip emp" data-cat="__emperor" data-genres="xm">エンペラー'
-        '<span class="n" id="empN"></span></span>')
+    ) + '<span class="chip on" data-cat="" data-genres="">すべて</span>' + godtools_ui.chip() + "".join(
+        f'<span class="chip{" " + c["cls"] if c.get("cls") else ""}" data-cat="{c["cat"]}" '
+        f'data-genres="xm">{html.escape(c["label"])}'
+        f'<span class="n" id="{c["badge"]}"></span></span>' for c in WALL_CHIPS)
 
     # カードのHTMLはここでは作らない。データだけ渡してブラウザ側で組み立てる。
     site_desc = SITE_DESC.format(n=len(items))
@@ -826,6 +843,9 @@ def build(items: list[dict], outdir: str) -> str:
     cmap_html = colormap_ui.section(paint_rows) if paint_rows else ""
     god_html = godtools_ui.section({"amazon": AMAZON_TAG, "mercari": MERCARI_AFID,
                                     "rakuten": RAKUTEN_AFID})
+    # JS は f-string ではないので、目印を実データに差し替えてから埋める
+    js_all = JS.replace("%WALL_CHIPS%", json.dumps(
+        WALL_CHIPS, ensure_ascii=False, separators=(",", ":")))
     # マシンカラーのページがあるときだけ、カッコ四駆 用の丸ボタンを出す
     wheel_fab = color_wheel_ui.FAB_HTML if color_wheel_ui.load()[1] else ""
 
@@ -897,7 +917,7 @@ def build(items: list[dict], outdir: str) -> str:
   最終更新 {datetime.now(JST).strftime("%Y-%m-%d %H:%M JST")}
 </footer>
 <script id="xdata" type="application/json">{payload}</script>
-<script>{JS}</script>
+<script>{js_all}</script>
 <!-- ValueCommerce LinkSwitch: ページ内のYahoo!ショッピング・ヤフオクへのリンクを
      自動でアフィリエイトリンクに差し替える。リンクのURLは書き換えない。 -->
 <script>var vc_pid = "{VALUECOMMERCE_PID}";</script>

@@ -118,7 +118,7 @@ JS = """
   let stage = null, current = null, wallFixed = false;
   let wallCells = [], wallNatural = NATURAL, wallScale = 1, pendingLead = null;
   let wallOrder = [];           // 開いたときに決めた並び（全件）
-  let wallTag = null;           // 絞り込み中のタグ（null なら全件）
+  let wallFilter = null;        // 絞り込み条件 {tag, days}。null なら全件
   let wallPage = 1, wallPerPageNow = WALL_PER_PC;
   let wallToken = 0;            // 描画中にページが変わったら捨てるための番号
   let wtt = null;               // 読み込んだ widgets.js
@@ -134,11 +134,18 @@ JS = """
   const count = () => isMobile() ? COUNT_SP : COUNT_PC;
   const actives = () => allPosts.filter(p => p && p.active === true && tweetIdOf(p.url));
   // タグで絞ったあとの母集団。ウォールの並び・件数・ページ数はこれで決まる。
-  const wallPool = () => wallTag
-    ? actives().filter(p => Array.isArray(p.tags) && p.tags.indexOf(wallTag) >= 0)
-    : actives();
-  const countTag = t => actives().filter(
-    p => Array.isArray(p.tags) && p.tags.indexOf(t) >= 0).length;
+  // days を指定すると「今日から数えてその日数以内の投稿」だけを残す。
+  // 公式アカウントのように、古くなったら自動で消えてほしいタブに使う。
+  const withinDays = (p, days) => {
+    if(!days) return true;
+    if(!p.postedAt) return false;
+    const t = Date.parse(p.postedAt + 'T00:00:00Z');
+    return isFinite(t) && (Date.now() - t) <= days * 86400000;
+  };
+  const matchFilter = (p, f) =>
+    !f || (Array.isArray(p.tags) && p.tags.indexOf(f.tag) >= 0 && withinDays(p, f.days));
+  const wallPool = () => actives().filter(p => matchFilter(p, wallFilter));
+  const countFilter = f => actives().filter(p => matchFilter(p, f)).length;
 
   const giveUp = (why) => {
     if(why) console.warn('[x-featured]', why);
@@ -682,12 +689,12 @@ JS = """
 
   // ページ本体（タブ切り替え）から呼ばれる
   window.__xwall = {
-    // tag を渡すとそのタグの投稿だけにする。null で全件。
-    open(tag){
+    // 絞り込み条件 {tag, days} を渡すとそのぶんだけにする。null で全件。
+    open(f){
       if(!WALL) { HOST.hidden = true; return; }
-      const t = tag || null;
-      const fresh = !WALL.classList.contains('on') || t !== wallTag;
-      wallTag = t;
+      const key = o => o ? (o.tag + '/' + (o.days || 0)) : '';
+      const fresh = !WALL.classList.contains('on') || key(f) !== key(wallFilter);
+      wallFilter = f || null;
       WALL.classList.add('on');
       HOST.hidden = true;
       if(fresh){ teardownWall(); openWallView(); }
@@ -700,7 +707,7 @@ JS = """
       if(HOST.dataset.ready) HOST.hidden = false;
     },
     count(){ return actives().length; },
-    countTag(t){ return countTag(t); }
+    countFilter(f){ return countFilter(f); }
   };
 
   async function main(){
@@ -717,9 +724,11 @@ JS = """
     // 上段タブの件数を実データで埋める
     const badge = document.getElementById('xmN');
     if(badge) badge.textContent = actives().length;
-    // エンペラー特設チップの件数も、実データから入れる
-    const empBadge = document.getElementById('empN');
-    if(empBadge) empBadge.textContent = countTag('エンペラー');
+    // 特設チップの件数も、実データから入れる
+    if(window.__wallChips) window.__wallChips.forEach(c => {
+      const el = document.getElementById(c.badge);
+      if(el) el.textContent = countFilter({tag: c.tag, days: c.days});
+    });
 
     HOST.hidden = false;
     HOST.classList.add('loading');
