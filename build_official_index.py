@@ -610,14 +610,14 @@ function buildPager(el, total){
   el.innerHTML = parts.join('');
 }
 
-// ページ番号を押したら切り替え、一覧の先頭へ戻す
+// ページ番号を押したら切り替える。
+// 画面は動かさない。見ている位置は本人のものなので、
+// 下のページ送りを押したのに一覧の先頭へ飛ばされる、という動きにしない。
 function onPagerClick(e){
   const b = e.target.closest('button[data-p]');
   if(!b || b.disabled) return;
   page = parseInt(b.dataset.p, 10);
   renderPage();
-  const top = grid.getBoundingClientRect().top + window.scrollY;
-  window.scrollTo({top: top - 80, behavior: 'smooth'});
 }
 pagerTop.addEventListener('click', onPagerClick);
 pagerBottom.addEventListener('click', onPagerClick);
