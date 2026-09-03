@@ -653,14 +653,14 @@ JS = """
     if(wallPoll){ clearInterval(wallPoll); wallPoll = null; }
   }
 
-  // ページ番号を押したら、そのページを描いて一覧の先頭へ戻す
+  // ページ番号を押したら、そのページを描く。
+  // 画面は動かさない。見ている位置は本人のものなので、
+  // 下のページ送りを押したのに上へ飛ばされる、という動きにしない。
   if(WALL) WALL.addEventListener('click', e => {
     const b = e.target.closest('.xwpager button[data-p]');
     if(!b || b.disabled) return;
     wallPage = parseInt(b.dataset.p, 10);
     renderWallPage();
-    const top = WALL.getBoundingClientRect().top + window.scrollY;
-    window.scrollTo({top: Math.max(0, top - 80), behavior: 'smooth'});
   });
 
   // 開くたびに並べ替える。押した1件があればそれが先頭。

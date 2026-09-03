@@ -169,7 +169,7 @@ def site_jsonld(desc: str) -> str:
     return json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace("<", "\\u003c")
 
 
-def catalog_payload(items: list[dict]) -> str:
+def catalog_payload(items: list[dict], new_codes: set) -> str:
     """商品データを、ブラウザ側でカードを組み立てるための小さなJSONにする。
 
     1469件ぶんのカードをHTMLに書き出すと4MB近くになり、スマホでは
@@ -207,9 +207,11 @@ def catalog_payload(items: list[dict]) -> str:
         if url == TAMIYA_URL.format(code=it["item_code"]):
             url = ""
         rows.append([it["item_code"], it.get("gp_no", ""), it["name"],
-                     ci[cat], gi[gkey], it["price"], img, url])
+                     ci[cat], gi[gkey], it["price"], img, url,
+                     it.get("_rel", ""), it.get("_relkey", "")])
 
     data = {"b": IMG_BASE, "c": cats, "g": genres, "i": rows,
+            "nw": sorted(new_codes),
             "ec": {"a": AMAZON_TAG, "m": MERCARI_AFID, "r": RAKUTEN_AFID}}
     body = json.dumps(data, ensure_ascii=False, separators=(",", ":"))
     # <script> の中に置くので、閉じタグに化ける可能性のある < だけ潰しておく
@@ -287,7 +289,19 @@ body.emp #xWall .pager button[aria-current="page"]{background:#f57c00;border-col
 /* チップ行はエンペラー特設の入口なので、カッコ四駆でも隠さない */
 body.wall .cmap,body.wall .cmap-fab,body.wall .count-line,
 body.wall .pager,body.wall .grid,body.wall .empty{display:none !important}
-.chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px;align-items:center}
+/* 細分類は数が多く名前も長いので、既定では畳んでおく。
+   開かないと最初の商品が画面に入らないため（キットは16種で538pxあった）。 */
+.catbtn{background:var(--surface);border:1.5px solid var(--line);border-radius:999px;
+padding:5px 12px;font:inherit;font-size:12px;font-weight:600;cursor:pointer;
+color:var(--ink2);display:inline-flex;align-items:center;gap:5px}
+.catbtn:hover{border-color:var(--brand);color:var(--brand)}
+.catbtn .cv{font-weight:800;color:var(--brand);max-width:11em;overflow:hidden;
+text-overflow:ellipsis;white-space:nowrap}
+.catbtn .ar{font-size:10px;transition:transform .18s}
+.catbtn[aria-expanded="true"] .ar{transform:rotate(180deg)}
+.chipbox{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px}
+.chipbox[hidden]{display:none}
 .chip{background:var(--surface);border:1.5px solid var(--line);border-radius:999px;
 padding:5px 14px;font-size:12px;font-weight:600;cursor:pointer;user-select:none}
 .chip.on{background:var(--brand);border-color:var(--brand);color:#fff}
@@ -323,6 +337,8 @@ font-family:inherit;line-height:1.5}
 .ec:hover{background:var(--brand-soft);border-color:var(--brand);color:var(--brand)}
 .ec.souba{background:var(--brand);border-color:var(--brand);color:#fff}
 .cat-tag{font-size:10px;color:var(--brand);font-weight:700}
+/* 新製品だけが持つ発売日。まだ買えないものがあるので必ず見せる */
+.rel{font-size:10.5px;color:#c2410c;font-weight:700;margin:2px 0 0}
 .empty{padding:60px 0;text-align:center;color:var(--ink3);display:none}
 /* ページ送り（公式サイトと同じ、数字を四角で並べる形） */
 .pager{display:none;gap:5px;flex-wrap:wrap;align-items:center;justify-content:center;margin:12px 0}
@@ -352,6 +368,10 @@ const q = document.getElementById('q');
 const tabs = [...document.querySelectorAll('.tab:not(.link)')];
 const chips = [...document.querySelectorAll('.chip')];
 const chipRow = document.querySelector('.chips');
+const chipBox = document.getElementById('chipBox');
+const catBtn = document.getElementById('catToggle');
+// 畳んだ細分類の呼び名。キットは「シリーズ」が実態に合う。
+const CAT_LABEL = {kit: 'シリーズ'};
 const grid = document.querySelector('.grid');
 const countLine = document.getElementById('countLine');
 const empty = document.getElementById('empty');
@@ -369,10 +389,15 @@ const ITEMS = XD.i.map(r => {
     code: r[0], gp: r[1], name: r[2], cat: cat_, gkey: g[0], genre: g[1], price: r[5],
     img: !img ? '' : (img.slice(0, 4) === 'http' ? img : XD.b + img),
     url: r[7] || ('https://www.tamiya.com/japan/products/' + r[0] + '/index.html'),
+    rel: r[8] || '',
+    relKey: r[9] || '',
     // 検索用。品番・GP番号・商品名・細分類・ジャンルをまとめて小文字にしたもの
     hay: (r[0] + ' ' + r[1] + ' ' + r[2] + ' ' + cat_ + ' ' + g[1]).toLowerCase()
   };
 });
+
+// タミヤ公式の「最新カタログ製品一覧」に載っていた品番。新製品タブはこれで絞る。
+const NEWSET = new Set(XD.nw || []);
 
 // ---- カードの組み立て ----
 const ESCMAP = {'&':'&amp;','\\u003c':'&lt;','>':'&gt;','"':'&quot;',"'":'&#x27;'};
@@ -419,6 +444,8 @@ function cardHTML(it){
         '<div class="nm">' + esc(short) + '</div>' +
         '<button class="btn-detail" type="button">詳細</button>' +
       '</div>' +
+      // 発売日は新製品タブでいちばん見たい情報なので、たたまずに常に出す
+      (it.rel ? '<div class="rel">' + esc(it.rel) + '</div>' : '') +
       '<div class="detail">' +
         '<div class="code">ITEM ' + esc(it.code) + gp + '</div>' +
         '<div class="cat-tag">' + esc(it.cat) + '</div>' +
@@ -461,12 +488,27 @@ function syncChips(){
   const active = chips.find(c => cat && c.dataset.cat === cat);
   if(active && active.classList.contains('hide')) cat = '';
   chips.forEach(c => c.classList.toggle('on', c.dataset.cat === cat));
-  // 細分類が1種類しかないジャンルでは、絞り込みにならないのでチップ行ごと隠す
   const shown = chips.filter(c => c.dataset.cat && !c.classList.contains('hide'));
   // 細分類が1種類だけなら絞り込みにならないので隠す。
   // ただし特設チップ（神ツール・エンペラー）が出ているときは必ず見せる。
   const special = shown.some(c => c.dataset.cat.slice(0, 2) === '__');
   chipRow.style.display = (real && (shown.length > 1 || special)) ? '' : 'none';
+
+  // 畳んである細分類の見出し。いま選んでいるものがあれば名前を出す。
+  const inBox = shown.filter(c => c.dataset.cat.slice(0, 2) !== '__');
+  if(catBtn){
+    catBtn.hidden = !(real && inBox.length > 1);
+    catBtn.querySelector('.cv').textContent = cat && cat.slice(0, 2) !== '__' ? cat : '';
+    catBtn.querySelector('.lb').textContent = CAT_LABEL[genre] || 'カテゴリー';
+  }
+  if(chipBox && (catBtn && catBtn.hidden)) closeCatBox();
+}
+
+// 細分類の箱を閉じる。開閉はボタンの aria-expanded を正とする。
+function closeCatBox(){
+  if(!chipBox || !catBtn) return;
+  chipBox.hidden = true;
+  catBtn.setAttribute('aria-expanded', 'false');
 }
 
 const WALL_GENRE = 'xm';
@@ -497,11 +539,14 @@ function apply(resetPage){
   matched = ITEMS.filter(it => {
     const okGenre = !genre ? true
                   : genre === 'fav' ? favs.has(it.code)
+                  : genre === 'new' ? NEWSET.has(it.code)
                   : it.gkey === genre;
     return okGenre
         && (!cat || it.cat === cat)
         && terms.every(t => it.hay.includes(t));
   });
+  // 新製品は発売日の新しい順。公式マスタの並びのままだと前後してしまう。
+  if(genre === 'new') matched.sort((a, b) => (b.relKey || '').localeCompare(a.relKey || ''));
   if(resetPage !== false) page = 1;
   renderPage();
   if(window.paintPins) paintPins();
@@ -609,8 +654,16 @@ tabs.forEach(t => t.addEventListener('click', () => {
 chips.forEach(ch => ch.addEventListener('click', () => {
   cat = (cat === ch.dataset.cat) ? '' : ch.dataset.cat;
   chips.forEach(c => c.classList.toggle('on', c.dataset.cat === cat));
+  closeCatBox();          // 選んだら畳む。開きっぱなしだと一覧が押し下げられる
+  syncChips();
   apply();
 }));
+
+if(catBtn) catBtn.addEventListener('click', () => {
+  const open = catBtn.getAttribute('aria-expanded') === 'true';
+  catBtn.setAttribute('aria-expanded', open ? 'false' : 'true');
+  chipBox.hidden = open;
+});
 
 // カードは組み立て直されるので、個別にではなく一覧側で受ける
 grid.addEventListener('click', e => {
@@ -782,7 +835,61 @@ def copy_assets(outdir: str) -> None:
         shutil.copy2("CNAME", os.path.join(outdir, "CNAME"))
 
 
+NEW_GENRE = "new"          # 新製品タブのジャンルキー
+NEW_ITEMS_JSON = "new_items.json"
+
+
+def merge_new_items(items: list[dict]) -> set:
+    """タミヤ公式の新製品を取り込み、新製品の品番の集合を返す。
+
+    すでにカタログにある品番はそのまま（ジャンルは元のまま）にして、
+    印だけ付ける。カタログにまだ無いものは新製品ジャンルとして足す。
+    発売前の商品は公式マスタにまだ載っていないため、これが要る。
+    """
+    if not os.path.exists(NEW_ITEMS_JSON):
+        return set()
+    with open(NEW_ITEMS_JSON, encoding="utf-8") as f:
+        rows = json.load(f).get("items", [])
+    have = {str(i["item_code"]) for i in items}
+    codes, rel = set(), {}
+    for r in rows:
+        code = str(r["item_code"])
+        codes.add(code)
+        rel[code] = r.get("release", "")
+        if code in have:
+            continue
+        items.append({
+            "item_code": code,
+            "name": html.unescape(r.get("name", "")),
+            "price": r.get("price", ""),
+            "image": r.get("image", ""),
+            "url": r.get("url", ""),
+            "genre_key": NEW_GENRE,
+            "genre": "新製品",
+            "official_category": "新製品",
+        })
+    for it in items:
+        c = str(it["item_code"])
+        if c in rel and rel[c]:
+            it["_rel"] = rel[c]
+            it["_relkey"] = rel_key(rel[c])
+    return codes
+
+
+def rel_key(text: str) -> str:
+    """「2026年9月12日(土)ごろ発売」から並べ替え用の 20260912 を作る。
+
+    日が書かれていない（例：2027年1月発送予定）ものは月末扱いにして、
+    同じ月の中では後ろに置く。"""
+    m = re.search(r"(\d{4})年\s*(\d{1,2})月(?:\s*(\d{1,2})日)?", text or "")
+    if not m:
+        return "00000000"
+    return "%04d%02d%02d" % (int(m.group(1)), int(m.group(2)),
+                             int(m.group(3)) if m.group(3) else 31)
+
+
 def build(items: list[dict], outdir: str) -> str:
+    new_codes = merge_new_items(items)
     # 各商品に細分類を割り当てる
     for it in items:
         it["_cat"] = it.get("official_category") or categorize(it["name"])
@@ -806,9 +913,13 @@ def build(items: list[dict], outdir: str) -> str:
     genre_counts = {k: sum(1 for i in items if i["genre_key"] == k) for k, _ in genres}
 
     # 上段タブ（ジャンル → すべて → お気に入り）
-    tab_html = "".join(
+    # 新製品は「見に来る理由」になるので先頭に置く
+    tab_html = (
+        f'<div class="tab" data-genre="{NEW_GENRE}">新製品'
+        f'<span class="n">{len(new_codes)}</span></div>' if new_codes else ""
+    ) + "".join(
         f'<div class="tab" data-genre="{k}">{html.escape(lb)}<span class="n">{genre_counts[k]}</span></div>'
-        for k, lb in genres
+        for k, lb in genres if k != NEW_GENRE
     ) + (
         f'<div class="tab" data-genre="{x_embed_ui.WALL_GENRE}">カッコ四駆'
         '<span class="n" id="xmN"></span></div>'
@@ -824,19 +935,28 @@ def build(items: list[dict], outdir: str) -> str:
     for k, _ in genres:
         for c in dict.fromkeys(i["_cat"] for i in items if i["genre_key"] == k):
             cat_genres.setdefault(c, []).append(k)
-    chip_html = "".join(
-        f'<span class="chip" data-cat="{html.escape(c)}" data-genres="{" ".join(gs)}">{html.escape(c)}</span>'
-        for c, gs in cat_genres.items()
-    ) + '<span class="chip on" data-cat="" data-genres="">すべて</span>' + godtools_ui.chip() + "".join(
-        f'<span class="chip{" " + c["cls"] if c.get("cls") else ""}" data-cat="{c["cat"]}" '
-        f'data-genres="xm">{html.escape(c["label"])}'
-        f'<span class="n" id="{c["badge"]}"></span></span>' for c in WALL_CHIPS)
+    # 細分類は数が多く名前も長いので、畳んだ箱（.chipbox）に入れる。
+    # 行に出しっぱなしにすると、それだけで1画面ぶんの高さになってしまう。
+    box_html = "".join(
+        f'<span class="chip" data-cat="{html.escape(c)}" data-genres="{" ".join(gs)}">'
+        f'{html.escape(c)}</span>'
+        for c, gs in cat_genres.items())
+    # 行に出すのは「すべて」「畳んだ細分類を開くボタン」と、各タブの特設チップだけ
+    chip_html = (
+        '<span class="chip on" data-cat="" data-genres="">すべて</span>'
+        '<button class="catbtn" id="catToggle" type="button" aria-expanded="false"'
+        ' aria-controls="chipBox" hidden><span class="lb">カテゴリー</span>'
+        '<span class="cv"></span><span class="ar">▾</span></button>'
+        + godtools_ui.chip() + "".join(
+            f'<span class="chip{" " + c["cls"] if c.get("cls") else ""}" data-cat="{c["cat"]}" '
+            f'data-genres="xm">{html.escape(c["label"])}'
+            f'<span class="n" id="{c["badge"]}"></span></span>' for c in WALL_CHIPS))
 
     # カードのHTMLはここでは作らない。データだけ渡してブラウザ側で組み立てる。
     site_desc = SITE_DESC.format(n=len(items))
     jsonld = site_jsonld(site_desc)
     site_name, site_url = SITE_NAME, SITE_URL
-    payload = catalog_payload(items)
+    payload = catalog_payload(items, new_codes)
     nojs = noscript_list(items)
 
     paint_rows = paint_colors.build([i for i in items if i.get("genre_key") == "paint"])
@@ -893,6 +1013,7 @@ def build(items: list[dict], outdir: str) -> str:
 <main>
 {x_embed_ui.SECTION}
   <div class="chips">{chip_html}</div>
+  <div class="chipbox" id="chipBox" hidden>{box_html}</div>
 {x_embed_ui.WALL_SECTION}
 {god_html}
 {cmap_html}

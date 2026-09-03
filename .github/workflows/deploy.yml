@@ -33,6 +33,9 @@ jobs:
       - name: タミヤ公式のパーツ一覧を取得
         run: python fetch_tamiya_catalog.py
 
+      - name: ミニ四駆の新製品を取得
+        run: python fetch_new_items.py --months 3
+
       - name: カタログを生成
         run: python build_official_index.py
 
@@ -40,7 +43,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs tamiya_catalog.json
+          git add docs tamiya_catalog.json new_items.json
           if git diff --cached --quiet; then
             echo "変更なし。コミットしません。"
           else
