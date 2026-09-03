@@ -339,6 +339,14 @@ font-family:inherit;line-height:1.5}
 .cat-tag{font-size:10px;color:var(--brand);font-weight:700}
 /* 新製品だけが持つ発売日。まだ買えないものがあるので必ず見せる */
 .rel{font-size:10.5px;color:#c2410c;font-weight:700;margin:2px 0 0}
+/* 「新製品」の3文字。色はJSが --c1〜--c3 に入れる。タブを押すたび組が変わる。 */
+#newTab .ch{display:inline-block}
+#newTab .ch:nth-child(1){color:var(--c1,#e5342c)}
+#newTab .ch:nth-child(2){color:var(--c2,#f07a1a)}
+#newTab .ch:nth-child(3){color:var(--c3,#f5c518)}
+/* 選択中は青背景に乗るので白で固定する。
+   上の3行より詳細度が低いため !important で上書きする。 */
+#newTab.on .ch{color:#fff !important}
 .empty{padding:60px 0;text-align:center;color:var(--ink3);display:none}
 /* ページ送り（公式サイトと同じ、数字を四角で並べる形） */
 .pager{display:none;gap:5px;flex-wrap:wrap;align-items:center;justify-content:center;margin:12px 0}
@@ -643,7 +651,22 @@ window.addEventListener('popstate', () => {
 
 q.addEventListener('input', apply);
 
+// 「新製品」の3文字の色。タブを押すたびに次の組へ回す。
+const NEW_HUES = %NEW_TAB_HUES%;
+const newTab = document.getElementById('newTab');
+let hueIdx = 0;
+function paintNewTab(){
+  if(!newTab) return;
+  const c = NEW_HUES[hueIdx % NEW_HUES.length];
+  newTab.style.setProperty('--c1', c[0]);
+  newTab.style.setProperty('--c2', c[1]);
+  newTab.style.setProperty('--c3', c[2]);
+}
+paintNewTab();
+
 tabs.forEach(t => t.addEventListener('click', () => {
+  hueIdx++;
+  paintNewTab();
   genre = t.dataset.genre;
   tabs.forEach(x => x.classList.toggle('on', x === t));
   cat = '';
@@ -836,6 +859,15 @@ def copy_assets(outdir: str) -> None:
 
 
 NEW_GENRE = "new"          # 新製品タブのジャンルキー
+# 「新製品」の3文字に付ける色。タブを押すたびに次の組へ移る。
+# 動かし続けると目に障るので、アニメーションではなく操作に応じた変化にした。
+NEW_TAB_HUES = [
+    ["#e5342c", "#f07a1a", "#f5c518"],   # 赤 / オレンジ / 黄
+    ["#f07a1a", "#f5c518", "#8dc925"],   # オレンジ / 黄 / 黄緑
+    ["#f5c518", "#8dc925", "#2fae5a"],   # 黄 / 黄緑 / 緑
+    ["#2fae5a", "#2277dd", "#8b5cf6"],   # 緑 / 青 / 紫
+    ["#2277dd", "#8b5cf6", "#ef5da8"],   # 青 / 紫 / ピンク
+]
 NEW_ITEMS_JSON = "new_items.json"
 
 
@@ -915,8 +947,9 @@ def build(items: list[dict], outdir: str) -> str:
     # 上段タブ（ジャンル → すべて → お気に入り）
     # 新製品は「見に来る理由」になるので先頭に置く
     tab_html = (
-        f'<div class="tab" data-genre="{NEW_GENRE}">新製品'
-        f'<span class="n">{len(new_codes)}</span></div>' if new_codes else ""
+        f'<div class="tab" data-genre="{NEW_GENRE}" id="newTab">'
+        + "".join(f'<span class="ch">{c}</span>' for c in "新製品")
+        + f'<span class="n">{len(new_codes)}</span></div>' if new_codes else ""
     ) + "".join(
         f'<div class="tab" data-genre="{k}">{html.escape(lb)}<span class="n">{genre_counts[k]}</span></div>'
         for k, lb in genres if k != NEW_GENRE
@@ -965,7 +998,8 @@ def build(items: list[dict], outdir: str) -> str:
                                     "rakuten": RAKUTEN_AFID})
     # JS は f-string ではないので、目印を実データに差し替えてから埋める
     js_all = JS.replace("%WALL_CHIPS%", json.dumps(
-        WALL_CHIPS, ensure_ascii=False, separators=(",", ":")))
+        WALL_CHIPS, ensure_ascii=False, separators=(",", ":"))).replace(
+        "%NEW_TAB_HUES%", json.dumps(NEW_TAB_HUES, separators=(",", ":")))
     # マシンカラーのページがあるときだけ、カッコ四駆 用の丸ボタンを出す
     wheel_fab = color_wheel_ui.FAB_HTML if color_wheel_ui.load()[1] else ""
 
