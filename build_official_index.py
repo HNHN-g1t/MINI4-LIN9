@@ -384,7 +384,8 @@ const grid = document.querySelector('.grid');
 const countLine = document.getElementById('countLine');
 const empty = document.getElementById('empty');
 const favN = document.getElementById('favN');
-let genre = '';   // '' = すべて
+// はじめに開くタブ。新製品が無い月は「すべて」に戻る（下でタブ側と合わせる）
+let genre = '%DEFAULT_GENRE%';
 let cat = '';     // '' = 全カテゴリ
 
 // ---- 商品データ ----
@@ -718,7 +719,12 @@ grid.addEventListener('click', e => {
 // apply() より前に入れること（apply の中で URL を書き換えるため）。
 try{
   const _s = new URLSearchParams(location.search).get('s');
-  if(_s) q.value = _s;
+  if(_s){
+    q.value = _s;
+    // 検索は全品番から。新製品タブのまま探すと、渡されたリンクが空振りする。
+    genre = '';
+    tabs.forEach(t => t.classList.toggle('on', t.dataset.genre === ''));
+  }
 }catch(e){}
 
 paintFavs();
@@ -947,7 +953,7 @@ def build(items: list[dict], outdir: str) -> str:
     # 上段タブ（ジャンル → すべて → お気に入り）
     # 新製品は「見に来る理由」になるので先頭に置く
     tab_html = (
-        f'<div class="tab" data-genre="{NEW_GENRE}" id="newTab">'
+        f'<div class="tab on" data-genre="{NEW_GENRE}" id="newTab">'
         + "".join(f'<span class="ch">{c}</span>' for c in "新製品")
         + f'<span class="n">{len(new_codes)}</span></div>' if new_codes else ""
     ) + "".join(
@@ -956,7 +962,8 @@ def build(items: list[dict], outdir: str) -> str:
     ) + (
         f'<div class="tab" data-genre="{x_embed_ui.WALL_GENRE}">カッコ四駆'
         '<span class="n" id="xmN"></span></div>'
-        f'<div class="tab on" data-genre="">すべて<span class="n">{len(items)}</span></div>'
+        f'<div class="tab{"" if new_codes else " on"}" data-genre="">'
+        f'すべて<span class="n">{len(items)}</span></div>'
         '<div class="tab fav" data-genre="fav">★ お気に入り<span class="n" id="favN">0</span></div>'
         # レースカレンダーは別ページ。タブと同じ見た目のリンクで並べる。
         '<a class="tab link" href="race.html">🏁レース情報</a>'
@@ -999,7 +1006,8 @@ def build(items: list[dict], outdir: str) -> str:
     # JS は f-string ではないので、目印を実データに差し替えてから埋める
     js_all = JS.replace("%WALL_CHIPS%", json.dumps(
         WALL_CHIPS, ensure_ascii=False, separators=(",", ":"))).replace(
-        "%NEW_TAB_HUES%", json.dumps(NEW_TAB_HUES, separators=(",", ":")))
+        "%NEW_TAB_HUES%", json.dumps(NEW_TAB_HUES, separators=(",", ":"))).replace(
+        "%DEFAULT_GENRE%", NEW_GENRE if new_codes else "")
     # マシンカラーのページがあるときだけ、カッコ四駆 用の丸ボタンを出す
     wheel_fab = color_wheel_ui.FAB_HTML if color_wheel_ui.load()[1] else ""
 
