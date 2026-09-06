@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-09-03",
+ "fetchedAt": "2026-09-06",
  "items": [
   {
    "item_code": "95404",
@@ -92,6 +92,15 @@
    "genre": "ミニ四駆"
   },
   {
+   "item_code": "18664",
+   "name": "ティクシヴ（MEシャーシ）",
+   "release": "2026年10月24日(土)ごろ発売",
+   "price": "1,650円",
+   "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/1/18664/18664_s.jpg",
+   "url": "https://www.tamiya.com/japan/products/18664/index.html",
+   "genre": "ミニ四駆"
+  },
+  {
    "item_code": "95396",
    "name": "19mmプラリング付アルミベアリングローラー(5本スポーク)(レッド)",
    "release": "2026年10月24日(土)ごろ発売",
@@ -107,15 +116,6 @@
    "price": "660円",
    "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/9/95711/95711_s.jpg",
    "url": "https://www.tamiya.com/japan/products/95711/index.html",
-   "genre": "ミニ四駆"
-  },
-  {
-   "item_code": "18664",
-   "name": "ティクシヴ（MEシャーシ）",
-   "release": "2026年10月24日(土)ごろ発売",
-   "price": "1,650円",
-   "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/1/18664/18664_s.jpg",
-   "url": "https://www.tamiya.com/japan/products/18664/index.html",
    "genre": "ミニ四駆"
   },
   {
