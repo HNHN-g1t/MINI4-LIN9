@@ -133,6 +133,11 @@ white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 overflow-wrap:anywhere;word-break:break-word}
 .nm:empty{display:none}
 
+/* 月の絞り込み。地域より一段小さくして、別の軸だと分かるようにする。 */
+.chips.month{margin:2px 0 12px}
+.chips.month .chip{font-size:12.5px;padding:6px 12px}
+.chips.month .chip[aria-pressed="true"]{background:var(--ink2);border-color:var(--ink2);color:#fff}
+
 /* ジャパンカップは地域とは別軸なので、色を変えて見分けられるようにする。
    幅いっぱいの改行を挟み、地域の並びの下に単独で置く。 */
 .chips .chip.jc{flex-basis:100%;order:99;margin-top:2px;
@@ -183,13 +188,9 @@ footer p{margin:4px 0}
 <div class="chips" id="regions" role="group" aria-label="地域で絞り込む"></div>
 <div class="chips pref" id="prefs" role="group" aria-label="都道府県で絞り込む" hidden></div>
 
+<div class="chips month" id="months" role="group" aria-label="月で絞り込む"></div>
+
 <div class="bar">
-  <select id="range" aria-label="期間で絞り込む">
-    <option value="0">これからの開催すべて</option>
-    <option value="1">1ヶ月以内</option>
-    <option value="3">3ヶ月以内</option>
-    <option value="6">6ヶ月以内</option>
-  </select>
   <input id="q" type="search" placeholder="会場名・イベント名で探す" aria-label="会場名・イベント名で探す">
   <span class="count" id="count"></span>
 </div>
@@ -615,13 +616,14 @@ const $favRow = document.getElementById('favRow');
 const $regions = document.getElementById('regions');
 const $prefs = document.getElementById('prefs');
 const $favOnly = document.getElementById('favOnly');
-const $range = document.getElementById('range');
+const $months = document.getElementById('months');
 const $q = document.getElementById('q');
 const $list = document.getElementById('list');
 const $count = document.getElementById('count');
 
 let region = '';    // '' = 全国
 let pref = '';      // '' = その地域すべて
+let month = '';     // '' = すべての月。'2026-10' のような形で1ヶ月に絞る
 let favOnly = false;
 
 // 今日の0時。過ぎた開催は出さない。
@@ -685,6 +687,31 @@ function buildRegions(){
   }
 }
 
+// ---- 月チップ（今月を含む3ヶ月ぶん） ----
+// 9月に見ているなら 9月 / 10月 / 11月。開催が無い月は出さない。
+// 3ヶ月より先（12月など）は「すべて」から辿れる。
+function buildMonths(){
+  const count = {};
+  for(const e of UPCOMING) count[e.date.slice(0, 7)] = (count[e.date.slice(0, 7)] || 0) + 1;
+
+  const mk = (label, value, n) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'chip'; b.dataset.v = value;
+    b.setAttribute('aria-pressed', value === month ? 'true' : 'false');
+    b.innerHTML = '<span></span><span class="n"></span>';
+    b.firstChild.textContent = label;
+    b.lastChild.textContent = n;
+    return b;
+  };
+  $months.innerHTML = '';
+  $months.appendChild(mk('すべて', '', UPCOMING.length));
+  for(let i = 0; i < 3; i++){
+    const d = new Date(today.getFullYear(), today.getMonth() + i, 1);
+    const key = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+    if(count[key]) $months.appendChild(mk((d.getMonth() + 1) + '月', key, count[key]));
+  }
+}
+
 // ---- 県チップ（選んだ地域の中で、開催があるものだけ） ----
 function buildPrefs(){
   $prefs.innerHTML = '';
@@ -715,20 +742,19 @@ function syncChips(){
     b.setAttribute('aria-pressed', b.dataset.v === region ? 'true' : 'false');
   for(const b of $prefs.querySelectorAll('.chip'))
     b.setAttribute('aria-pressed', b.dataset.v === pref ? 'true' : 'false');
+  for(const b of $months.querySelectorAll('.chip'))
+    b.setAttribute('aria-pressed', b.dataset.v === month ? 'true' : 'false');
 }
 
 function render(){
-  const months = parseInt($range.value, 10) || 0;
   const q = $q.value.trim();
-  let limit = null;
-  if(months){ limit = new Date(today); limit.setMonth(limit.getMonth() + months); }
   const jcOnly = region === JC;
   const inRegion = (region && !jcOnly)
     ? (REGIONS.find(r => r[0] === region) || [null, []])[1] : null;
 
   const rows = UPCOMING
     .filter(e => {
-      if(limit && asDate(e.date) > limit) return false;
+      if(month && e.date.slice(0, 7) !== month) return false;
       if(jcOnly && !isJC(e)) return false;
       if(inRegion && !inRegion.includes(e.pref)) return false;
       if(pref && e.pref !== pref) return false;
@@ -750,12 +776,12 @@ function render(){
     return;
   }
 
-  let month = '';
+  let headMonth = '';           // 直前に出した月の見出し（状態変数 month とは別物）
   for(const e of rows){
     const d = asDate(e.date);
     const key = d.getFullYear() + '-' + (d.getMonth() + 1);
-    if(key !== month){
-      month = key;
+    if(key !== headMonth){
+      headMonth = key;
       const h = document.createElement('div');
       h.className = 'month';
       h.textContent = d.getFullYear() + '年 ' + (d.getMonth() + 1) + '月';
@@ -822,10 +848,17 @@ $favOnly.addEventListener('click', () => {
   $favOnly.setAttribute('aria-pressed', favOnly ? 'true' : 'false');
   render();
 });
-$range.addEventListener('change', render);
+$months.addEventListener('click', e => {
+  const b = e.target.closest('.chip');
+  if(!b) return;
+  month = b.dataset.v;
+  syncChips();
+  render();
+});
 $q.addEventListener('input', render);
 
 buildRegions();
+buildMonths();
 buildPrefs();
 syncChips();
 syncFavButton();
