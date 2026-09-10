@@ -1,0 +1,58 @@
+name: レース開催情報の下書きを取得
+
+# タミヤ公式から開催情報を取り込み、下書き（events_draft.json）だけを作る。
+# 公開中の docs/race.html には一切触らない。反映は人が差分を確かめてから行う。
+#
+# 手元のPCから 4_UpdateEvents.bat を実行するのと取得部分は同じ。
+# 違いは、取得だけをここで済ませて、下書きを events-draft ブランチに
+# 置いておく点。手元に環境が無くても差分の確認まで進められる。
+
+on:
+  workflow_dispatch: # 手動実行ボタン（自動では走らせない）
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fetch-events
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: タミヤ公式から開催情報を取得
+        # キャッシュを持たない実行環境なので必ず取り直す。
+        # 0件だった場合はここで異常終了し、下書きは作られない。
+        run: python fetch_events.py --refresh
+
+      - name: 下書きを events-draft ブランチに置く
+        # main は汚さない。下書き専用の枝に、毎回まるごと置き換える。
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout --orphan events-draft
+          git rm -rf --cached . >/dev/null
+          # events_draft.json は .gitignore の対象なので -f で明示的に加える
+          git add -f events_draft.json
+          git commit -m "レース開催情報の下書き（$(date -u '+%Y-%m-%d %H:%M UTC') 取得）"
+          git push -f origin events-draft
+          echo "events-draft ブランチに置きました。"
+
+      - name: 取得結果の要約
+        run: |
+          python - <<'PY'
+          import json
+          d = json.load(open('events_draft.json', encoding='utf-8'))
+          ev = d.get('events', [])
+          print(f"取得 {len(ev)}件 / generatedAt={d.get('generatedAt')}")
+          from collections import Counter
+          m = Counter(e['date'][:7] for e in ev)
+          for k in sorted(m): print(f"  {k}  {m[k]}件")
+          PY
