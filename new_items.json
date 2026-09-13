@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-09-06",
+ "fetchedAt": "2026-09-13",
  "items": [
   {
    "item_code": "95404",
@@ -191,21 +191,21 @@
    "genre": "ミニ四駆"
   },
   {
-   "item_code": "95712",
-   "name": "ダッシュ１号･皇帝（エンペラー）シルバーメッキボディセット",
-   "release": "2026年9月12日(土)ごろ発売",
-   "price": "594円",
-   "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/9/95712/95712_s.jpg",
-   "url": "https://www.tamiya.com/japan/products/95712/index.html",
-   "genre": "ミニ四駆"
-  },
-  {
    "item_code": "95713",
    "name": "レッドスパイクタイヤ &amp; シルバーメッキホイールセット",
    "release": "2026年9月12日(土)ごろ発売",
    "price": "352円",
    "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/9/95713/95713_s.jpg",
    "url": "https://www.tamiya.com/japan/products/95713/index.html",
+   "genre": "ミニ四駆"
+  },
+  {
+   "item_code": "95712",
+   "name": "ダッシュ１号･皇帝（エンペラー）シルバーメッキボディセット",
+   "release": "2026年9月12日(土)ごろ発売",
+   "price": "594円",
+   "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/9/95712/95712_s.jpg",
+   "url": "https://www.tamiya.com/japan/products/95712/index.html",
    "genre": "ミニ四駆"
   },
   {
