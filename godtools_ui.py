@@ -9,6 +9,7 @@
   asin        … Amazonの商品ページURL（/dp/XXXXXXXXXX）から取れる10文字
   rakuten_url … 楽天の商品ページURL（余計な追跡パラメータは外して入れる）
 image は商品ページの画像URL。text は1行が1要素で、書いたとおりに改行される。
+only を書くと、そのショップのリンクだけを出す（正規品がそこにしか無い商品用）。
 """
 import html
 import urllib.parse
@@ -47,6 +48,8 @@ ITEMS = [
         "official": "汐見板金Web-Shop ミニ四駆ワーキングボックス",
         # 楽天ショップの商品。Amazonの品番が無いので、直リンクは楽天側に持たせる。
         "rakuten_url": "https://item.rakuten.co.jp/shop-siomi/m4d-tls-wkb/",
+        # 正規品は楽天のこのショップでしか売っていないので、他店の検索は出さない
+        "only": ["楽天"],
         "image": "https://shop.r10s.jp/shop-siomi/cabinet/product-img/m4d-tls-wkb-01b.jpg",
         "search": "ミニ四駆 ワーキングボックス",
         "text": [
@@ -122,6 +125,8 @@ def shops(it: dict, ids: dict) -> list:
     直リンクにすると切れたリンクになるため。
     Yahoo!とヤフオクにIDを付けないのは、ページに入れてある
     ValueCommerce の LinkSwitch が自動で差し替えてくれるため。
+    only があるショップは、そこでしか正規品が買えない商品。
+    関係ない検索結果へ送らないよう、指定されたショップだけを残す。
     """
     term = it.get("search") or it["official"]
     q = urllib.parse.quote(term)
@@ -131,7 +136,7 @@ def shops(it: dict, ids: dict) -> list:
               else (f"https://www.amazon.co.jp/s?k={q}&tag={ids['amazon']}", False))
     rakuten = ((_rakuten(it["rakuten_url"], ids["rakuten"]), True) if it.get("rakuten_url")
                else (_rakuten(rk_search, ids["rakuten"]), False))
-    return [
+    rows = [
         ("amazon", amazon[0], amazon[1], "az"),
         ("メルカリ", f"https://jp.mercari.com/search?keyword={q}&afid={ids['mercari']}",
          False, "mr"),
@@ -139,6 +144,8 @@ def shops(it: dict, ids: dict) -> list:
         ("ヤフオク", f"https://auctions.yahoo.co.jp/search/search?p={q}", False, "ya"),
         ("楽天", rakuten[0], rakuten[1], "rk"),
     ]
+    only = it.get("only")
+    return [r for r in rows if r[0] in only] if only else rows
 
 
 def section(ids: dict) -> str:
