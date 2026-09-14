@@ -64,10 +64,6 @@ CSS = """
 /* 選んでいる間は商品一覧まわりを出さない */
 body.god .chips,body.god .chipbox,body.god .count-line,body.god .pager,
 body.god .grid,body.god .empty,body.god .cmap,body.god .cmap-fab{display:none !important}
-/* タブは黄色。選ぶと濃い黄色になる（他のタブの青とは別扱い） */
-.tab.god{background:#f5c518;color:#4a3800;font-weight:800}
-.tab.god:hover{background:#ffd42a;color:#4a3800}
-.tab.god.on{background:#d99b00;color:#fff}
 .god-sec{display:none;margin:6px 0 8px}
 body.god .god-sec{display:block}
 .god-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:0 0 4px}
@@ -184,6 +180,6 @@ def section(ids: dict) -> str:
 
 
 def tab() -> str:
-    """上段タブ。「ツール」の次に置く。"""
-    return (f'<div class="tab god" data-genre="{GENRE}">神ツール'
+    """上段タブ。「ツール」の次に置く。見た目は他のタブと揃える。"""
+    return (f'<div class="tab" data-genre="{GENRE}">神ツール'
             f'<span class="n">{len(ITEMS)}</span></div>')
