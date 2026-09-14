@@ -1,28 +1,29 @@
 # -*- coding: utf-8 -*-
-"""「神ツール」— ツールタブの中に置く、読み物寄りの商品紹介コーナー。
+"""「神ツール」— 上段タブの1つ。読み物寄りの商品紹介コーナー。
 
-品番カタログの一覧とは性質が違うため、チップを選んだときだけ
-一覧を隠してこのコーナーを出す。
+品番カタログの一覧とは性質が違うため、このタブを選んだときだけ
+商品一覧を隠してこのコーナーを出す。
 
 商品を足すときは ITEMS に1つ増やすだけでよい。
-asin は Amazon の商品ページURL（/dp/XXXXXXXXXX）から取れる10文字。
-image は SiteStripe が出す m.media-amazon.com の画像URLを使う。
+直リンクは次のどちらか（両方でもよい）。無ければ検索リンクになる。
+  asin        … Amazonの商品ページURL（/dp/XXXXXXXXXX）から取れる10文字
+  rakuten_url … 楽天の商品ページURL（余計な追跡パラメータは外して入れる）
+image は商品ページの画像URL。text は1行が1要素で、書いたとおりに改行される。
 """
 import html
 import urllib.parse
 
-# チップの合言葉。細分類の名前と混ざらないよう、記号で始めておく。
-CAT = "__god"
+# 上段タブのジャンルキー。build_official_index.py と合わせること。
+GENRE = "god"
 
-# text は1行が1要素。書いたとおりの位置で改行される。
 ITEMS = [
     {
         "name": "アネックス(ANEX) ハンドル 差替式",
-        # Amazon上の正式名称。品番まで含めて取り違えを防ぐ。
+        # 販売ページ上の正式名称。品番まで含めて取り違えを防ぐ。
         "official": "アネックス(ANEX) ハンドル 差替式 精密タイプ (ビットなし) No.3610-H",
         "asin": "B00I0HJEDO",
         "image": "https://m.media-amazon.com/images/I/31ApVgLTOOL._SL500_.jpg",
-        # amazon以外のショップは検索で当てる。ここを変えれば検索語を調整できる。
+        # 直リンクが無いショップは検索で当てる。ここを変えれば検索語を調整できる。
         "search": "アネックス 差替ハンドル 3610",
         "text": [
             "ご本家同等アイテム。ミニ四ドライバー＆ボックスドライバーにスーパーフィット。",
@@ -41,16 +42,29 @@ ITEMS = [
             "サイズバッチリ携行性◎本体シャフトが金属製で耐久性◎",
         ],
     },
+    {
+        "name": "ミニ四駆ワーキングボックス",
+        "official": "汐見板金Web-Shop ミニ四駆ワーキングボックス",
+        # 楽天ショップの商品。Amazonの品番が無いので、直リンクは楽天側に持たせる。
+        "rakuten_url": "https://item.rakuten.co.jp/shop-siomi/m4d-tls-wkb/",
+        "image": "https://shop.r10s.jp/shop-siomi/cabinet/product-img/m4d-tls-wkb-01b.jpg",
+        "search": "ミニ四駆 ワーキングボックス",
+        "text": [
+            "ミニ四駆パーツの切る・削る・穴をあけるといった基本作業を土台から支えてくれる必須アイテムです。",
+            "頑強な作りと四方の集塵スリットは、ご家庭を汚せない（笑）お父さんやキッズの頼もしい味方です！",
+        ],
+    },
 ]
 
 CSS = """
-/* ---- 神ツール（ツールタブ内の読み物コーナー） ---- */
-/* 選んでいる間は商品一覧まわりを出さない。チップ行だけは残す。 */
-body.god .count-line,body.god .pager,body.god .grid,
-body.god .empty,body.god .cmap,body.god .cmap-fab{display:none !important}
-.chip.god{background:#f5c518;border-color:#e2b400;color:#4a3800;font-weight:800}
-.chip.god:hover{background:#ffd42a}
-.chip.god.on{background:#d99b00;border-color:#c08a00;color:#fff}
+/* ---- 神ツール（上段タブの1つ） ---- */
+/* 選んでいる間は商品一覧まわりを出さない */
+body.god .chips,body.god .chipbox,body.god .count-line,body.god .pager,
+body.god .grid,body.god .empty,body.god .cmap,body.god .cmap-fab{display:none !important}
+/* タブは黄色。選ぶと濃い黄色になる（他のタブの青とは別扱い） */
+.tab.god{background:#f5c518;color:#4a3800;font-weight:800}
+.tab.god:hover{background:#ffd42a;color:#4a3800}
+.tab.god.on{background:#d99b00;color:#fff}
 .god-sec{display:none;margin:6px 0 8px}
 body.god .god-sec{display:block}
 .god-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:0 0 4px}
@@ -77,36 +91,53 @@ align-items:center;justify-content:center;padding:14px;border-right:1px solid va
 .gec{font-size:11.5px;font-weight:700;border-radius:7px;padding:6px 14px;
 border:1px solid var(--line);color:var(--ink2);background:var(--surface)}
 .gec:hover{background:var(--brand-soft);border-color:var(--brand);color:var(--brand)}
-/* amazon だけは品番が分かっていて商品ページへ直接飛ぶので目立たせる */
-.gec.az{background:#ff9900;border-color:#e88a00;color:#1a2233;
+/* その商品ページへ直接飛べるショップだけ色を付ける。
+   検索に飛ぶだけのものと区別が付くように。 */
+.gec.direct.az{background:#ff9900;border-color:#e88a00;color:#1a2233;
 box-shadow:0 2px 6px rgba(255,153,0,.32)}
-.gec.az:hover{background:#ffad33;border-color:#ff9900;color:#1a2233}
+.gec.direct.az:hover{background:#ffad33;border-color:#ff9900;color:#1a2233}
+.gec.direct.rk{background:#bf0000;border-color:#a30000;color:#fff;
+box-shadow:0 2px 6px rgba(191,0,0,.3)}
+.gec.direct.rk:hover{background:#d51616;border-color:#bf0000;color:#fff}
 .god-note{font-size:11px;color:var(--ink3);margin-top:2px}
 """
 
 
-def _link(asin: str, tag: str) -> str:
+def _amazon(asin: str, tag: str) -> str:
     return f"https://www.amazon.co.jp/dp/{asin}?tag={tag}&linkCode=ll1&language=ja_JP"
 
 
-def shops(it: dict, ids: dict) -> list:
-    """ショップへのリンクを (ラベル, URL) で返す。並びは商品一覧と同じ。
+def _rakuten(target: str, afid: str) -> str:
+    """楽天は遷移先をまるごとURLエンコードして中継URLに渡す形式。"""
+    t = urllib.parse.quote(target, safe="")
+    return f"https://hb.afl.rakuten.co.jp/hgc/{afid}/?pc={t}&m={t}"
 
-    amazon だけは品番が分かっているので商品ページへ直接飛ばす。
-    他は検索結果へ飛ばす（メルカリは中古なので個別の出品はすぐ消えるため、
-    直リンクにすると切れたリンクになってしまう）。
+
+def shops(it: dict, ids: dict) -> list:
+    """ショップへのリンクを (ラベル, URL, 直リンクか, 印) で返す。
+
+    並びは商品一覧のカードと同じ。品番やURLが分かっているショップは
+    その商品ページへ直接飛ばし、それ以外は検索結果へ飛ばす。
+    メルカリを検索にしているのは、中古の個別出品はすぐ消えてしまい、
+    直リンクにすると切れたリンクになるため。
     Yahoo!とヤフオクにIDを付けないのは、ページに入れてある
     ValueCommerce の LinkSwitch が自動で差し替えてくれるため。
     """
     term = it.get("search") or it["official"]
     q = urllib.parse.quote(term)
-    rt = urllib.parse.quote(f"https://search.rakuten.co.jp/search/mall/{q}/", safe="")
+    rk_search = f"https://search.rakuten.co.jp/search/mall/{q}/"
+
+    amazon = ((_amazon(it["asin"], ids["amazon"]), True) if it.get("asin")
+              else (f"https://www.amazon.co.jp/s?k={q}&tag={ids['amazon']}", False))
+    rakuten = ((_rakuten(it["rakuten_url"], ids["rakuten"]), True) if it.get("rakuten_url")
+               else (_rakuten(rk_search, ids["rakuten"]), False))
     return [
-        ("amazon", _link(it["asin"], ids["amazon"])),
-        ("メルカリ", f"https://jp.mercari.com/search?keyword={q}&afid={ids['mercari']}"),
-        ("Yahoo!", f"https://shopping.yahoo.co.jp/search?p={q}"),
-        ("ヤフオク", f"https://auctions.yahoo.co.jp/search/search?p={q}"),
-        ("楽天", f"https://hb.afl.rakuten.co.jp/hgc/{ids['rakuten']}/?pc={rt}&m={rt}"),
+        ("amazon", amazon[0], amazon[1], "az"),
+        ("メルカリ", f"https://jp.mercari.com/search?keyword={q}&afid={ids['mercari']}",
+         False, "mr"),
+        ("Yahoo!", f"https://shopping.yahoo.co.jp/search?p={q}", False, "yh"),
+        ("ヤフオク", f"https://auctions.yahoo.co.jp/search/search?p={q}", False, "ya"),
+        ("楽天", rakuten[0], rakuten[1], "rk"),
     ]
 
 
@@ -114,16 +145,18 @@ def section(ids: dict) -> str:
     """神ツールのHTML。ids は各アフィリエイトの計測ID。"""
     cards = []
     for it in ITEMS:
-        url = html.escape(_link(it["asin"], ids["amazon"]))
+        links = shops(it, ids)
+        # 写真を押したときの行き先は、その商品ページへ直接飛べるショップを優先する
+        main = next((u for _, u, direct, _k in links if direct), links[0][1])
         row = "".join(
-            f'<a class="gec{" az" if lb == "amazon" else ""}" href="{html.escape(u)}" '
+            f'<a class="gec{" direct " + k if direct else ""}" href="{html.escape(u)}" '
             f'target="_blank" rel="sponsored noopener">{html.escape(lb)}</a>'
-            for lb, u in shops(it, ids))
+            for lb, u, direct, k in links)
         # 書かれたとおりの位置で改行する。狭い画面では各行がさらに折り返す。
         lines = it["text"] if isinstance(it["text"], list) else [it["text"]]
         body = "<br>".join(html.escape(ln) for ln in lines)
         cards.append(f"""  <article class="gitem">
-    <a class="gshot" href="{url}" target="_blank" rel="sponsored noopener">
+    <a class="gshot" href="{html.escape(main)}" target="_blank" rel="sponsored noopener">
       <img src="{html.escape(it["image"])}" alt="{html.escape(it["name"])}"
            loading="lazy" decoding="async"></a>
     <div class="gbody">
@@ -138,11 +171,12 @@ def section(ids: dict) -> str:
   <p class="god-lead">タミヤ純正ではないけれど、ミニ四駆に効く道具を紹介します。
   実際に使ってよかったものだけを載せています。</p>
 {chr(10).join(cards)}
-  <p class="god-note">amazonは商品ページへ、ほかのショップは検索結果へ移動します。
+  <p class="god-note">色の付いたショップは商品ページへ、ほかは検索結果へ移動します。
   価格・在庫は各ショップの表示をご確認ください。</p>
 </section>"""
 
 
-def chip() -> str:
-    """ツールジャンルの最後に置く黄色いチップ。"""
-    return (f'<span class="chip god" data-cat="{CAT}" data-genres="tool">神ツール</span>')
+def tab() -> str:
+    """上段タブ。「ツール」の次に置く。"""
+    return (f'<div class="tab god" data-genre="{GENRE}">神ツール'
+            f'<span class="n">{len(ITEMS)}</span></div>')

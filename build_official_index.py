@@ -521,7 +521,7 @@ function closeCatBox(){
 }
 
 const WALL_GENRE = 'xm';
-const GOD_CAT = '__god';
+const GOD_GENRE = '%GOD_GENRE%';
 // カッコ四駆の中の特設チップ。cat をキーに、どのタグで絞るかを引く。
 // days があると「その日数以内の投稿だけ」になり、古いものは自動で外れる。
 const WALL_CHIPS = %WALL_CHIPS%;
@@ -539,8 +539,8 @@ function apply(resetPage){
   }
   if(wall) return;
 
-  // 神ツールも一覧ではない。チップ行だけ残して、商品一覧は出さない。
-  const god = cat === GOD_CAT;
+  // 神ツールも一覧ではないので、絞り込みも件数もページ送りも使わない
+  const god = genre === GOD_GENRE;
   document.body.classList.toggle('god', god);
   if(god) return;
 
@@ -958,6 +958,8 @@ def build(items: list[dict], outdir: str) -> str:
         + f'<span class="n">{len(new_codes)}</span></div>' if new_codes else ""
     ) + "".join(
         f'<div class="tab" data-genre="{k}">{html.escape(lb)}<span class="n">{genre_counts[k]}</span></div>'
+        # 神ツールは品番カタログではないが、道具の並びなので「ツール」の次に置く
+        + (godtools_ui.tab() if k == "tool" else "")
         for k, lb in genres if k != NEW_GENRE
     ) + (
         f'<div class="tab" data-genre="{x_embed_ui.WALL_GENRE}">カッコ四駆'
@@ -987,7 +989,7 @@ def build(items: list[dict], outdir: str) -> str:
         '<button class="catbtn" id="catToggle" type="button" aria-expanded="false"'
         ' aria-controls="chipBox" hidden><span class="lb">カテゴリー</span>'
         '<span class="cv"></span><span class="ar">▾</span></button>'
-        + godtools_ui.chip() + "".join(
+        + "".join(
             f'<span class="chip{" " + c["cls"] if c.get("cls") else ""}" data-cat="{c["cat"]}" '
             f'data-genres="xm">{html.escape(c["label"])}'
             f'<span class="n" id="{c["badge"]}"></span></span>' for c in WALL_CHIPS))
@@ -1007,7 +1009,8 @@ def build(items: list[dict], outdir: str) -> str:
     js_all = JS.replace("%WALL_CHIPS%", json.dumps(
         WALL_CHIPS, ensure_ascii=False, separators=(",", ":"))).replace(
         "%NEW_TAB_HUES%", json.dumps(NEW_TAB_HUES, separators=(",", ":"))).replace(
-        "%DEFAULT_GENRE%", NEW_GENRE if new_codes else "")
+        "%DEFAULT_GENRE%", NEW_GENRE if new_codes else "").replace(
+        "%GOD_GENRE%", godtools_ui.GENRE)
     # マシンカラーのページがあるときだけ、カッコ四駆 用の丸ボタンを出す
     wheel_fab = color_wheel_ui.FAB_HTML if color_wheel_ui.load()[1] else ""
 
