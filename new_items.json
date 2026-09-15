@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-09-13",
+ "fetchedAt": "2026-09-15",
  "items": [
   {
    "item_code": "95404",
@@ -20,12 +20,30 @@
    "genre": "ミニ四駆"
   },
   {
+   "item_code": "18106",
+   "name": "ネオVQS アドバンスパック (VZシャーシ)",
+   "release": "2026年12月発送予定",
+   "price": "3,300円",
+   "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/9/95598/95598_s.jpg",
+   "url": "https://www.tamiya.com/japan/products/18106/index.html",
+   "genre": "ミニ四駆"
+  },
+  {
    "item_code": "95512",
    "name": "ブロッケンギガント ブラック プレミアム(FM-Aシャーシ)",
    "release": "2026年12月発売予定",
    "price": "1,430円",
    "image": "https://d7z22c0gz59ng.cloudfront.net/japan_contents/img/usr/item/9/95512/95512_s.jpg",
    "url": "https://www.tamiya.com/japan/products/95512/index.html",
+   "genre": "ミニ四駆"
+  },
+  {
+   "item_code": "95731",
+   "name": "ブロッケンギガント ゴジラ-0.0バージョン",
+   "release": "2026年11月発送予定",
+   "price": "1,760円",
+   "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/9/95731/95731_s.jpg",
+   "url": "https://www.tamiya.com/japan/products/95731/index.html",
    "genre": "ミニ四駆"
   },
   {
@@ -206,6 +224,24 @@
    "price": "594円",
    "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/9/95712/95712_s.jpg",
    "url": "https://www.tamiya.com/japan/products/95712/index.html",
+   "genre": "ミニ四駆"
+  },
+  {
+   "item_code": "95721",
+   "name": "2027年 干支ミニ四駆「未年」",
+   "release": "2026年12月発売予定",
+   "price": "1,650円",
+   "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/9/95721/95721_s.jpg",
+   "url": "https://www.tamiya.com/japan/products/95721/index.html",
+   "genre": "ミニ四駆"
+  },
+  {
+   "item_code": "18107",
+   "name": "ホーネットJr. (VZシャーシ)",
+   "release": "2026年12月発売予定",
+   "price": "1,540円",
+   "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/1/18107/18107_s.jpg",
+   "url": "https://www.tamiya.com/japan/products/18107/index.html",
    "genre": "ミニ四駆"
   },
   {
