@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-09-15",
+ "fetchedAt": "2026-09-20",
  "items": [
   {
    "item_code": "95404",
@@ -17,6 +17,24 @@
    "price": "1,320円",
    "image": "https://d7z22c0gz59ng.cloudfront.net/japan_contents/img/usr/item/9/95423/95423_s.jpg",
    "url": "https://www.tamiya.com/japan/products/95423/index.html",
+   "genre": "ミニ四駆"
+  },
+  {
+   "item_code": "95721",
+   "name": "2027年 干支ミニ四駆「未年」",
+   "release": "2026年12月発売予定",
+   "price": "1,650円",
+   "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/9/95721/95721_s.jpg",
+   "url": "https://www.tamiya.com/japan/products/95721/index.html",
+   "genre": "ミニ四駆"
+  },
+  {
+   "item_code": "18107",
+   "name": "ホーネットJr. (VZシャーシ)",
+   "release": "2026年12月発売予定",
+   "price": "1,540円",
+   "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/1/18107/18107_s.jpg",
+   "url": "https://www.tamiya.com/japan/products/18107/index.html",
    "genre": "ミニ四駆"
   },
   {
@@ -173,6 +191,15 @@
    "genre": "ミニ四駆"
   },
   {
+   "item_code": "95424",
+   "name": "2mmアルミロックナット （グリーン5個）",
+   "release": "2026年9月19日(土)ごろ発売",
+   "price": "550円",
+   "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/9/95424/95424_s.jpg",
+   "url": "https://www.tamiya.com/japan/products/95424/index.html",
+   "genre": "ミニ四駆"
+  },
+  {
    "item_code": "95710",
    "name": "スーパーFM 蛍光カラーシャーシセット(オレンジ・イエロー)",
    "release": "2026年9月19日(土)ごろ発売",
@@ -188,15 +215,6 @@
    "price": "550円",
    "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/9/95719/95719_s.jpg",
    "url": "https://www.tamiya.com/japan/products/95719/index.html",
-   "genre": "ミニ四駆"
-  },
-  {
-   "item_code": "95424",
-   "name": "2mmアルミロックナット （グリーン5個）",
-   "release": "2026年9月19日(土)ごろ発売",
-   "price": "550円",
-   "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/9/95424/95424_s.jpg",
-   "url": "https://www.tamiya.com/japan/products/95424/index.html",
    "genre": "ミニ四駆"
   },
   {
@@ -224,24 +242,6 @@
    "price": "594円",
    "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/9/95712/95712_s.jpg",
    "url": "https://www.tamiya.com/japan/products/95712/index.html",
-   "genre": "ミニ四駆"
-  },
-  {
-   "item_code": "95721",
-   "name": "2027年 干支ミニ四駆「未年」",
-   "release": "2026年12月発売予定",
-   "price": "1,650円",
-   "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/9/95721/95721_s.jpg",
-   "url": "https://www.tamiya.com/japan/products/95721/index.html",
-   "genre": "ミニ四駆"
-  },
-  {
-   "item_code": "18107",
-   "name": "ホーネットJr. (VZシャーシ)",
-   "release": "2026年12月発売予定",
-   "price": "1,540円",
-   "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/1/18107/18107_s.jpg",
-   "url": "https://www.tamiya.com/japan/products/18107/index.html",
    "genre": "ミニ四駆"
   },
   {
