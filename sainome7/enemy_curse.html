@@ -24,7 +24,7 @@
     <label>マスサイズ <input type="range" id="cell" min="32" max="96" value="64"> <span id="cellv">64</span>px</label>
     <small id="fps"></small>
   </div>
-  <p><small>敵はマス 2×2（4マス分）。Canvas 2D のみ・画像なし・オフスクリーンなし。毎フレーム：本体パス1本＋パーティクル約16＋ノイズ触手約10。</small></p>
+  <p><small>敵はマス 2×2（4マス分）。Canvas 2D のみ・画像なし・オフスクリーンなし。本体は不透明度40%（透明度60%）のゼリー。毎フレーム：本体パス3本＋泡14＋塊3＋ノイズ触手4。</small></p>
 </main>
 <script>
 /* ============================================================
@@ -37,110 +37,98 @@ class CurseEnemy {
   constructor(seed = 1) {
     this.t = 0;
     this.seed = seed;
-    // 本体色
-    this.body = '#9a1fd8';
-    this.bodyDark = '#7616ad';
+    // 本体色（ゼリー：上が明るく下が濃い）
+    this.bodyTop = '#bb4ff2';
+    this.bodyBottom = '#7a14b8';
+    this.bodyAlpha = 0.4;               // 透明度60% = 不透明度0.4
+    this.rim = '#5c0f8f';
     this.outline = '#111';
-    this.palette = ['#12085e', '#1c10a0', '#2a18c8', '#6d17a6', '#8a2fc4'];
-    // 内部パーティクル（本体内のローカル座標 0..1）
-    this.parts = [];
-    for (let i = 0; i < 16; i++) this.parts.push(this._newPart(true));
-    // 呪いノイズ触手
+    this.tendrilColor = '#9a1fd8';
+    this.bubbleColors = ['#3a0a7a', '#2c0f86', '#4e0c92', '#1c0a5e'];
+    // 立ち上る泡（本体内のローカル座標 0..1）
+    this.bubbles = [];
+    for (let i = 0; i < 14; i++) this.bubbles.push(this._newBubble(true));
+    // 奥で漂う濃い塊（毒の沈殿）
+    this.blobs = [];
+    for (let i = 0; i < 3; i++) this.blobs.push({ x: this._rnd(0.25, 0.75), y: this._rnd(0.45, 0.8), r: this._rnd(0.1, 0.16), ph: this._rnd(0, 6.28) });
+    // 呪いノイズ触手（少なめ・水平垂直）
     this.tendrils = [];
-    for (let i = 0; i < 10; i++) this.tendrils.push(this._newTendril(Math.random()));
-    // ぽたぽた飛沫
-    this.drops = [];
+    for (let i = 0; i < 4; i++) this.tendrils.push(this._newTendril(i / 4));
   }
 
   _rnd(a, b) { return a + Math.random() * (b - a); }
 
-  _newPart(initial) {
+  _newBubble(initial) {
     return {
-      x: this._rnd(0.12, 0.88), y: this._rnd(0.12, 0.88),
-      vx: this._rnd(-0.03, 0.03), vy: this._rnd(-0.05, 0.01),
-      r: this._rnd(0.07, 0.15),
-      c: this.palette[(Math.random() * this.palette.length) | 0],
-      kind: Math.random() < 0.35 ? 1 : 0,          // 0=塊 1=三日月（画像の「C」）
-      rot: this._rnd(0, Math.PI * 2),
-      life: initial ? this._rnd(0, 1) : 0,
-      span: this._rnd(2.5, 5),
+      x: this._rnd(0.15, 0.85),
+      y: initial ? this._rnd(0.2, 0.9) : this._rnd(0.82, 0.92),
+      vy: this._rnd(0.08, 0.2),            // 上昇速度（本体高さ/秒）
+      r: this._rnd(0.022, 0.06),
+      ph: this._rnd(0, 6.28),
+      c: this.bubbleColors[(Math.random() * this.bubbleColors.length) | 0],
+      age: initial ? 1 : 0,
     };
   }
 
-  // 辺(0上 1右 2下 3左)上の位置 u から外向きに伸びる
+  // 辺(0上 1右 2下 3左)上の位置 u から外向きにまっすぐ伸びる。jog≠0 なら途中で直角に段差
   _newTendril(phase = 0) {
     const side = (Math.random() * 4) | 0;
+    const len = this._rnd(0.3, 0.7);
     return {
-      side, u: this._rnd(0.08, 0.92),
-      len: this._rnd(0.25, 0.75),          // 最大長（本体幅比）
-      w: this._rnd(0.025, 0.06),           // 太さ
-      bend: this._rnd(-0.35, 0.35),        // 曲がり
-      p: phase,                            // 0→1 で 伸びる→縮む
-      speed: this._rnd(0.5, 1.2),
+      side, u: this._rnd(0.15, 0.85),
+      len,                                           // 最大長（本体幅比）
+      w: this._rnd(0.03, 0.05),                      // 太さ
+      jogAt: this._rnd(0.3, 0.6) * len,              // 段差を入れる位置
+      jog: Math.random() < 0.5 ? (Math.random() < 0.5 ? -1 : 1) * this._rnd(0.05, 0.1) : 0,
+      p: phase,                                      // 0→1 で 伸びる→縮む
+      speed: this._rnd(0.35, 0.7),
       glitch: 0,
     };
   }
 
   update(dt) {
     this.t += dt;
-    for (let i = 0; i < this.parts.length; i++) {
-      const p = this.parts[i];
-      p.life += dt / p.span;
-      p.x += p.vx * dt; p.y += p.vy * dt; p.rot += dt * 0.4;
-      if (p.life >= 1) this.parts[i] = this._newPart(false);
+    for (let i = 0; i < this.bubbles.length; i++) {
+      const b = this.bubbles[i];
+      b.y -= b.vy * dt;
+      b.vy += 0.03 * dt;                   // 上ほど少し加速
+      b.age = Math.min(1, b.age + dt * 2);
+      if (b.y < 0.14) this.bubbles[i] = this._newBubble(false);
     }
     for (let i = 0; i < this.tendrils.length; i++) {
       const d = this.tendrils[i];
       d.p += dt * d.speed;
-      // たまにガクッとずれる（呪いのノイズ感）
-      d.glitch = Math.random() < 0.04 ? this._rnd(-0.06, 0.06) : d.glitch * 0.8;
-      if (d.p >= 1) {
-        // 引っ込むときに先端から飛沫を落とす
-        if (Math.random() < 0.5 && this.drops.length < 8) {
-          const tip = this._tip(d, 0.9);
-          this.drops.push({ x: tip.x, y: tip.y, vy: 0, r: d.w * 0.9, life: 1 });
-        }
-        this.tendrils[i] = this._newTendril(0);
-      }
-    }
-    for (let i = this.drops.length - 1; i >= 0; i--) {
-      const o = this.drops[i];
-      o.vy += 0.9 * dt; o.y += o.vy * dt; o.life -= dt * 1.2;
-      if (o.life <= 0) this.drops.splice(i, 1);
+      // たまにマス目方向へカクッとずれる（呪いのノイズ感）
+      d.glitch = Math.random() < 0.03 ? (Math.random() < 0.5 ? -1 : 1) * 0.03 : (Math.random() < 0.15 ? 0 : d.glitch);
+      if (d.p >= 1) this.tendrils[i] = this._newTendril(0);
     }
   }
 
   // 触手の根元・法線（本体ローカル 0..1）
   _base(d) {
     switch (d.side) {
-      case 0: return { x: d.u, y: 0.04, nx: 0, ny: -1 };
-      case 1: return { x: 0.96, y: d.u, nx: 1, ny: 0 };
-      case 2: return { x: d.u, y: 0.96, nx: 0, ny: 1 };
-      default: return { x: 0.04, y: d.u, nx: -1, ny: 0 };
+      case 0: return { x: d.u, y: 0.07, nx: 0, ny: -1 };
+      case 1: return { x: 0.93, y: d.u, nx: 1, ny: 0 };
+      case 2: return { x: d.u, y: 0.93, nx: 0, ny: 1 };
+      default: return { x: 0.07, y: d.u, nx: -1, ny: 0 };
     }
   }
-  // 伸び量 0..1 の山形（素早く伸びてゆっくり縮む）
-  _ext(p) { return p < 0.3 ? p / 0.3 : 1 - (p - 0.3) / 0.7; }
-  _tip(d, e) {
-    const b = this._base(d), L = d.len * e;
-    return { x: b.x + b.nx * L - b.ny * d.bend * L + d.glitch, y: b.y + b.ny * L + b.nx * d.bend * L + d.glitch };
-  }
+  // 伸び量 0..1（素早く伸びて、少し留まり、ゆっくり縮む）
+  _ext(p) { return p < 0.25 ? p / 0.25 : p < 0.45 ? 1 : 1 - (p - 0.45) / 0.55; }
 
-  // 波打つ角丸四角のパス（S=一辺px, ox,oy=左上）
-  _bodyPath(ctx, ox, oy, S, amp, off) {
-    const N = 40, t = this.t, cx = ox + S / 2, cy = oy + S / 2;
-    const h = S * 0.45, rr = S * 0.14;
-    ctx.beginPath();
+  // 波打つ角丸四角のパス（S=一辺px, ox,oy=左上）。begin=false で既存パスに追加
+  _bodyPath(ctx, ox, oy, S, amp, off, begin = true) {
+    const N = 40, t = this.t, cx = ox + S / 2 + off, cy = oy + S / 2 + off;
+    const h = S * 0.45;
+    if (begin) ctx.beginPath();
     for (let i = 0; i <= N; i++) {
       const a = (i / N) * Math.PI * 2;
       // 角丸四角の極座標半径（超楕円で近似：軽い）
       const c = Math.abs(Math.cos(a)), s = Math.abs(Math.sin(a));
-      const k = 5;
-      let r = h / Math.pow(Math.pow(c, k) + Math.pow(s, k), 1 / k);
-      r += rr * 0.08;
+      let r = h / Math.pow(Math.pow(c, 5) + Math.pow(s, 5), 0.2) + S * 0.011;
       // 波打ち：低周波サイン3本の合成
       r += amp * S * (0.6 * Math.sin(a * 3 + t * 2.1) + 0.4 * Math.sin(a * 5 - t * 3.3) + 0.25 * Math.sin(a * 9 + t * 5.7));
-      const x = cx + Math.cos(a) * r + off, y = cy + Math.sin(a) * r + off;
+      const x = cx + Math.cos(a) * r, y = cy + Math.sin(a) * r;
       i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
     }
     ctx.closePath();
@@ -150,66 +138,85 @@ class CurseEnemy {
     const S = cell * 2;                 // 2×2マス
     const X = (v) => x + v * S, Y = (v) => y + v * S;
     ctx.save();
-    ctx.lineCap = 'round';
 
-    // --- 触手（本体の後ろ）---
-    ctx.strokeStyle = this.body; ctx.fillStyle = this.body;
+    // --- 触手（本体の後ろ）：直線＋直角の段差、先端は四角 ---
+    ctx.strokeStyle = this.tendrilColor; ctx.fillStyle = this.tendrilColor;
+    ctx.lineCap = 'butt'; ctx.lineJoin = 'miter';
     for (const d of this.tendrils) {
       const e = this._ext(d.p);
       if (e <= 0.02) continue;
-      const b = this._base(d), tip = this._tip(d, e);
-      const mid = this._tip(d, e * 0.5);
-      ctx.lineWidth = d.w * S * (0.6 + 0.4 * e);
+      const b = this._base(d), L = d.len * e;
+      const tx = -b.ny, ty = b.nx;                    // 辺に沿う向き
+      const g = d.glitch;
+      const w = d.w * S * (0.7 + 0.3 * e);
+      ctx.globalAlpha = 0.85;
+      ctx.lineWidth = w;
       ctx.beginPath();
       ctx.moveTo(X(b.x), Y(b.y));
-      ctx.quadraticCurveTo(X(mid.x + b.ny * 0.04), Y(mid.y - b.nx * 0.04), X(tip.x), Y(tip.y));
+      let ex, ey;
+      if (d.jog && L > d.jogAt) {
+        const kx = b.x + b.nx * d.jogAt, ky = b.y + b.ny * d.jogAt;
+        ctx.lineTo(X(kx), Y(ky));
+        const jx = kx + tx * d.jog + tx * g, jy = ky + ty * d.jog + ty * g;
+        ctx.lineTo(X(jx), Y(jy));
+        ex = jx + b.nx * (L - d.jogAt); ey = jy + b.ny * (L - d.jogAt);
+      } else {
+        ex = b.x + b.nx * L + tx * g; ey = b.y + b.ny * L + ty * g;
+        if (g) { ctx.lineTo(X(b.x + b.nx * L * 0.5), Y(b.y + b.ny * L * 0.5)); ctx.lineTo(X(b.x + b.nx * L * 0.5 + tx * g), Y(b.y + b.ny * L * 0.5 + ty * g)); }
+      }
+      ctx.lineTo(X(ex), Y(ey));
       ctx.stroke();
-      // 先端の滴
-      ctx.beginPath();
-      ctx.arc(X(tip.x + b.nx * 0.04), Y(tip.y + b.ny * 0.04), d.w * S * 0.7 * e, 0, 6.283);
-      ctx.fill();
-    }
-    for (const o of this.drops) {
-      ctx.globalAlpha = Math.max(0, o.life);
-      ctx.beginPath(); ctx.arc(X(o.x), Y(o.y), o.r * S * 0.6, 0, 6.283); ctx.fill();
+      // 先端の四角いブロック
+      const q = w * 1.5;
+      ctx.fillRect(X(ex) - q / 2 + b.nx * q * 0.3, Y(ey) - q / 2 + b.ny * q * 0.3, q, q);
     }
     ctx.globalAlpha = 1;
 
-    // --- 黒い影輪郭（少しずらす：元絵の黒線） ---
+    // --- 黒い影輪郭：本体の外側にはみ出た部分だけ塗る（透けても中に影が出ない） ---
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(x - S, y - S, S * 3, S * 3);
+    this._bodyPath(ctx, x, y, S, 0.015, 0, false);
+    ctx.clip('evenodd');                          // 本体の外側だけ
     this._bodyPath(ctx, x, y, S, 0.012, S * 0.025);
     ctx.fillStyle = this.outline; ctx.fill();
+    ctx.restore();
 
-    // --- 本体 ---
+    // --- 本体（半透明ゼリー） ---
     this._bodyPath(ctx, x, y, S, 0.015, 0);
-    ctx.fillStyle = this.body; ctx.fill();
+    const grad = ctx.createLinearGradient(0, y, 0, y + S);
+    grad.addColorStop(0, this.bodyTop); grad.addColorStop(1, this.bodyBottom);
+    ctx.globalAlpha = this.bodyAlpha;
+    ctx.fillStyle = grad; ctx.fill();
+    ctx.globalAlpha = 1;
 
-    // --- 内部パーティクル（本体でクリップ） ---
+    // --- 内部（本体でクリップ） ---
     ctx.save();
     ctx.clip();
-    for (const p of this.parts) {
-      const a = Math.sin(p.life * Math.PI);          // フェードイン→アウト
-      const pulse = 1 + 0.12 * Math.sin(this.t * 4 + p.rot * 3);
-      const r = p.r * S * pulse * (0.7 + 0.3 * a);
-      ctx.globalAlpha = 0.9 * a;
-      ctx.fillStyle = p.c; ctx.strokeStyle = p.c;
-      const px = X(p.x), py = Y(p.y);
-      if (p.kind === 0) {
-        // 角丸っぽい塊（円2つで歪ませる：軽い）
-        ctx.beginPath();
-        ctx.arc(px, py, r, 0, 6.283);
-        ctx.arc(px + Math.cos(p.rot) * r * 0.4, py + Math.sin(p.rot) * r * 0.4, r * 0.8, 0, 6.283);
-        ctx.fill();
-      } else {
-        // 三日月
-        ctx.lineWidth = r * 0.55;
-        ctx.beginPath();
-        ctx.arc(px, py, r * 0.8, p.rot, p.rot + Math.PI * 1.3);
-        ctx.stroke();
-      }
+    // 奥の濃い塊（ゆっくり脈打つ）
+    for (const o of this.blobs) {
+      const k = 1 + 0.08 * Math.sin(this.t * 1.3 + o.ph);
+      ctx.globalAlpha = 0.28;
+      ctx.fillStyle = '#2a0870';
+      ctx.beginPath();
+      ctx.arc(X(o.x + 0.02 * Math.sin(this.t * 0.5 + o.ph)), Y(o.y), o.r * S * k, 0, 6.283);
+      ctx.fill();
+    }
+    // 立ち上る泡：濃い円＋左上に小さなハイライト
+    for (const b of this.bubbles) {
+      const fade = Math.min(1, (b.y - 0.14) / 0.12) * b.age;   // 上端で弾けて消える
+      const r = b.r * S * (1 + (0.9 - b.y) * 0.4);             // 上るほど少し膨らむ
+      const px = X(b.x + 0.015 * Math.sin(this.t * 3 + b.ph)), py = Y(b.y);
+      ctx.globalAlpha = 0.7 * fade;
+      ctx.fillStyle = b.c;
+      ctx.beginPath(); ctx.arc(px, py, r, 0, 6.283); ctx.fill();
+      ctx.globalAlpha = 0.45 * fade;
+      ctx.fillStyle = '#fff';
+      ctx.beginPath(); ctx.arc(px - r * 0.35, py - r * 0.35, r * 0.28, 0, 6.283); ctx.fill();
     }
     // シアンのきらめき
     ctx.fillStyle = '#35e6d8';
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 5; i++) {
       const f = Math.sin(this.t * 7 + i * 12.9);
       if (f < 0.6) continue;
       ctx.globalAlpha = (f - 0.6) * 2.5;
@@ -217,7 +224,20 @@ class CurseEnemy {
       const sy = 0.2 + ((i * 0.53 + Math.floor(this.t * 0.7 + i) * 0.29) % 0.6);
       ctx.fillRect(X(sx), Y(sy), S * 0.018, S * 0.018);
     }
+    // ゼリーの照り（左上の楕円ハイライト）
+    ctx.globalAlpha = 0.28;
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.ellipse(X(0.3), Y(0.2), S * 0.16, S * 0.06, -0.5, 0, 6.283);
+    ctx.fill();
     ctx.restore();
+
+    // --- 縁取り（ゼリーの縁は濃く見える） ---
+    this._bodyPath(ctx, x, y, S, 0.015, 0);
+    ctx.globalAlpha = 0.8;
+    ctx.strokeStyle = this.rim;
+    ctx.lineWidth = S * 0.014;
+    ctx.stroke();
 
     ctx.restore();
   }
