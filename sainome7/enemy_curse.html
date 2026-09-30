@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>サイノメ 呪い敵</title>
+<style>
+  :root { --bg:#f4f1f7; --ink:#2a2233; --grid:#d9d0e3; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#16121c; --ink:#e8e0f0; --grid:#2c2438; } }
+  html,body { margin:0; background:var(--bg); color:var(--ink); font:14px/1.5 system-ui,sans-serif; }
+  main { max-width:560px; margin:0 auto; padding:16px; }
+  canvas { display:block; width:100%; height:auto; background:var(--bg); touch-action:none; }
+  .row { display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-top:10px; }
+  label { display:flex; gap:6px; align-items:center; }
+  small { opacity:.7; }
+</style>
+</head>
+<body>
+<main>
+  <h1 style="font-size:18px;margin:0 0 8px">サイノメ 敵「呪い」— 動きプロトタイプ</h1>
+  <canvas id="cv" width="384" height="384"></canvas>
+  <div class="row">
+    <label><input type="checkbox" id="grid" checked> マス目</label>
+    <label>マスサイズ <input type="range" id="cell" min="32" max="96" value="64"> <span id="cellv">64</span>px</label>
+    <small id="fps"></small>
+  </div>
+  <p><small>敵はマス 2×2（4マス分）。Canvas 2D のみ・画像なし・オフスクリーンなし。毎フレーム：本体パス1本＋パーティクル約16＋ノイズ触手約10。</small></p>
+</main>
+<script>
+/* ============================================================
+ * CurseEnemy : 呪いノイズをまとったサイノメ（2×2マス）
+ *   const e = new CurseEnemy();
+ *   e.update(dt);                // dt: 秒
+ *   e.draw(ctx, x, y, cell);     // (x,y)=左上マスの左上座標, cell=1マスのpx
+ * ============================================================ */
+class CurseEnemy {
+  constructor(seed = 1) {
+    this.t = 0;
+    this.seed = seed;
+    // 本体色
+    this.body = '#9a1fd8';
+    this.bodyDark = '#7616ad';
+    this.outline = '#111';
+    this.palette = ['#12085e', '#1c10a0', '#2a18c8', '#6d17a6', '#8a2fc4'];
+    // 内部パーティクル（本体内のローカル座標 0..1）
+    this.parts = [];
+    for (let i = 0; i < 16; i++) this.parts.push(this._newPart(true));
+    // 呪いノイズ触手
+    this.tendrils = [];
+    for (let i = 0; i < 10; i++) this.tendrils.push(this._newTendril(Math.random()));
+    // ぽたぽた飛沫
+    this.drops = [];
+  }
+
+  _rnd(a, b) { return a + Math.random() * (b - a); }
+
+  _newPart(initial) {
+    return {
+      x: this._rnd(0.12, 0.88), y: this._rnd(0.12, 0.88),
+      vx: this._rnd(-0.03, 0.03), vy: this._rnd(-0.05, 0.01),
+      r: this._rnd(0.07, 0.15),
+      c: this.palette[(Math.random() * this.palette.length) | 0],
+      kind: Math.random() < 0.35 ? 1 : 0,          // 0=塊 1=三日月（画像の「C」）
+      rot: this._rnd(0, Math.PI * 2),
+      life: initial ? this._rnd(0, 1) : 0,
+      span: this._rnd(2.5, 5),
+    };
+  }
+
+  // 辺(0上 1右 2下 3左)上の位置 u から外向きに伸びる
+  _newTendril(phase = 0) {
+    const side = (Math.random() * 4) | 0;
+    return {
+      side, u: this._rnd(0.08, 0.92),
+      len: this._rnd(0.25, 0.75),          // 最大長（本体幅比）
+      w: this._rnd(0.025, 0.06),           // 太さ
+      bend: this._rnd(-0.35, 0.35),        // 曲がり
+      p: phase,                            // 0→1 で 伸びる→縮む
+      speed: this._rnd(0.5, 1.2),
+      glitch: 0,
+    };
+  }
+
+  update(dt) {
+    this.t += dt;
+    for (let i = 0; i < this.parts.length; i++) {
+      const p = this.parts[i];
+      p.life += dt / p.span;
+      p.x += p.vx * dt; p.y += p.vy * dt; p.rot += dt * 0.4;
+      if (p.life >= 1) this.parts[i] = this._newPart(false);
+    }
+    for (let i = 0; i < this.tendrils.length; i++) {
+      const d = this.tendrils[i];
+      d.p += dt * d.speed;
+      // たまにガクッとずれる（呪いのノイズ感）
+      d.glitch = Math.random() < 0.04 ? this._rnd(-0.06, 0.06) : d.glitch * 0.8;
+      if (d.p >= 1) {
+        // 引っ込むときに先端から飛沫を落とす
+        if (Math.random() < 0.5 && this.drops.length < 8) {
+          const tip = this._tip(d, 0.9);
+          this.drops.push({ x: tip.x, y: tip.y, vy: 0, r: d.w * 0.9, life: 1 });
+        }
+        this.tendrils[i] = this._newTendril(0);
+      }
+    }
+    for (let i = this.drops.length - 1; i >= 0; i--) {
+      const o = this.drops[i];
+      o.vy += 0.9 * dt; o.y += o.vy * dt; o.life -= dt * 1.2;
+      if (o.life <= 0) this.drops.splice(i, 1);
+    }
+  }
+
+  // 触手の根元・法線（本体ローカル 0..1）
+  _base(d) {
+    switch (d.side) {
+      case 0: return { x: d.u, y: 0.04, nx: 0, ny: -1 };
+      case 1: return { x: 0.96, y: d.u, nx: 1, ny: 0 };
+      case 2: return { x: d.u, y: 0.96, nx: 0, ny: 1 };
+      default: return { x: 0.04, y: d.u, nx: -1, ny: 0 };
+    }
+  }
+  // 伸び量 0..1 の山形（素早く伸びてゆっくり縮む）
+  _ext(p) { return p < 0.3 ? p / 0.3 : 1 - (p - 0.3) / 0.7; }
+  _tip(d, e) {
+    const b = this._base(d), L = d.len * e;
+    return { x: b.x + b.nx * L - b.ny * d.bend * L + d.glitch, y: b.y + b.ny * L + b.nx * d.bend * L + d.glitch };
+  }
+
+  // 波打つ角丸四角のパス（S=一辺px, ox,oy=左上）
+  _bodyPath(ctx, ox, oy, S, amp, off) {
+    const N = 40, t = this.t, cx = ox + S / 2, cy = oy + S / 2;
+    const h = S * 0.45, rr = S * 0.14;
+    ctx.beginPath();
+    for (let i = 0; i <= N; i++) {
+      const a = (i / N) * Math.PI * 2;
+      // 角丸四角の極座標半径（超楕円で近似：軽い）
+      const c = Math.abs(Math.cos(a)), s = Math.abs(Math.sin(a));
+      const k = 5;
+      let r = h / Math.pow(Math.pow(c, k) + Math.pow(s, k), 1 / k);
+      r += rr * 0.08;
+      // 波打ち：低周波サイン3本の合成
+      r += amp * S * (0.6 * Math.sin(a * 3 + t * 2.1) + 0.4 * Math.sin(a * 5 - t * 3.3) + 0.25 * Math.sin(a * 9 + t * 5.7));
+      const x = cx + Math.cos(a) * r + off, y = cy + Math.sin(a) * r + off;
+      i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+    }
+    ctx.closePath();
+  }
+
+  draw(ctx, x, y, cell) {
+    const S = cell * 2;                 // 2×2マス
+    const X = (v) => x + v * S, Y = (v) => y + v * S;
+    ctx.save();
+    ctx.lineCap = 'round';
+
+    // --- 触手（本体の後ろ）---
+    ctx.strokeStyle = this.body; ctx.fillStyle = this.body;
+    for (const d of this.tendrils) {
+      const e = this._ext(d.p);
+      if (e <= 0.02) continue;
+      const b = this._base(d), tip = this._tip(d, e);
+      const mid = this._tip(d, e * 0.5);
+      ctx.lineWidth = d.w * S * (0.6 + 0.4 * e);
+      ctx.beginPath();
+      ctx.moveTo(X(b.x), Y(b.y));
+      ctx.quadraticCurveTo(X(mid.x + b.ny * 0.04), Y(mid.y - b.nx * 0.04), X(tip.x), Y(tip.y));
+      ctx.stroke();
+      // 先端の滴
+      ctx.beginPath();
+      ctx.arc(X(tip.x + b.nx * 0.04), Y(tip.y + b.ny * 0.04), d.w * S * 0.7 * e, 0, 6.283);
+      ctx.fill();
+    }
+    for (const o of this.drops) {
+      ctx.globalAlpha = Math.max(0, o.life);
+      ctx.beginPath(); ctx.arc(X(o.x), Y(o.y), o.r * S * 0.6, 0, 6.283); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    // --- 黒い影輪郭（少しずらす：元絵の黒線） ---
+    this._bodyPath(ctx, x, y, S, 0.012, S * 0.025);
+    ctx.fillStyle = this.outline; ctx.fill();
+
+    // --- 本体 ---
+    this._bodyPath(ctx, x, y, S, 0.015, 0);
+    ctx.fillStyle = this.body; ctx.fill();
+
+    // --- 内部パーティクル（本体でクリップ） ---
+    ctx.save();
+    ctx.clip();
+    for (const p of this.parts) {
+      const a = Math.sin(p.life * Math.PI);          // フェードイン→アウト
+      const pulse = 1 + 0.12 * Math.sin(this.t * 4 + p.rot * 3);
+      const r = p.r * S * pulse * (0.7 + 0.3 * a);
+      ctx.globalAlpha = 0.9 * a;
+      ctx.fillStyle = p.c; ctx.strokeStyle = p.c;
+      const px = X(p.x), py = Y(p.y);
+      if (p.kind === 0) {
+        // 角丸っぽい塊（円2つで歪ませる：軽い）
+        ctx.beginPath();
+        ctx.arc(px, py, r, 0, 6.283);
+        ctx.arc(px + Math.cos(p.rot) * r * 0.4, py + Math.sin(p.rot) * r * 0.4, r * 0.8, 0, 6.283);
+        ctx.fill();
+      } else {
+        // 三日月
+        ctx.lineWidth = r * 0.55;
+        ctx.beginPath();
+        ctx.arc(px, py, r * 0.8, p.rot, p.rot + Math.PI * 1.3);
+        ctx.stroke();
+      }
+    }
+    // シアンのきらめき
+    ctx.fillStyle = '#35e6d8';
+    for (let i = 0; i < 6; i++) {
+      const f = Math.sin(this.t * 7 + i * 12.9);
+      if (f < 0.6) continue;
+      ctx.globalAlpha = (f - 0.6) * 2.5;
+      const sx = 0.2 + ((i * 0.37 + Math.floor(this.t * 0.7 + i) * 0.61) % 0.6);
+      const sy = 0.2 + ((i * 0.53 + Math.floor(this.t * 0.7 + i) * 0.29) % 0.6);
+      ctx.fillRect(X(sx), Y(sy), S * 0.018, S * 0.018);
+    }
+    ctx.restore();
+
+    ctx.restore();
+  }
+}
+
+/* ============================ デモ ============================ */
+const cv = document.getElementById('cv');
+const ctx = cv.getContext('2d');
+const gridBox = document.getElementById('grid');
+const cellIn = document.getElementById('cell');
+const cellV = document.getElementById('cellv');
+const fpsEl = document.getElementById('fps');
+const enemy = new CurseEnemy();
+
+function resize() {
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  cv.width = 384 * dpr; cv.height = 384 * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+resize();
+addEventListener('resize', resize);
+cellIn.oninput = () => cellV.textContent = cellIn.value;
+
+let last = performance.now(), acc = 0, frames = 0;
+function loop(now) {
+  const dt = Math.min(0.05, (now - last) / 1000); last = now;
+  enemy.update(dt);
+
+  const cell = +cellIn.value, W = 384;
+  ctx.fillStyle = getComputedStyle(document.body).backgroundColor;
+  ctx.fillRect(0, 0, W, W);
+  // 敵を中央の2×2マスに配置
+  const n = Math.ceil(W / cell), start = Math.floor(n / 2) - 1;
+  const ox = (W - n * cell) / 2;
+  if (gridBox.checked) {
+    ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--grid');
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (let i = 0; i <= n; i++) {
+      ctx.moveTo(ox + i * cell + 0.5, 0); ctx.lineTo(ox + i * cell + 0.5, W);
+      ctx.moveTo(0, ox + i * cell + 0.5); ctx.lineTo(W, ox + i * cell + 0.5);
+    }
+    ctx.stroke();
+  }
+  enemy.draw(ctx, ox + start * cell, ox + start * cell, cell);
+
+  acc += dt; frames++;
+  if (acc >= 0.5) { fpsEl.textContent = Math.round(frames / acc) + ' fps'; acc = 0; frames = 0; }
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
