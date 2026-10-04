@@ -1,15 +1,6 @@
 {
- "fetchedAt": "2026-09-27",
+ "fetchedAt": "2026-10-04",
  "items": [
-  {
-   "item_code": "95404",
-   "name": "HG 軽量19mmオールアルミベアリングローラー （レッド）",
-   "release": "2027年1月発送予定",
-   "price": "1,078円",
-   "image": "https://d7z22c0gz59ng.cloudfront.net/japan_contents/img/usr/item/9/95404/95404_s.jpg",
-   "url": "https://www.tamiya.com/japan/products/95404/index.html",
-   "genre": "ミニ四駆"
-  },
   {
    "item_code": "95423",
    "name": "軽量2段アルミローラーセット （13-12mm）（レッド）",
@@ -20,12 +11,30 @@
    "genre": "ミニ四駆"
   },
   {
+   "item_code": "95404",
+   "name": "HG 軽量19mmオールアルミベアリングローラー （レッド）",
+   "release": "2027年1月発送予定",
+   "price": "1,078円",
+   "image": "https://d7z22c0gz59ng.cloudfront.net/japan_contents/img/usr/item/9/95404/95404_s.jpg",
+   "url": "https://www.tamiya.com/japan/products/95404/index.html",
+   "genre": "ミニ四駆"
+  },
+  {
    "item_code": "95721",
    "name": "2027年 干支ミニ四駆「未年」",
    "release": "2026年12月発売予定",
    "price": "1,650円",
    "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/9/95721/95721_s.jpg",
    "url": "https://www.tamiya.com/japan/products/95721/index.html",
+   "genre": "ミニ四駆"
+  },
+  {
+   "item_code": "95512",
+   "name": "ブロッケンギガント ブラック プレミアム(FM-Aシャーシ)",
+   "release": "2026年12月発売予定",
+   "price": "1,430円",
+   "image": "https://d7z22c0gz59ng.cloudfront.net/japan_contents/img/usr/item/9/95512/95512_s.jpg",
+   "url": "https://www.tamiya.com/japan/products/95512/index.html",
    "genre": "ミニ四駆"
   },
   {
@@ -47,54 +56,9 @@
    "genre": "ミニ四駆"
   },
   {
-   "item_code": "95512",
-   "name": "ブロッケンギガント ブラック プレミアム(FM-Aシャーシ)",
-   "release": "2026年12月発売予定",
-   "price": "1,430円",
-   "image": "https://d7z22c0gz59ng.cloudfront.net/japan_contents/img/usr/item/9/95512/95512_s.jpg",
-   "url": "https://www.tamiya.com/japan/products/95512/index.html",
-   "genre": "ミニ四駆"
-  },
-  {
-   "item_code": "95731",
-   "name": "ブロッケンギガント ゴジラ-0.0バージョン",
-   "release": "2026年11月発送予定",
-   "price": "1,760円",
-   "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/9/95731/95731_s.jpg",
-   "url": "https://www.tamiya.com/japan/products/95731/index.html",
-   "genre": "ミニ四駆"
-  },
-  {
-   "item_code": "95459",
-   "name": "2mmアルミロックナット （ダークブルー5個）",
-   "release": "2026年11月発売予定",
-   "price": "550円",
-   "image": "https://d7z22c0gz59ng.cloudfront.net/japan_contents/img/usr/item/9/95459/95459_s.jpg",
-   "url": "https://www.tamiya.com/japan/products/95459/index.html",
-   "genre": "ミニ四駆"
-  },
-  {
-   "item_code": "95458",
-   "name": "2mmアルミロックナット （ゴールド5個）",
-   "release": "2026年11月発売予定",
-   "price": "550円",
-   "image": "https://d7z22c0gz59ng.cloudfront.net/japan_contents/img/usr/item/9/95458/95458_s.jpg",
-   "url": "https://www.tamiya.com/japan/products/95458/index.html",
-   "genre": "ミニ四駆"
-  },
-  {
-   "item_code": "95426",
-   "name": "2mmアルミロックナット （ピンク5個）",
-   "release": "2026年11月発売予定",
-   "price": "550円",
-   "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/9/95426/95426_s.jpg",
-   "url": "https://www.tamiya.com/japan/products/95426/index.html",
-   "genre": "ミニ四駆"
-  },
-  {
    "item_code": "95439",
    "name": "ガンブラスターXTO ライトブルースペシャル(ポリカボディ)",
-   "release": "2026年11月発売予定",
+   "release": "2026年11月21日(土)ごろ発売",
    "price": "1,650円",
    "image": "https://d7z22c0gz59ng.cloudfront.net/japan_contents/img/usr/item/9/95439/95439_s.jpg",
    "url": "https://www.tamiya.com/japan/products/95439/index.html",
@@ -103,10 +67,46 @@
   {
    "item_code": "95324",
    "name": "アジャスト マスダンパー （2.5g&#215;6個）",
-   "release": "2026年11月発売予定",
+   "release": "2026年11月21日(土)ごろ発売",
    "price": "660円",
    "image": "https://d7z22c0gz59ng.cloudfront.net/japan_contents/img/usr/item/9/95324/95324_s.jpg",
    "url": "https://www.tamiya.com/japan/products/95324/index.html",
+   "genre": "ミニ四駆"
+  },
+  {
+   "item_code": "95459",
+   "name": "2mmアルミロックナット （ダークブルー5個）",
+   "release": "2026年11月14日(土)ごろ発売",
+   "price": "550円",
+   "image": "https://d7z22c0gz59ng.cloudfront.net/japan_contents/img/usr/item/9/95459/95459_s.jpg",
+   "url": "https://www.tamiya.com/japan/products/95459/index.html",
+   "genre": "ミニ四駆"
+  },
+  {
+   "item_code": "95458",
+   "name": "2mmアルミロックナット （ゴールド5個）",
+   "release": "2026年11月14日(土)ごろ発売",
+   "price": "550円",
+   "image": "https://d7z22c0gz59ng.cloudfront.net/japan_contents/img/usr/item/9/95458/95458_s.jpg",
+   "url": "https://www.tamiya.com/japan/products/95458/index.html",
+   "genre": "ミニ四駆"
+  },
+  {
+   "item_code": "95426",
+   "name": "2mmアルミロックナット （ピンク5個）",
+   "release": "2026年11月14日(土)ごろ発売",
+   "price": "550円",
+   "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/9/95426/95426_s.jpg",
+   "url": "https://www.tamiya.com/japan/products/95426/index.html",
+   "genre": "ミニ四駆"
+  },
+  {
+   "item_code": "95731",
+   "name": "ブロッケンギガント ゴジラ-0.0バージョン",
+   "release": "2026年11月7日(土)ごろ発売",
+   "price": "1,760円",
+   "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/9/95731/95731_s.jpg",
+   "url": "https://www.tamiya.com/japan/products/95731/index.html",
    "genre": "ミニ四駆"
   },
   {
@@ -191,12 +191,12 @@
    "genre": "ミニ四駆"
   },
   {
-   "item_code": "95424",
-   "name": "2mmアルミロックナット （グリーン5個）",
+   "item_code": "95719",
+   "name": "2mmアルミロックナット （ブラック5個）",
    "release": "2026年9月19日(土)ごろ発売",
    "price": "550円",
-   "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/9/95424/95424_s.jpg",
-   "url": "https://www.tamiya.com/japan/products/95424/index.html",
+   "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/9/95719/95719_s.jpg",
+   "url": "https://www.tamiya.com/japan/products/95719/index.html",
    "genre": "ミニ四駆"
   },
   {
@@ -209,12 +209,12 @@
    "genre": "ミニ四駆"
   },
   {
-   "item_code": "95719",
-   "name": "2mmアルミロックナット （ブラック5個）",
+   "item_code": "95424",
+   "name": "2mmアルミロックナット （グリーン5個）",
    "release": "2026年9月19日(土)ごろ発売",
    "price": "550円",
-   "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/9/95719/95719_s.jpg",
-   "url": "https://www.tamiya.com/japan/products/95719/index.html",
+   "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/9/95424/95424_s.jpg",
+   "url": "https://www.tamiya.com/japan/products/95424/index.html",
    "genre": "ミニ四駆"
   },
   {
@@ -296,33 +296,6 @@
    "price": "1,650円",
    "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/9/95703/info/95703_s.jpg",
    "url": "https://www.tamiya.com/japan/products/95703/index.html",
-   "genre": "ミニ四駆"
-  },
-  {
-   "item_code": "95187",
-   "name": "HG カーボンマルチワイドリヤステー (1.5mm) J-CUP 2026",
-   "release": "2026年7月11日(土)ごろ発売",
-   "price": "1,210円",
-   "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/9/95187/95187_s.jpg",
-   "url": "https://www.tamiya.com/japan/products/95187/index.html",
-   "genre": "ミニ四駆"
-  },
-  {
-   "item_code": "95186",
-   "name": "HG カーボンフロントワイドステー (1.5mm) J-CUP 2026",
-   "release": "2026年7月11日(土)ごろ発売",
-   "price": "1,210円",
-   "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/9/95186/95186_s.jpg",
-   "url": "https://www.tamiya.com/japan/products/95186/index.html",
-   "genre": "ミニ四駆"
-  },
-  {
-   "item_code": "95720",
-   "name": "グラスホッパーJr. (VZシャーシ) ブラックスペシャル",
-   "release": "2026年7月4日(土) よりタミヤ・イベント会場にて発売",
-   "price": "1,430円",
-   "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/9/95720/95720_s.jpg",
-   "url": "https://www.tamiya.com/japan/products/95720/index.html",
    "genre": "ミニ四駆"
   }
  ]
