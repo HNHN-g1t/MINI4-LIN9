@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-04",
+ "fetchedAt": "2026-10-07",
  "items": [
   {
    "item_code": "95423",
@@ -155,24 +155,6 @@
    "genre": "ミニ四駆"
   },
   {
-   "item_code": "95555",
-   "name": "2mmアルミロックナット （パープル5個）",
-   "release": "2026年10月10日(土)ごろ発売",
-   "price": "550円",
-   "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/9/95555/95555_s.jpg",
-   "url": "https://www.tamiya.com/japan/products/95555/index.html",
-   "genre": "ミニ四駆"
-  },
-  {
-   "item_code": "95556",
-   "name": "2mmアルミロックナット （オレンジ5個）",
-   "release": "2026年10月10日(土)ごろ発売",
-   "price": "550円",
-   "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/9/95556/95556_s.jpg",
-   "url": "https://www.tamiya.com/japan/products/95556/index.html",
-   "genre": "ミニ四駆"
-  },
-  {
    "item_code": "15552",
    "name": "EZシャーシ 大径タイヤ＆ホイールセット（ワイドトレッド）",
    "release": "2026年10月10日(土)ごろ発売",
@@ -188,6 +170,24 @@
    "price": "1,540円",
    "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/9/95707/95707_s.jpg",
    "url": "https://www.tamiya.com/japan/products/95707/index.html",
+   "genre": "ミニ四駆"
+  },
+  {
+   "item_code": "95555",
+   "name": "2mmアルミロックナット （パープル5個）",
+   "release": "2026年10月10日(土)ごろ発売",
+   "price": "550円",
+   "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/9/95555/95555_s.jpg",
+   "url": "https://www.tamiya.com/japan/products/95555/index.html",
+   "genre": "ミニ四駆"
+  },
+  {
+   "item_code": "95556",
+   "name": "2mmアルミロックナット （オレンジ5個）",
+   "release": "2026年10月10日(土)ごろ発売",
+   "price": "550円",
+   "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/9/95556/95556_s.jpg",
+   "url": "https://www.tamiya.com/japan/products/95556/index.html",
    "genre": "ミニ四駆"
   },
   {
