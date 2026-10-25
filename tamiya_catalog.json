@@ -3597,6 +3597,28 @@
   "gp_no": ""
  },
  {
+  "item_code": "19402",
+  "name": "1/32 ソニックセイバー",
+  "price": 1320,
+  "image": "https://d7z22c0gz59ng.cloudfront.net/japan_contents/img/usr/item/1/19402/19402_s.jpg",
+  "url": "https://www.tamiya.com/japan/products/19402/index.html",
+  "genre": "キット",
+  "genre_key": "kit",
+  "official_category": "1/32 フルカウルミニ四駆シリーズ",
+  "gp_no": ""
+ },
+ {
+  "item_code": "19401",
+  "name": "1/32 マグナムセイバー",
+  "price": 1320,
+  "image": "https://d7z22c0gz59ng.cloudfront.net/japan_contents/img/usr/item/1/19401/19401_s.jpg",
+  "url": "https://www.tamiya.com/japan/products/19401/index.html",
+  "genre": "キット",
+  "genre_key": "kit",
+  "official_category": "1/32 フルカウルミニ四駆シリーズ",
+  "gp_no": ""
+ },
+ {
   "item_code": "95721",
   "name": "2027年 干支ミニ四駆「未年」",
   "price": 1650,
@@ -8134,28 +8156,6 @@
   "price": 858,
   "image": "https://d7z22c0gz59ng.cloudfront.net/japan_contents/img/usr/item/1/19403/19403_s.jpg",
   "url": "https://www.tamiya.com/japan/products/19403/index.html",
-  "genre": "キット",
-  "genre_key": "kit",
-  "official_category": "1/32 フルカウルミニ四駆シリーズ",
-  "gp_no": ""
- },
- {
-  "item_code": "19402",
-  "name": "1/32 ソニックセイバー",
-  "price": 858,
-  "image": "https://d7z22c0gz59ng.cloudfront.net/japan_contents/img/usr/item/1/19402/19402_s.jpg",
-  "url": "https://www.tamiya.com/japan/products/19402/index.html",
-  "genre": "キット",
-  "genre_key": "kit",
-  "official_category": "1/32 フルカウルミニ四駆シリーズ",
-  "gp_no": ""
- },
- {
-  "item_code": "19401",
-  "name": "1/32 マグナムセイバー",
-  "price": 858,
-  "image": "https://d7z22c0gz59ng.cloudfront.net/japan_contents/img/usr/item/1/19401/19401_s.jpg",
-  "url": "https://www.tamiya.com/japan/products/19401/index.html",
   "genre": "キット",
   "genre_key": "kit",
   "official_category": "1/32 フルカウルミニ四駆シリーズ",
@@ -14102,22 +14102,22 @@
   "gp_no": ""
  },
  {
-  "item_code": "10329",
-  "name": "AO-1051 ミニ四駆PRO G-20ギヤ (オレンジ10個)",
+  "item_code": "10328",
+  "name": "AO-1050 ミニ四駆 G-11ギヤ (うす茶10個)",
   "price": 330,
-  "image": "https://d7z22c0gz59ng.cloudfront.net/japan_contents/img/usr/item/1/10329/10329_s.jpg",
-  "url": "https://www.tamiya.com/japan/products/10329/index.html",
+  "image": "https://d7z22c0gz59ng.cloudfront.net/japan_contents/img/usr/item/1/10328/10328_s.jpg",
+  "url": "https://www.tamiya.com/japan/products/10328/index.html",
   "genre": "AOパーツ",
   "genre_key": "ao",
   "official_category": "",
   "gp_no": ""
  },
  {
-  "item_code": "10328",
-  "name": "AO-1050 ミニ四駆 G-11ギヤ (うす茶10個)",
+  "item_code": "10329",
+  "name": "AO-1051 ミニ四駆PRO G-20ギヤ (オレンジ10個)",
   "price": 330,
-  "image": "https://d7z22c0gz59ng.cloudfront.net/japan_contents/img/usr/item/1/10328/10328_s.jpg",
-  "url": "https://www.tamiya.com/japan/products/10328/index.html",
+  "image": "https://d7z22c0gz59ng.cloudfront.net/japan_contents/img/usr/item/1/10329/10329_s.jpg",
+  "url": "https://www.tamiya.com/japan/products/10329/index.html",
   "genre": "AOパーツ",
   "genre_key": "ao",
   "official_category": "",

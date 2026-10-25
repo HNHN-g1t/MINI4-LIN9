@@ -1,6 +1,24 @@
 {
- "fetchedAt": "2026-10-18",
+ "fetchedAt": "2026-10-25",
  "items": [
+  {
+   "item_code": "19402",
+   "name": "1/32 ソニックセイバー",
+   "release": "2027年4月発売予定",
+   "price": "1,320円",
+   "image": "https://d7z22c0gz59ng.cloudfront.net/japan_contents/img/usr/item/1/19402/19402_s.jpg",
+   "url": "https://www.tamiya.com/japan/products/19402/index.html",
+   "genre": "ミニ四駆"
+  },
+  {
+   "item_code": "19401",
+   "name": "1/32 マグナムセイバー",
+   "release": "2027年4月発売予定",
+   "price": "1,320円",
+   "image": "https://d7z22c0gz59ng.cloudfront.net/japan_contents/img/usr/item/1/19401/19401_s.jpg",
+   "url": "https://www.tamiya.com/japan/products/19401/index.html",
+   "genre": "ミニ四駆"
+  },
   {
    "item_code": "95423",
    "name": "軽量2段アルミローラーセット （13-12mm）（レッド）",
@@ -128,6 +146,15 @@
    "genre": "ミニ四駆"
   },
   {
+   "item_code": "95711",
+   "name": "スーパーFM蛍光カラーシャーシセット（ピンク・グリーン）",
+   "release": "2026年10月24日(土)ごろ発売",
+   "price": "660円",
+   "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/9/95711/95711_s.jpg",
+   "url": "https://www.tamiya.com/japan/products/95711/index.html",
+   "genre": "ミニ四駆"
+  },
+  {
    "item_code": "18664",
    "name": "ティクシヴ（MEシャーシ）",
    "release": "2026年10月24日(土)ごろ発売",
@@ -146,12 +173,12 @@
    "genre": "ミニ四駆"
   },
   {
-   "item_code": "95711",
-   "name": "スーパーFM蛍光カラーシャーシセット（ピンク・グリーン）",
-   "release": "2026年10月24日(土)ごろ発売",
-   "price": "660円",
-   "image": "https://d7z22c0gz59ng.cloudfront.net/cms/img/usr/item/9/95711/95711_s.jpg",
-   "url": "https://www.tamiya.com/japan/products/95711/index.html",
+   "item_code": "10328",
+   "name": "AO-1050 ミニ四駆 G-11ギヤ (うす茶10個)",
+   "release": "2026年10月17日(土)ごろ発売",
+   "price": "330円",
+   "image": "https://d7z22c0gz59ng.cloudfront.net/japan_contents/img/usr/item/1/10328/10328_s.jpg",
+   "url": "https://www.tamiya.com/japan/products/10328/index.html",
    "genre": "ミニ四駆"
   },
   {
@@ -161,15 +188,6 @@
    "price": "330円",
    "image": "https://d7z22c0gz59ng.cloudfront.net/japan_contents/img/usr/item/1/10329/10329_s.jpg",
    "url": "https://www.tamiya.com/japan/products/10329/index.html",
-   "genre": "ミニ四駆"
-  },
-  {
-   "item_code": "10328",
-   "name": "AO-1050 ミニ四駆 G-11ギヤ (うす茶10個)",
-   "release": "2026年10月17日(土)ごろ発売",
-   "price": "330円",
-   "image": "https://d7z22c0gz59ng.cloudfront.net/japan_contents/img/usr/item/1/10328/10328_s.jpg",
-   "url": "https://www.tamiya.com/japan/products/10328/index.html",
    "genre": "ミニ四駆"
   },
   {
