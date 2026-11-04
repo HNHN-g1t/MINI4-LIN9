@@ -29,7 +29,7 @@ import urllib.request
 
 BASE = "https://www.tamiya.com/japan/products/list.html"
 LIST_URL = BASE + "?field_sort=d&cmdarticlesearch=1&genre_item={code}&absolutepage={page}"
-UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) partspost-catalog-builder"
+UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) mini4lin9-catalog-builder"
 PER_PAGE = 20
 SLEEP = 1.0  # 公式サイトへの負荷配慮
 
